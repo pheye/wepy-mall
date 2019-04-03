@@ -1,0 +1,48 @@
+<template>
+ <view style="background-color:white;min-height:100vh;">
+      <import src="../plugins/wxParse/wxParse.wxml" />
+      <template is="wxParse" data="{{wxParseData:detailInfo.nodes}}">
+      </template>
+ </view>
+</template>
+<script>
+import wepy from 'wepy'
+import api from '@/api/api'
+import tip from '@/utils/tip'
+import WxParse from "../plugins/wxParse/wxParse";
+
+export default class Provider extends wepy.page {
+  config = {
+    navigationBarTitleText: '供应商招募',
+  }
+  data = {
+    content: '',
+  }
+  computed = {}
+  onLoad() {
+    this.init()      
+  }
+  async init() {
+      let json = await api.queryPages({
+          query: {
+              slug: 'provider'
+          }
+      })
+      if (json.statusCode !== 200) {
+          if (json.data.message) {
+            tip.error(json.data.message)
+          } else {
+            tip.error('查看商品失败')
+          }
+          return
+      }
+      // this.content = json.data[0].content.rendered
+      console.log('content', json.data[0].content.rendered);
+
+      WxParse.wxParse('detailInfo', 'html', json.data[0].content.rendered, this);
+  }
+}
+
+</script>
+<style lang="less" >
+</style>
