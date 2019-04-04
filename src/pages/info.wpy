@@ -75,7 +75,7 @@
         </view>
         <view class="arrow">&gt;</view>
       </navigator>
-      <navigator class="item">
+      <navigator class="item" url="/pages/provider">
         <view class="item_content">
           <view class="text">供应商招募</view>
         </view>

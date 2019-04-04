@@ -183,6 +183,7 @@ const queryCities = (params) => request(`${host}/wp-json/wp/v2/cities?per_page=1
 
 //获取小区
 const queryEstates = ({query = {}}) => request(`${host}/wp-json/wp/v2/estates`, {query: {...query, status: 'publish', per_page: 100}, noauth: true});
+const queryPages =  (params) => request(`${host}/wp-json/wp/v2/pages`, params)
 
 export default {
   hostGoodsList,
@@ -239,4 +240,5 @@ export default {
   getSignDate,
   queryCities,
   queryEstates,
+  queryPages,
 }
