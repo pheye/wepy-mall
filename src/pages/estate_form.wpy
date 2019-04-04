@@ -1,0 +1,22 @@
+<template>
+    <view>
+        <view style="text-align:center;">正在加载...</view>
+        <web-view src="https://lingqule.papamk.com/estate-form"></web-view>
+    </view>
+</template>
+<script>
+import wepy from 'wepy'
+
+export default class EstateForm extends wepy.page {
+  config = {
+    navigationBarTitleText: '小区长招募',
+  }
+  data = {
+    content: '',
+  }
+  onLoad() {
+  }
+}
+</script>
+<style lang="less">
+</style>

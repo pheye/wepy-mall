@@ -22,6 +22,7 @@ export default class Provider extends wepy.page {
   onLoad() {
     this.init()      
   }
+  wxParseImgLoad(e) {}
   async init() {
       let json = await api.queryPages({
           query: {

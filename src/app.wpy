@@ -48,6 +48,7 @@ export default class extends wepy.app {
       'pages/comment_add',
       'pages/estate',
       'pages/provider',
+      'pages/estate_form',
     ],
     window: {
       backgroundTextStyle: 'dark',

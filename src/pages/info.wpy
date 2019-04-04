@@ -69,7 +69,7 @@
         </view>
         <view class="arrow">&gt;</view>
       </navigator>
-      <navigator class="item">
+      <navigator class="item" url="/pages/estate_form">
         <view class="item_content">
           <view class="text">小区长招募</view>
         </view>
