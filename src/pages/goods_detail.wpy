@@ -18,12 +18,34 @@
           <timer :startTime.sync="startTime" :endTime.sync="endTime"></timer>
         </view>
 <!--         <view class="share-box">
-          <i class="iconfont icon-share"></i>
+          <i class="iconfont icon-share" @tap="onShareAppMessage"></i>
           <text>分享</text>
         </view> -->
       </view>
       <!-- <view class="baoyou">满{{detail.freeShipNum}}件包邮</view> -->
+      <!-- 分享内容 -->
+      <view class="share_container">
+      <view class="share_message">他们都在买剩余{{detail.stock_quantity}}件</view>
+          <van-row>
+              <van-col span="2">
+                <!-- 分享用户 -->
+                <image class="avatarUrl" src="{{randomUserInfo[0].avatarUrl}}"></image>
+               </van-col>
+               <van-col offset="1" span="2">
+                <image class="avatarUrl" src="{{randomUserInfo[1].avatarUrl}}"></image>
+                </van-col>
+                <van-col offset="1" span="2">
+                <image class="avatarUrl" src="{{randomUserInfo[2].avatarUrl}}"></image>
+              </van-col>
+               <!-- 分享按钮 -->
+                <van-col offset="6" span="10">
+                  <button class="share_btn " data-name="shareBtn" open-type="share">邀请朋友一起抢</button>
+                </van-col>
+          </van-row>
     </view>
+    </view>
+
+
     <!-- <view class="order_num"> -->
     <!--   <view class="doc" wx:if="{{special == 1}}">库存: -->
     <!--     <text class="num">{{detail.stock_quantity}}件</text> -->
@@ -156,7 +178,8 @@ import {
   SYSTEM_INFO,
   USER_SPECICAL_INFO
 } from '@/utils/constant';
-import tip from '@/utils/tip'
+import tip from '@/utils/tip';
+import util from '@/utils/util';
 import api from '@/api/api';
 import WxParse from "../plugins/wxParse/wxParse";
 import CommentList from "../components/comment_list"
@@ -215,6 +238,37 @@ export default class goodsDetail extends wepy.page {
 
     ],
     commentList1: [],
+    // 模拟用户分享数据（需要根据不同商品ID读取对应的数据）
+    shareUserInfo:[
+      {
+        name:"no1",
+        avatarUrl:"../images/no1.png"
+      },
+      {
+        name:"no2",
+        avatarUrl:"../images/no2.png"
+      },
+      {
+        name:"no3",
+        avatarUrl:"../images/no3.png"
+      },
+      {
+        name:"no4",
+        avatarUrl:"../images/no4.png"
+      },
+      {
+        name:"no5",
+        avatarUrl:"../images/no5.png"
+      },
+      {
+        name:"no6",
+        avatarUrl:"../images/no6.png"
+      },
+
+    ],
+    // 随机抽取用户数据
+    randomUserInfo:[],
+
   }
 
   components = {
@@ -248,6 +302,7 @@ export default class goodsDetail extends wepy.page {
     that.getGoodsDetail();
     // that.addUserBrowser();
     console.log("special===" + this.special);
+
   }
   onShow() {
     // this.goodsIsFavorite();
@@ -259,6 +314,8 @@ export default class goodsDetail extends wepy.page {
       delay: 0
     })
     this.animation = animation;
+
+    this.randomUserInfo = util.getRandomArrayElements(this.shareUserInfo, 3);
   }
   wxParseImgLoad(e) {}
 
@@ -597,7 +654,7 @@ export default class goodsDetail extends wepy.page {
           // 转发失败
         }
       }
-    }
+    },
   }
 }
 
@@ -1001,6 +1058,32 @@ export default class goodsDetail extends wepy.page {
   /* Opera 10.5+, 以及使用了IE-CSS3的IE浏览器 */
   color: #ff4856;
   border: 1px solid #ff4856;
+}
+
+.share_container{
+  padding: 20rpx 20rpx 20rpx 20rpx;
+  background-color:#FFFFEE;
+  border-radius: 10rpx;
+  .share_message{
+      font-size: 22rpx;
+      margin-bottom:30rpx;
+      }
+  .share_btn {
+
+        text-align: center;
+        line-height: 50rpx;
+        font-weight: 300;
+        background-color: #FF9900;
+        font-size: 22rpx;
+        color: #ffffff;
+        border-radius: 30rpx;
+    }
+  .avatarUrl {
+        width: 50rpx;
+        height: 50rpx;
+        border-radius: 1000px;
+        margin-right:30rpx;
+  }
 }
 
 </style>

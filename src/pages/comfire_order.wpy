@@ -65,17 +65,31 @@
       </view>
     </view>
     <view wx:if="{{chosenShipping.method_id == 'local_pickup'}}">
+      <navigator  url="/pages/estate">
       <view class="block">
-      <view class="left">自提点: {{estate.title.rendered}}</view>
+        <view class="left">自提点:</view>
+        <view class="right">{{estate.title.rendered}}</view>
       </view>
+      </navigator>
       <view class="block">
         <view class="left">站长</view>
         <view class="right">{{estate.contact}}</view>
       </view>
       <view class="block">
-        <view class="left">联系电话</view>
+        <view class="left">站长电话</view>
         <view class="right">{{estate.phone}}</view>
       </view>
+
+      <view class="block">
+        <view class="left">地址</view>
+        <view class="right">{{estate.address}}</view>
+      </view>
+      <view class="block">
+        <view class="left">营业时间</view>
+        <view class="right">{{estate.timerange}}</view>
+      </view>
+    </view>
+      <view class="spacing"></view>
       <view class="block">
         <view class="left">联系人:</view>
         <view class="right input_box">
@@ -88,16 +102,6 @@
           <input @input="changeCustomerPhone" placeholder="{{customer.phone}}" />
         </view>
       </view>
-      <view class="block">
-        <view class="left">地址</view>
-        <view class="right">{{estate.address}}</view>
-      </view>
-      <view class="block">
-        <view class="left">营业时间</view>
-        <view class="right">{{estate.timerange}}</view>
-      </view>
-    </view>
-      <view class="spacing"></view>
       <view class="block">
         <view class="left">买家留言:</view>
         <view class="right input_box">
@@ -213,7 +217,7 @@ export default class ComfireOrder extends wepy.page {
 
     // 加载自提点信息
 
-    this.estate= wepy.getStorageSync(CURRENT_ESTATE);
+    // this.estate= wepy.getStorageSync(CURRENT_ESTATE);
 
 console.log("load");
     that.$apply();
@@ -543,10 +547,19 @@ console.log("load");
   events = {
 
   }
+
+  onShow () {
+  // 更新自提点信息
+    this.estate = wepy.getStorageSync(CURRENT_ESTATE);
+  }
 }
 
 </script>
 <style lang="less">
+.estate_container {
+    color: #000;
+    align-items: center;
+}
 .address {
   border-top: 1px solid #efefef;
   background: #fff;
