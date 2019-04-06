@@ -7,14 +7,14 @@
   -->
    <!--商品内容-->
 
-  <van-row gutter="20">
+  <van-row gutter="15">
     <view class="item_container">
       <van-col span="8" class="item_image_container">
         <navigator url="/pages/goods_detail?id={{item.id}}">
           <!-- 商品图片 -->
            <image class="item-img" src="{{item.images[0].shop_thumbnail}}">
            <!-- 商品标签 -->
-            <text class="item_tag" style ="position:absolute;" wx:if="{{tags[index] != ''}}" >{{tags[index]}}</text>
+            <text class="item_tag" style ="position:absolute;" wx:if="{{tags[index] != ''&& tags[index] != '缺货'}}" >{{tags[index]}}</text>
             <view class="img-textbox" wx:if="{{item.stock_quantity == 0}}" >
                 <p class='img-text' style='padding-top: 25%;font-size: 12px;'>抢光啦!</p>
                 <p class='img-text' style='padding-bottom: 25%;font-size: 8px;'>补货ing...</p>
@@ -127,6 +127,7 @@ export default class productCardList extends wepy.component {
     .item_image_container {
     .item-img {
      position:relative;
+     float:right;
     width: 190rpx !important;
     height: 190rpx !important;
         .item_tag{
