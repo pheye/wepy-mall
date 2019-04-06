@@ -8,6 +8,8 @@
 import wepy from 'wepy';
 import 'wepy-async-function';
 import api from '@/api/api';
+import QQMapWX from 'qqmap-wx-jssdk';
+
 import {
   ESTATES,
   CURRENT_ESTATE,
@@ -95,6 +97,11 @@ export default class extends wepy.app {
         "van-row": "components/van/row/index",
         "van-col": "components/van/col/index",
         "van-tree-select": "components/van/tree-select/index"
+    },
+    permission: {
+      "scope.userLocation": {
+        "desc": "您的位置将用于自动定位您所在的城市"
+      }
     }
   }
 
@@ -133,16 +140,11 @@ export default class extends wepy.app {
       json.data[key].items = subCollection;
     })
 
-    console.log("cities", json.data);
+    // console.log("cities", json.data);
     // wepy.setStorageSync(ESTATES, json.data);
     this.globalData.estates = json.data;
 
 
-    let currentEstate = wepy.getStorageSync(CURRENT_ESTATE);
-    if (!currentEstate) {
-      currentEstate = json2.data[0];
-      wepy.setStorageSync(CURRENT_ESTATE, currentEstate);
-    }
   }
 }
 

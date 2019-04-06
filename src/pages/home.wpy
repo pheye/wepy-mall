@@ -134,6 +134,12 @@ export default class Home extends wepy.page {
     that.getDiscoverList();
     this.getAdList();
 
+    let currentEstate = wepy.getStorageSync(CURRENT_ESTATE);
+    if (!currentEstate) {
+      // currentEstate = json2.data[0];
+      // wepy.setStorageSync(CURRENT_ESTATE, currentEstate);
+      wepy.navigateTo({url: "/pages/estate"})
+    }
     // this.currentEstate = wepy.getStorageSync(CURRENT_ESTATE);
   }
   computed = {}
