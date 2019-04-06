@@ -51,6 +51,7 @@ export default class extends wepy.app {
       'pages/estate',
       'pages/provider',
       'pages/estate_form',
+      'pages/estate_detail',
     ],
     window: {
       backgroundTextStyle: 'dark',
@@ -96,7 +97,8 @@ export default class extends wepy.app {
         'van-icon': 'components/van/icon/index',
         "van-row": "components/van/row/index",
         "van-col": "components/van/col/index",
-        "van-tree-select": "components/van/tree-select/index"
+        "van-tree-select": "components/van/tree-select/index",
+        "van-cell": "components/van/cell/index"
     },
     permission: {
       "scope.userLocation": {
