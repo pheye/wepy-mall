@@ -1,0 +1,36 @@
+<template>
+  <view>
+    <van-cell title="自提点" value="{{estate.title.rendered}}"/>
+    <van-cell title="小区长" value="{{estate.contact}}"/>
+    <van-cell title="联系电话" value="{{estate.phone}}"/>
+    <van-cell title="地址" value="{{estate.address}}"/>
+    <van-cell title="营业时间" value="{{estate.timerange}}"/>
+  </view>
+</template>
+<script>
+import wepy from 'wepy'
+import api from '@/api/api'
+import tip from '@/utils/tip'
+import {
+  CURRENT_ESTATE,
+} from '@/utils/constant';
+
+export default class Provider extends wepy.page {
+  config = {
+    navigationBarTitleText: '小区长信息',
+  }
+  data = {
+    estate: {}
+  }
+  computed = {}
+  onLoad() {
+    this.init()      
+  }
+  async init() {
+    this.estate= wepy.getStorageSync(CURRENT_ESTATE);
+  }
+}
+
+</script>
+<style lang="less" >
+</style>

@@ -14,6 +14,8 @@ import wepy from 'wepy'
 import {
   CURRENT_ESTATE,
 } from '@/utils/constant';
+import QQMapWX from 'qqmap-wx-jssdk';
+import tip from '@/utils/tip'
 
 export default class Estate extends wepy.page {
   config = {
@@ -25,7 +27,7 @@ export default class Estate extends wepy.page {
     currentEstate: {}
   }
   computed = {}
-  onLoad() {
+  async init () {
     // console.log('es', wepy.$instance.globalData)
     let items = wepy.$instance.globalData.estates.map(item => {
       let children = item.items.map(item2 => ({text: item2.title.rendered, id: item2.id, disabled: false})) 
@@ -35,7 +37,55 @@ export default class Estate extends wepy.page {
 
     this.items = items
     this.currentEstate = wepy.getStorageSync(CURRENT_ESTATE);
-    this.mainActiveIndex = wepy.$instance.globalData.estates.findIndex(item => this.currentEstate.cities[0] == item.id)
+    if (this.currentEstate) {
+      this.mainActiveIndex = wepy.$instance.globalData.estates.findIndex(item => this.currentEstate.cities[0] == item.id)
+    } else {
+      let that = this
+      let res = await wepy.getSetting()
+      if (!res.authSetting['scope.userLocation']) {
+        await wepy.authorize({
+          scope: 'scope.userLocation'
+        })
+      }
+      let loc = await wepy.getLocation()
+      console.log('location', loc)
+
+      let qqmapsdk = new QQMapWX({
+        key: 'C5VBZ-XVRCX-H5F4H-T7WZ4-3RPYV-GTBRP'
+      })
+      qqmapsdk.reverseGeocoder({
+        location: {
+          latitude: loc.latitude,
+          longitude: loc.longitude
+        },
+        success: function (res2) {
+          let city = res2.result.address_component.city
+          let district = res2.result.address_component.district
+          that.mainActiveIndex = items.findIndex(item => district == item.text || district == `${item.text}市`)
+          if (that.mainActiveIndex < 0) {
+            that.mainActiveIndex = items.findIndex(item => city == item.text || city == `${item.text}市` )
+          }
+          if (that.mainActiveIndex < 0) {
+            wx.showToast({
+              title: '未找到您所在城市，请手动选择',
+              icon: 'none',
+              mask: true,
+              duration: 3000
+            });
+            return
+          }
+          that.$apply()
+          console.log('res2', res2.result, that.mainActiveIndex)
+          // that.setData({mainActiveIndex: this.mainActiveIndex})
+        },
+        fail: function (err) {
+          console.log('err', err)
+        }
+      })
+    }
+  }
+  onLoad() {
+    this.init()
   }
   methods = {
     onClickNav({ detail = {} }) {
@@ -44,6 +94,7 @@ export default class Estate extends wepy.page {
     onClickItem({ detail = {} }) {
       this.currentEstate = wepy.$instance.globalData.estates[this.mainActiveIndex].items.find(item => item.id == detail.id)
       wepy.setStorageSync(CURRENT_ESTATE, this.currentEstate)
+      // console.log('estate', this.currentEstate, detail.id, this.mainActiveIndex, wepy.$instance.globalData.estates[this.mainActiveIndex])
       // this.$emit('current-estate', this.currentEstate)
       wepy.navigateBack()
     }

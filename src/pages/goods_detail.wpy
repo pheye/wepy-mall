@@ -97,7 +97,10 @@
     <!--     </view> -->
     <!--   </view> -->
     <!-- </view> -->
-    <view class="spacing"></view>
+    <view>
+      <image src="../images/detail_banner.jpg"  mode="widthFix" />
+    </view>
+    <!-- <view class="spacing"></view> -->
     <view class="block">
       <view class="block_title">商品详情</view>
     </view>

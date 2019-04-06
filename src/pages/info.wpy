@@ -51,24 +51,24 @@
         </navigator>
 
       </view>
-      <view class="item">
-        <view class="item_content">
-          <view class="text">我的优惠券</view>
-        </view>
-        <view class="arrow">&gt;</view>
-      </view>
-      <navigator class="item">
+      <!-- <view class="item"> -->
+      <!--   <view class="item_content"> -->
+      <!--     <view class="text">我的优惠券</view> -->
+      <!--   </view> -->
+      <!--   <view class="arrow">&gt;</view> -->
+      <!-- </view> -->
+      <navigator class="item" url="/pages/estate_detail">
         <view class="item_content">
           <view class="text">联系小区长</view>
         </view>
         <view class="arrow">&gt;</view>
       </navigator>
-      <navigator class="item" @tap="setAddress">
+      <view class="item" @tap="setAddress">
         <view class="item_content">
           <view class="text">我的收货地址</view>
         </view>
         <view class="arrow">&gt;</view>
-      </navigator>
+      </view>
       <navigator class="item" url="/pages/estate_form">
         <view class="item_content">
           <view class="text">小区长招募</view>
