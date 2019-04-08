@@ -362,7 +362,10 @@ export default class goodsDetail extends wepy.page {
       let data = json.data;
       that.detail = data;
       that.detail.short_description = that.detail.short_description_html.replace(/<[^>]*>|/g,'');
-      WxParse.wxParse('detailInfo', 'html', that.detail.description_html, this);
+      // video是shortcode，需要自己手动替换
+      let description_html =  that.detail.description_html.replace(/\[video(.*)mp4=(.*)\]\[\/video\]/g, "<video $1 src=$2 class='video'></video>")
+      // console.log("description_html", description_html);
+      WxParse.wxParse('detailInfo', 'html', description_html, this);
       time.endTime = that.detail.date_on_sale_to;
       time.startTime = that.detail.date_on_sale_from;
       if (json.data.validDate == "0") {
@@ -675,6 +678,9 @@ export default class goodsDetail extends wepy.page {
 
 </script>
 <style lang="less">
+.video {
+  text-align: center;
+}
 .swiper {
   height: 662rpx;
 }
