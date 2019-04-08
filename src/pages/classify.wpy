@@ -14,7 +14,7 @@
       </view>
     </scroll-view>
     <scroll-view class="classify_detail" scroll-y scroll-with-animation="true" style="height:{{windowHeight-50}}px" lower-threshold="100" @scrolltolower="loadMore" >
-        <view class="children" style='padding-left:30rpx;'>
+        <view class="children" style='padding-left:50rpx;'>
           <productCardList :list.sync="childList" ></productCardList>
           <!--加载更多时动画-->
           <bottomLoadMore :show.sync="showLoading" message="正在加载"></bottomLoadMore>

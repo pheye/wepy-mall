@@ -267,6 +267,18 @@ export default class goodsDetail extends wepy.page {
         name:"no6",
         avatarUrl:"../images/no6.png"
       },
+      {
+        name:"no7",
+        avatarUrl:"../images/no7.png"
+      },
+            {
+        name:"no8",
+        avatarUrl:"../images/no8.png"
+      },
+            {
+        name:"no9",
+        avatarUrl:"../images/no9.png"
+      },
 
     ],
     // 随机抽取用户数据

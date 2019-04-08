@@ -33,14 +33,17 @@
          <view><text class="item_rule">库存:{{ item.stock_quantity }}</text></view>
          <van-row>
            <view class="item_price_container">
-               <van-col span="4">
+               <van-col span="4" >
+                  <view><text class="group">团购价</text></view>
+                  <view >
                   <!-- 商品价格 -->
-                 <text class="item_price">{{ '￥' +item.price }}</text>
-                 <!-- 原始价格 -->
-                 <text class="item_origin_price" wx:if="{{item.regular_price && item.regular_price != item.price}}">{{  '￥' +  item.regular_price }}</text>
+                   <text class="item_price">{{ '￥' +item.price }}</text>
+                   <!-- 原始价格 -->
+                   <text class="item_origin_price" wx:if="{{item.regular_price && item.regular_price != item.price}}">{{  '￥' +  item.regular_price }}</text>
+                 </view>
                </van-col>
                <!-- 购买按钮 -->
-                <van-col offset="14" span="4">
+                <van-col offset="12" span="6">
                   <view class="cannot-buy-btn" wx:if="{{item.stock_quantity == 0}}" >售罄</view>
                   <view class="to-buy-btn " wx:else @tap="buy({{item.id}})">立即抢购</view>
                 </van-col>
@@ -122,15 +125,15 @@ export default class productCardList extends wepy.component {
 
 
 .item_container {
-    height: 200rpx;
-    padding:20rpx 20rpx 20rpx 20rpx;
-    border-bottom: 1px solid #ededed;
+    height: 230rpx;
+    padding:20rpx 20rpx 10rpx 20rpx;
+    // border-bottom: 1px solid #ededed;
     .item_image_container {
     .item-img {
      position:relative;
      float:right;
-    width: 190rpx !important;
-    height: 190rpx !important;
+    width: 210rpx !important;
+    height: 210rpx !important;
         .item_tag{
           position:absolute;
           top:10rpx;
@@ -186,19 +189,27 @@ export default class productCardList extends wepy.component {
       background-color:#f1f1f1;
       }
       .item_price_container{
-      margin-top: 20rpx;
+      margin-top: 10rpx;
       padding-right:10rpx;
       height: 50rpx;
-        .item_price {
-          color:#FF9900;
+         .group {
+          font-size:60%;
+          color:#FF3300;
+         }
+         .item_price {
+          font-weight: 600;
+          color:#FF3300;
         }
         .item_origin_price {
           font-size:70%;
           color:#707070;
           text-decoration:line-through;
         }
+
+
         .cannot-buy-btn {
-          width: 110rpx;
+          margin-top: 20rpx;
+          width: 130rpx;
         text-align: center;
         line-height: 55rpx;
         font-weight: 300;
@@ -211,14 +222,15 @@ export default class productCardList extends wepy.component {
         }
 
         .to-buy-btn {
-        width: 110rpx;
+        margin-top: 20rpx;
+        width: 130rpx;
         text-align: center;
         line-height: 55rpx;
         font-weight: 300;
-        background-color: #FF9900;
+        background-color: #FF3300;
         font-size: 25rpx;
         color: #ffffff;
-        border-radius: 10rpx;
+        border-radius: 30rpx;
         }
 
 
