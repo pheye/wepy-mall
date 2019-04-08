@@ -39,7 +39,7 @@
                   <!-- 商品价格 -->
                    <text class="item_price">{{ '￥' +item.price }}</text>
                    <!-- 原始价格 -->
-                   <text class="item_origin_price" wx:if="{{item.regular_price && item.regular_price != item.price}}">{{  '￥' +  item.regular_price }}</text>
+                   <text class="item_origin_price" wx:if="{{item.on_sale}}">{{  '￥' +  item.regular_price }}</text>
                  </view>
                </van-col>
                <!-- 购买按钮 -->
@@ -76,7 +76,7 @@ export default class productCardList extends wepy.component {
         let tags = [];
         this.list.map((item, key) => {
             if (!item.tag) {
-                tags[key] = item.regular_price && item.regular_price != item.price ? '促销' : '';
+                tags[key] = item.on_sale ? '促销' : '';
                 if (item.stock_quantity == 0) {
                     // 缺货不显示tag
                     tags[key] += '';

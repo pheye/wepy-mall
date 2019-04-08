@@ -46,7 +46,7 @@
     <!-- <view style="font-size:40rpx;padding:20rpx;text-align:center;color:black;weight:600;">最新商品</view> -->
 
     <view style="padding-top:20rpx;">
-      <image src="../images/detail_banner.jpg"  mode="widthFix" />
+      <image src="../images/detail_banner.jpg"  mode="widthFix" style="width:100%;"/>
     </view>
     <productCardList :list.sync="discoverList"></productCardList>
     <!--加载更多时动画-->
@@ -109,7 +109,8 @@ export default class Home extends wepy.page {
     const json = await api.queryProducts({
       query: {
         page: currentPage || 1,
-        size: size || 10
+        size: size || 10,
+        on_sale: 1,
       }
     });
     if (json.statusCode == 200) {
