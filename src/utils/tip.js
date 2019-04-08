@@ -17,7 +17,7 @@ export default class Tips {
         mask: true,
         duration: duration
       });
-    }, 300);
+    }, 500);
     if (duration > 0) {
       return new Promise((resolve, reject) => {
         setTimeout(() => {
@@ -58,7 +58,7 @@ export default class Tips {
         mask: true,
         duration: 500
       });
-    }, 300);
+    }, 500);
 
     // 隐藏结束回调
     if (onHide) {

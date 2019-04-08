@@ -12,7 +12,7 @@
       <van-col span="8" class="item_image_container">
         <navigator url="/pages/goods_detail?id={{item.id}}">
           <!-- 商品图片 -->
-           <image class="item-img" src="{{item.images[0].shop_thumbnail}}">
+           <image class="item-img" src="{{item.images[0].shop_single}}">
            <!-- 商品标签 -->
             <text class="item_tag" style ="position:absolute;" wx:if="{{tags[index] != ''}}" >{{tags[index]}}</text>
             <view class="img-textbox" wx:if="{{item.stock_quantity == 0}}" >

@@ -98,7 +98,7 @@
     <!--   </view> -->
     <!-- </view> -->
     <view>
-      <image src="../images/detail_banner.jpg"  mode="widthFix" />
+      <image src="../images/goods_detail_banner.jpg"  mode="widthFix" />
     </view>
     <!-- <view class="spacing"></view> -->
     <view class="block">

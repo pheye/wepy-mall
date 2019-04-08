@@ -43,7 +43,11 @@
     <!-- </view> -->
     <!--发现好商品模块-->
     <!-- <discover :list.sync="discoverList"></discover> -->
-    <view style="font-size:40rpx;padding:20rpx;text-align:center;color:black;weight:600;">最新商品</view>
+    <!-- <view style="font-size:40rpx;padding:20rpx;text-align:center;color:black;weight:600;">最新商品</view> -->
+
+    <view style="padding-top:20rpx;">
+      <image src="../images/detail_banner.jpg"  mode="widthFix" />
+    </view>
     <productCardList :list.sync="discoverList"></productCardList>
     <!--加载更多时动画-->
     <bottomLoadMore :show.sync="showLoading" message="正在加载"></bottomLoadMore>
