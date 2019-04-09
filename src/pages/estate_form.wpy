@@ -16,6 +16,21 @@ export default class EstateForm extends wepy.page {
   }
   onLoad() {
   }
+  methods = {
+    onShareAppMessage: function(res) {
+      return {
+        title: '小区长招募',
+        path: '/pages/estate_form',
+        success: function(res) {
+          // 转发成功
+        },
+        fail: function(res) {
+          // 转发失败
+        }
+      }
+    }
+  }
+
 }
 </script>
 <style lang="less">
