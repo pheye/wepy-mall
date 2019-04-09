@@ -23,6 +23,19 @@
         </swiper-item>
       </block>
     </swiper>
+    <view class="product-tab">
+        <van-tabs active="{{activeTab}}">
+            <van-tab title="20:00促销">
+                <productCardListTab1 :list.sync="tabs1"></productCardListTab1>
+            </van-tab>
+            <van-tab title="21:00促销">
+                <productCardListTab2 :list.sync="tabs2"></productCardListTab2>
+            </van-tab>
+            <van-tab title="明10:00促销">
+                <productCardListTab3 :list.sync="tabs3"></productCardListTab3>
+            </van-tab>
+        </van-tabs>
+    </view>
     <!-- <view class="pos"> -->
     <!--   <view class="search_read_only"> -->
     <!--     <navigator class="search_content" open-type="navigate" url="/pages/search"> -->
@@ -81,6 +94,7 @@ import ProductCardList from "@/components/product_card_list"
 import {
   CURRENT_ESTATE,
 } from '@/utils/constant';
+import moment from 'moment'
 
 export default class Home extends wepy.page {
   config = {
@@ -91,7 +105,11 @@ export default class Home extends wepy.page {
     bottomLoadMore: BottomLoadMore,
     placeholder: Placeholder,
     bombscreen: Bombscreen,
+    // wepy的设计缺陷，同名组件会引用相同数据，必须更名才能使用
     productCardList: ProductCardList,     
+    productCardListTab1: ProductCardList,     
+    productCardListTab2: ProductCardList,     
+    productCardListTab3: ProductCardList,     
   }
   data = {
     indicatorDots: true,
@@ -115,6 +133,11 @@ export default class Home extends wepy.page {
     tps: 0,
     is_show_alert: false, //true,
     currentEstate: {},
+    activeTab: 0,
+    // wepy的缺陷导致无法使用多维数组传值
+    tabs1: [],
+    tabs2: [],
+    tabs3: [],
   }
   async getDiscoverList(currentPage, size) {
     let that = this;
@@ -138,6 +161,27 @@ export default class Home extends wepy.page {
     }
     that.showLoading = false;
   }
+  async getProductsForTabs() {
+    const json = await api.queryProducts({
+      query: {
+        orderby:'meta_value_num',
+        meta_key: '_sale_price_dates_from',
+        order: 'desc'
+      }
+    });
+    if (json.statusCode !== 200) {
+        tip.error(json.data.message);
+        return;
+    }
+    let pm8 = moment().format('YYYY-MM-DD 20:00:00')
+    let pm9 = moment().format('YYYY-MM-DD 21:00:00')
+    let day2am10 = moment().add(1, 'days').format('YYYY-MM-DD 10:00:00')
+    this.tabs1 = json.data.filter(item => item.date_on_sale_from == pm8)
+    this.tabs2 = json.data.filter(item => item.date_on_sale_from == pm9)
+    this.tabs3 = json.data.filter(item => item.date_on_sale_from == day2am10)
+    this.$apply()
+    console.log('json', this.tabsProducts, json.data, day2am10 )
+  }
   async getAdList() {
     const json = await api.getBanners();
     if (json.statusCode == 200) {
@@ -157,6 +201,7 @@ export default class Home extends wepy.page {
       // wepy.setStorageSync(CURRENT_ESTATE, currentEstate);
       wepy.navigateTo({url: "/pages/estate"})
     }
+    this.getProductsForTabs()
     // this.currentEstate = wepy.getStorageSync(CURRENT_ESTATE);
   }
   computed = {}
@@ -267,6 +312,9 @@ export default class Home extends wepy.page {
   }
 }
 
+.product-tab {
+    margin:8rpx 16rpx;
+}
 
 .nav_list {
   color: #404040;
