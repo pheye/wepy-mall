@@ -1,27 +1,35 @@
 <template>
   <view wx:if="{{isShow}}">
-    <view class="hold hold1">
+<!--     <view class="hold hold1">
       <view class="pie pie1" style="transform: rotate({{rotate1}}deg);"></view>
     </view>
     <view class="hold hold2">
       <view class="pie pie2" style="transform: rotate({{rotate2}}deg);"></view>
     </view>
-    <view class="bg"></view>
+    <view class="bg"></view> -->
     <view class="time_box">
-      <view class="time">{{strD>=0?strD+"天":""}}{{strH}}:{{strM}}:{{strS}}</view>
-      <view class="over">促销结束</view>
+      <view class="over">距结束</view>
+      <view class="time">
+      <text class="time_font">{{strD}}</text>
+      <text>{{strD>=0?"天":""}}</text>
+      <text class="time_font">{{strH}}</text>
+      <text>:</text>
+      <text class="time_font">{{strM}}</text>
+      <text>:</text>
+      <text class="time_font">{{strS}}</text>
+      </view>
     </view>
   </view>
   <view wx:if="{{!isShow}}">
-    <view class="hold hold1">
+<!--     <view class="hold hold1">
     <view class="pie pie1" style="transform: rotate({{rotate1}}deg);"></view>
     </view>
     <view class="hold hold2">
     <view class="pie pie2" style="transform: rotate({{rotate2}}deg);"></view>
     </view>
-    <view class="bg_zero"></view>
+    <view class="bg_zero"></view> -->
     <view class="time_box">
-    <view class="time_zero">{{endTxt}}</view>
+<!--     <view class="time_zero">{{endTxt}}</view> -->
     <view class="over">促销结束</view>
   </view>
   </view>
@@ -215,30 +223,41 @@ export default class Timer extends wepy.component {
 }
 
 .time_box {
-  width: 149rpx;
-  height: 149rpx;
-  margin: 6rpx;
-  background: #fff;
-  border-radius: 100rpx;
-  position: absolute;
+  display:flex;
+  // width: 149rpx;
+  // height: 149rpx;
+  // margin: 6rpx;
+  // background: #fff;
+  // border-radius: 100rpx;
+  // position: absolute;
   z-index: 1;
   text-align: center;
   line-height:35rpx;
-
-
   .time {
-    margin-top: 20rpx;
+    // margin-top: 20rpx;
     color: #fe7070;
     font-size: 32rpx;
+    text {
+      font-size: 25rpx;
+      color: #000;
+    }
+    .time_font{
+      margin-left: 10rpx;
+      margin-right:10rpx;
+      padding:8rpx;
+      color: #fff;
+      background-color: #000;
+      border-radius: 10rpx;
+    }
   }
   .time_zero {
-    margin-top: 40rpx;
+    // margin-top: 40rpx;
     color: #BDBDBD;
     font-size: 32rpx;
   }
   .over {
-    font-size: 26rpx;
-    color: #808080;
+  font-size: 25rpx;
+  color: #000;
   }
 }
 

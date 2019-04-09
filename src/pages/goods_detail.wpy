@@ -12,8 +12,16 @@
     <view class="details-msg">
       <view class="details-title">{{detail.name}}</view>
       <view class="details-introduction">{{detail.short_description}}</view>
-      <view class="details_pinfo">
-      <text class="price">￥{{detail.price}} </text> <text class="origin-price">{{detail.regular_price}}</text>
+      <view class="details_pinfo" wx:if="{{detail.on_sale}}">
+        <view class="price_container">
+          <view >
+             <text class="origin-price">￥{{detail.regular_price}}</text>
+          </view>
+          <view >
+              <text class="price">￥{{detail.price}} </text>
+              <text class="group">团购价</text>
+          </view>
+        </view>
         <view class="order_time {{detail.date_on_sale_to ? '' : 'hidden'}}">
           <timer :startTime.sync="startTime" :endTime.sync="endTime"></timer>
         </view>
@@ -21,6 +29,9 @@
           <i class="iconfont icon-share" @tap="onShareAppMessage"></i>
           <text>分享</text>
         </view> -->
+      </view>
+      <view class="detail_not_sale" wx:else>
+        <text class="price">￥{{detail.price}} </text> <text class="origin-price">￥{{detail.regular_price}}</text>
       </view>
       <!-- <view class="baoyou">满{{detail.freeShipNum}}件包邮</view> -->
       <!-- 分享内容 -->
@@ -700,15 +711,16 @@ export default class goodsDetail extends wepy.page {
 }
 
 .origin-price {
-  display:inline-block;
+  // display:inline-block;
   text-decoration:line-through;
-  font-size:24rpx;
+  font-size:20rpx;
   padding-left:16rpx;
 }
 
 .details-msg {
   border-top: 1px solid #ededed;
-  padding: 30rpx 30rpx;
+  padding-top: 30rpx;
+  padding-bottom: 30rpx;
   background: #fff;
   .details-title {
     overflow: hidden;
@@ -727,13 +739,22 @@ export default class goodsDetail extends wepy.page {
     text-align: center;
   }
   .details_pinfo {
-    padding: 20rpx 0;
+    padding: 10rpx 30rpx 10rpx 30rpx;
     position: relative;
     display: flex;
+    justify-content: space-between;
     align-items: center;
+    background-color: #FFDD00;
     .price {
       color: #f73c3c;
       font-size: 45rpx;
+    }
+    .group {
+      background-color: #FF3300;
+      font-size:70%;
+      color: #fff;
+      padding:5rpx;
+      border-radius: 10rpx;
     }
     .other-price {
       font-size: 28rpx;
@@ -756,9 +777,21 @@ export default class goodsDetail extends wepy.page {
       margin-top: 20rpx;
     }
     .order_time {
-      position: absolute;
-      right: 170rpx;
-      top: 0rpx;
+
+    }
+  }
+  .detail_not_sale{
+    padding: 10rpx 30rpx 10rpx 30rpx;
+    position: relative;
+    display: flex;
+    align-items: center;
+    .price {
+      color: #f73c3c;
+      font-size: 45rpx;
+    }
+    .other-price {
+      font-size: 28rpx;
+      padding-left: 40rpx
     }
   }
 }
@@ -1083,6 +1116,8 @@ export default class goodsDetail extends wepy.page {
 
 .share_container{
   padding: 20rpx 20rpx 20rpx 20rpx;
+  margin-left:30rpx;
+  margin-right:30rpx;
   background-color:#FFFFEE;
   border-radius: 10rpx;
   .share_message{
@@ -1093,10 +1128,10 @@ export default class goodsDetail extends wepy.page {
 
         text-align: center;
         line-height: 50rpx;
-        font-weight: 300;
-        background-color: #FF9900;
+        font-weight: 500;
+        background-color: #FFDD00;
         font-size: 22rpx;
-        color: #ffffff;
+        color: #000;
         border-radius: 30rpx;
     }
   .avatarUrl {
