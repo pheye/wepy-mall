@@ -20,7 +20,21 @@ export default class Provider extends wepy.page {
   }
   computed = {}
   onLoad() {
-    this.init()      
+    this.init()
+  }
+  methods = {
+    onShareAppMessage: function(res) {
+      return {
+        title: '供应商招募',
+        path: '/pages/provider',
+        success: function(res) {
+          // 转发成功
+        },
+        fail: function(res) {
+          // 转发失败
+        }
+      }
+    }
   }
   wxParseImgLoad(e) {}
   async init() {

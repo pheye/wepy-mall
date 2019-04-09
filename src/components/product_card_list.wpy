@@ -197,18 +197,19 @@ export default class productCardList extends wepy.component {
           color:#FF3300;
          }
          .item_price {
-          font-weight: 600;
+          font-size:130%;
+          font-weight: 700;
           color:#FF3300;
         }
         .item_origin_price {
-          font-size:70%;
+          font-size:80%;
           color:#707070;
           text-decoration:line-through;
         }
 
 
         .cannot-buy-btn {
-          margin-top: 20rpx;
+          margin-top: 25rpx;
           width: 130rpx;
         text-align: center;
         line-height: 55rpx;
@@ -222,7 +223,7 @@ export default class productCardList extends wepy.component {
         }
 
         .to-buy-btn {
-        margin-top: 20rpx;
+        margin-top: 25rpx;
         width: 130rpx;
         text-align: center;
         line-height: 55rpx;
