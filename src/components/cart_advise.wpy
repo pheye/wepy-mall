@@ -1,15 +1,14 @@
 <template>
-      <view class="share_container" animation="{{moveData}}">
+      <view class="advise_container" animation="{{moveData}}">
           <van-row>
               <van-col span="4">
                 <!-- 订单用户 -->
-                <image class="avatarUrl" src="{{randomUserInfo[0].avatarUrl}}"></image>
+                <image class="advise_avatarUrl" src="{{randomUserInfo[0].avatarUrl}}"></image>
                </van-col>
                <!-- 订单信息-->
-                <van-col  span="20">
-                <text class="share_message" >{{randomUserInfo[0].name}}刚下了一笔订单</text>
-<!--                   <button class="share_btn " data-name="shareBtn" open-type="share">邀请朋友一起抢</button>
- -->                </van-col>
+                <van-col offset="2" span="18">
+                <text class="advise_message" >{{randomUserInfo[0].name}}刚下了一笔订单</text>
+                </van-col>
           </van-row>
     </view>
 </template>
@@ -18,7 +17,7 @@ import wepy from 'wepy';
 import util from '@/utils/util';
 export default class CartAdvise extends wepy.component {
   data = {
-     moveData:null,
+     moveData:"",
         // 模拟用户分享数据（需要根据不同商品ID读取对应的数据）
     shareUserInfo:[
       {
@@ -73,28 +72,38 @@ export default class CartAdvise extends wepy.component {
     }
   }
   components = {
-    // swipeDelete: SwipeDelete
   }
   onLoad() {
-
+    // 动画对象初始化
     var animation = wx.createAnimation({
         duration: 1000,
         timingFunction: 'ease',
     });
 
-    const am = this;
-    this.timer = setInterval(() =>{
-      am.randomUserInfo = util.getRandomArrayElements(this.shareUserInfo, 1);
-      animation.translateX(230).step();
+    let am = this;
+    // 清空计时器
+    clearInterval(am.timer);
+    //生成订单通告
+    function fn(){
+        // 随机读取订单信息
+      am.randomUserInfo = util.getRandomArrayElements(am.shareUserInfo, 1);
+      // 通告飞入
+      animation.translateX(200).step();
       am.moveData = animation.export();
       am.$apply();
+      // 通告飞出（30秒后）
       setTimeout(() =>{
         animation.translateX(0).step();
         am.moveData = animation.export();
         am.$apply();
-      },3000)
-    }, 10000);
-
+      },1000*30);
+      // 清空计时器
+      clearInterval(am.timer);
+      // 递归调用随机1~5分钟内生成订单
+      am.timer = setInterval(fn, Math.floor(Math.random()*1000*60*3));
+    }
+    // 第一次生成订单
+    am.timer = setInterval(fn, 5000);
   }
   computed = {
   }
@@ -109,10 +118,10 @@ export default class CartAdvise extends wepy.component {
 
 </script>
 <style lang="less">
-.share_container{
+.advise_container{
     position: fixed;
   left:-420rpx;
-  top:50rpx;
+  top:100rpx;
   width:300rpx;
   height:40rpx;
   padding: 10rpx 20rpx 20rpx 20rpx;
@@ -124,13 +133,13 @@ export default class CartAdvise extends wepy.component {
   border-radius: 50rpx;
   z-index:10;
 
-  .share_message{
+  .advise_message{
       font-size: 25rpx;
       margin-bottom:30rpx;
       color:#fff;
       }
 
-  .avatarUrl {
+  .advise_avatarUrl {
         width: 50rpx;
         height: 50rpx;
         border-radius: 1000px;
