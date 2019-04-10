@@ -1,0 +1,140 @@
+<template>
+      <view class="share_container" animation="{{moveData}}">
+          <van-row>
+              <van-col span="4">
+                <!-- 订单用户 -->
+                <image class="avatarUrl" src="{{randomUserInfo[0].avatarUrl}}"></image>
+               </van-col>
+               <!-- 订单信息-->
+                <van-col  span="20">
+                <text class="share_message" >{{randomUserInfo[0].name}}刚下了一笔订单</text>
+<!--                   <button class="share_btn " data-name="shareBtn" open-type="share">邀请朋友一起抢</button>
+ -->                </van-col>
+          </van-row>
+    </view>
+</template>
+<script>
+import wepy from 'wepy';
+import util from '@/utils/util';
+export default class CartAdvise extends wepy.component {
+  data = {
+     moveData:null,
+        // 模拟用户分享数据（需要根据不同商品ID读取对应的数据）
+    shareUserInfo:[
+      {
+        name:"no1",
+        avatarUrl:"../images/no1.png"
+      },
+      {
+        name:"no2",
+        avatarUrl:"../images/no2.png"
+      },
+      {
+        name:"no3",
+        avatarUrl:"../images/no3.png"
+      },
+      {
+        name:"no4",
+        avatarUrl:"../images/no4.png"
+      },
+      {
+        name:"no5",
+        avatarUrl:"../images/no5.png"
+      },
+      {
+        name:"no6",
+        avatarUrl:"../images/no6.png"
+      },
+      {
+        name:"no7",
+        avatarUrl:"../images/no7.png"
+      },
+            {
+        name:"no8",
+        avatarUrl:"../images/no8.png"
+      },
+            {
+        name:"no9",
+        avatarUrl:"../images/no9.png"
+      },
+
+    ],
+    // 随机抽取用户数据
+    randomUserInfo:[],
+    timer:'',
+  }
+  props = {
+    type : {
+      default: 0
+    },
+    list: {
+      type: Object,
+      default: []
+    }
+  }
+  components = {
+    // swipeDelete: SwipeDelete
+  }
+  onLoad() {
+
+    var animation = wx.createAnimation({
+        duration: 1000,
+        timingFunction: 'ease',
+    });
+
+    const am = this;
+    this.timer = setInterval(() =>{
+      am.randomUserInfo = util.getRandomArrayElements(this.shareUserInfo, 1);
+      animation.translateX(230).step();
+      am.moveData = animation.export();
+      am.$apply();
+      setTimeout(() =>{
+        animation.translateX(0).step();
+        am.moveData = animation.export();
+        am.$apply();
+      },3000)
+    }, 10000);
+
+  }
+  computed = {
+  }
+
+  methods = {
+
+  }
+
+  events = {
+  }
+}
+
+</script>
+<style lang="less">
+.share_container{
+    position: fixed;
+  left:-420rpx;
+  top:50rpx;
+  width:300rpx;
+  height:40rpx;
+  padding: 10rpx 20rpx 20rpx 20rpx;
+  margin-left:30rpx;
+  margin-right:30rpx;
+  background-color: rgba(0,0,0,0.75) !important;
+  color:#fff;
+  opacity: 0.8;
+  border-radius: 50rpx;
+  z-index:10;
+
+  .share_message{
+      font-size: 25rpx;
+      margin-bottom:30rpx;
+      color:#fff;
+      }
+
+  .avatarUrl {
+        width: 50rpx;
+        height: 50rpx;
+        border-radius: 1000px;
+        margin-right:30rpx;
+  }
+}
+</style>

@@ -16,6 +16,7 @@
           </view>
       </van-col>
     </van-row>
+
     <swiper class="swiper" indicator-active-color="{{indicatorActiveColor}}" indicator-dots="{{indicatorDots}}" autoplay="{{autoplay}}" interval="{{interval}}" duration="{{duration}}" circular="true">
       <block wx:for="{{adList}}" wx:key="key">
         <swiper-item>
@@ -23,7 +24,9 @@
         </swiper-item>
       </block>
     </swiper>
-    <view class="product-tab">
+
+    <cartAdvise></cartAdvise>
+        <view class="product-tab">
         <van-tabs active="{{activeTab}}">
             <van-tab title="20:00促销">
                 <productCardListTab1 :list.sync="tabs1"></productCardListTab1>
@@ -91,6 +94,7 @@ import Bombscreen from '@/components/bomb_screen'
 import BottomLoadMore from "../components/common/bottomLoadMore"
 import Placeholder from "../components/common/placeholder"
 import ProductCardList from "@/components/product_card_list"
+import CartAdvise from "@/components/cart_advise"
 import {
   CURRENT_ESTATE,
 } from '@/utils/constant';
@@ -106,10 +110,11 @@ export default class Home extends wepy.page {
     placeholder: Placeholder,
     bombscreen: Bombscreen,
     // wepy的设计缺陷，同名组件会引用相同数据，必须更名才能使用
-    productCardList: ProductCardList,     
-    productCardListTab1: ProductCardList,     
-    productCardListTab2: ProductCardList,     
-    productCardListTab3: ProductCardList,     
+    productCardList: ProductCardList,
+    productCardListTab1: ProductCardList,
+    productCardListTab2: ProductCardList,
+    productCardListTab3: ProductCardList,
+    cartAdvise: CartAdvise,
   }
   data = {
     indicatorDots: true,
