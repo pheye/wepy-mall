@@ -194,12 +194,12 @@ export default class productCardList extends wepy.component {
       height: 50rpx;
          .group {
           font-size:60%;
-          color:#FF3300;
+          color:#fa8c16;
          }
          .item_price {
           font-size:130%;
           font-weight: 700;
-          color:#FF3300;
+          color:#fa8c16;
         }
         .item_origin_price {
           font-size:80%;
@@ -228,7 +228,7 @@ export default class productCardList extends wepy.component {
         text-align: center;
         line-height: 55rpx;
         font-weight: 300;
-        background-color: #FF3300;
+        background-color:#fa8c16;
         font-size: 25rpx;
         color: #ffffff;
         border-radius: 30rpx;

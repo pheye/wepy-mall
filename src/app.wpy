@@ -84,7 +84,7 @@ export default class extends wepy.app {
         "iconPath": "images/icon_shop_cart.png",
         "selectedIconPath": "images/icon_shop_cart_active.png"
       }, {
-        "pagePath": "pages/canvas_draw",
+        "pagePath": "pages/info",
         "text": "我",
         "iconPath": "images/icon_info.png",
         "selectedIconPath": "images/icon_info_active.png"
