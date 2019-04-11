@@ -52,6 +52,7 @@ export default class extends wepy.app {
       'pages/provider',
       'pages/estate_form',
       'pages/estate_detail',
+      'pages/canvas_draw',
     ],
     window: {
       backgroundTextStyle: 'dark',
@@ -83,7 +84,7 @@ export default class extends wepy.app {
         "iconPath": "images/icon_shop_cart.png",
         "selectedIconPath": "images/icon_shop_cart_active.png"
       }, {
-        "pagePath": "pages/info",
+        "pagePath": "pages/canvas_draw",
         "text": "我",
         "iconPath": "images/icon_info.png",
         "selectedIconPath": "images/icon_info_active.png"
@@ -100,7 +101,8 @@ export default class extends wepy.app {
         "van-tree-select": "components/van/tree-select/index",
         "van-cell": "components/van/cell/index",
         "van-tab": "components/van/tab/index",
-        "van-tabs": "components/van/tabs/index"
+        "van-tabs": "components/van/tabs/index",
+        "canvasdrawer": "components/canvasdrawer/canvasdrawer"
     },
     permission: {
       "scope.userLocation": {
