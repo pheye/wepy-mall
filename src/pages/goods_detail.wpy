@@ -12,8 +12,6 @@
     </swiper>
 <cartAdvise></cartAdvise>
     <view class="details-msg">
-      <view class="details-title">{{detail.name}}</view>
-      <view class="details-introduction">{{detail.short_description}}</view>
       <view class="details_pinfo" wx:if="{{detail.on_sale}}">
         <view class="price_container">
           <view >
@@ -35,6 +33,9 @@
       <view class="detail_not_sale" wx:else>
         <text class="price">￥{{detail.price}} </text> <text class="origin-price">￥{{detail.regular_price}}</text>
       </view>
+      <view class="details-title">{{detail.name}}</view>
+      <view class="details-introduction">{{detail.short_description}}</view>
+
       <!-- <view class="baoyou">满{{detail.freeShipNum}}件包邮</view> -->
       <!-- 分享内容 -->
       <view class="share_container">
@@ -726,10 +727,11 @@ export default class goodsDetail extends wepy.page {
 
 .details-msg {
   border-top: 1px solid #ededed;
-  padding-top: 30rpx;
+  // padding-top: 30rpx;
   padding-bottom: 30rpx;
   background: #fff;
   .details-title {
+    margin-top:30rpx;
     overflow: hidden;
     width: 100%;
     box-sizing: border-box;
@@ -743,6 +745,7 @@ export default class goodsDetail extends wepy.page {
     font-size: 28rpx;
     line-height: 40rpx;
     margin-top: 20rpx;
+    margin-bottom:20rpx;
     text-align: center;
   }
   .details_pinfo {
@@ -1132,7 +1135,7 @@ export default class goodsDetail extends wepy.page {
       margin-bottom:30rpx;
       }
   .share_btn {
-
+        position:relative;
         text-align: center;
         line-height: 50rpx;
         font-weight: 500;
@@ -1154,5 +1157,7 @@ export default class goodsDetail extends wepy.page {
   margin: 0 75rpx;
   border: 1px solid black;
 }
-
+button::after {
+  border: none
+}
 </style>
