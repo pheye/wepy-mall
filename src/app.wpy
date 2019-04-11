@@ -52,7 +52,6 @@ export default class extends wepy.app {
       'pages/provider',
       'pages/estate_form',
       'pages/estate_detail',
-      'pages/canvas_draw',
     ],
     window: {
       backgroundTextStyle: 'dark',
@@ -102,7 +101,8 @@ export default class extends wepy.app {
         "van-cell": "components/van/cell/index",
         "van-tab": "components/van/tab/index",
         "van-tabs": "components/van/tabs/index",
-        "canvasdrawer": "components/canvasdrawer/canvasdrawer"
+        "canvasdrawer": "components/canvasdrawer/canvasdrawer",
+        "van-action-sheet": "components/van/action-sheet/index"
     },
     permission: {
       "scope.userLocation": {

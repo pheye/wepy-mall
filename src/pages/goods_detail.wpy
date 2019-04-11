@@ -2,6 +2,8 @@
 
   <view style="height:{{winHeight}}rpx;overflow:hidden">
     <import src="../plugins/wxParse/wxParse.wxml" />
+    <!-- 底部菜单 -->
+    <van-action-sheet show="{{ show }}" actions="{{ actions }}" bind:close="onClose" bind:select="onSelect"/>
     <!--index.wxml-->
     <swiper indicator-dots="true" autoplay="true" interval="5000" duration="500" indicator-active-color="#ffc452" indicator-color="#efefef" class="swiper">
       <block wx:for="{{detail.images}}" key="item" item="item" wx:key="key">
@@ -53,11 +55,16 @@
               </van-col>
                <!-- 分享按钮 -->
                 <van-col offset="6" span="10">
-                  <button class="share_btn " data-name="shareBtn" open-type="share">邀请朋友一起抢</button>
-                </van-col>
+                   <button class="share_btn " @tap="showSheet" >邀请朋友一起抢</button>
+           </van-col>
           </van-row>
     </view>
     </view>
+      <view class="container">
+<!--     <image src="{{shareImage}}" class="share-image" wx:if="{{shareImage}}"></image>-->
+      <!-- 画布 -->
+     <canvasdrawer painting="{{painting}}" class="canvasdrawer" bind:getImage="eventGetImage"/>
+  </view>
 
 
     <!-- <view class="order_num"> -->
@@ -202,6 +209,7 @@ import WxParse from "../plugins/wxParse/wxParse";
 import CommentList from "../components/comment_list"
 import timer from '@/components/common/timer'
 import CartAdvise from "@/components/cart_advise"
+import CanvasDraw from "@/components/canvas_draw"
 export default class goodsDetail extends wepy.page {
   config = {
     navigationBarTitleText: '商品详情'
@@ -299,7 +307,21 @@ export default class goodsDetail extends wepy.page {
     // 随机抽取用户数据
     randomUserInfo:[],
     painting:{},
-    shareImage: ''
+    shareImage: '',
+    show: false,
+    actions: [
+      {
+        name: '生成卡片分享'
+      },
+      {
+        name: '发送给朋友',
+        openType: 'share'
+      },
+      {
+        name: '禁用选项',
+        disabled: true
+      }
+    ]
 
   }
 
@@ -307,6 +329,8 @@ export default class goodsDetail extends wepy.page {
     commentList: CommentList,
     timer:timer,
     cartAdvise: CartAdvise,
+    canvasDraw: CanvasDraw,
+
   }
   onLoad(option) {
     let that = this;
@@ -340,6 +364,7 @@ export default class goodsDetail extends wepy.page {
   onShow() {
     // this.goodsIsFavorite();
     //创建动画
+
     var animation = wx.createAnimation({
       transformOrigin: "50% 50%",
       duration: 200,
@@ -691,7 +716,145 @@ export default class goodsDetail extends wepy.page {
         }
       }
     },
-
+      onClose() {
+        this.show = false;
+      },
+      onSelect(event) {
+        if(event.detail.name =='生成卡片分享'){
+          this.methods.eventDraw(this)
+        }
+      },
+      showSheet() {
+        this.show = true
+      },
+      eventDraw (value) {
+        let that = value;
+        that.painting= {
+            width: 375,
+            height: 555,
+            clear: true,
+            views: [
+              {
+                type: 'image',
+                url: '../../images/background.jpeg',
+                top: 0,
+                left: 0,
+                width: 375,
+                height: 555
+              },
+              {
+                type: 'image',
+                url: '../../images/no5.png',
+                top: 27.5,
+                left: 29,
+                width: 55,
+                height: 55
+              },
+              {
+                type: 'image',
+                url: '../../images/avatar_cover.jpeg',
+                top: 27.5,
+                left: 29,
+                width: 55,
+                height: 55
+              },
+              {
+                type: 'text',
+                content: '邻区乐',
+                fontSize: 30,
+                color: '#402D16',
+                textAlign: 'left',
+                top: 23,
+                left: 96,
+                bolder: true
+              },
+              {
+                type: 'text',
+                content: '一个小区的快乐',
+                fontSize: 12,
+                color: '#563D20',
+                textAlign: 'left',
+                top: 59.5,
+                left: 96
+              },
+              {
+                type: 'image',
+                url: that.detail.images[0].src,
+                top: 136,
+                left: 42.5,
+                width: 290,
+                height: 290
+              },
+              {
+                type: 'image',
+                url: '../../images/code.png',
+                top: 443,
+                left: 255,
+                width: 68,
+                height: 68
+              },
+              {
+                type: 'text',
+                content: that.detail.name,
+                fontSize: 16,
+                lineHeight: 21,
+                color: '#383549',
+                textAlign: 'left',
+                top: 466,
+                left: 44,
+                width: 287,
+                MaxLineNumber: 2,
+                breakWord: true,
+                bolder: true
+              },
+              {
+                type: 'text',
+                content: '￥' + that.detail.price,
+                fontSize: 19,
+                color: '#E62004',
+                textAlign: 'left',
+                top: 437,
+                left: 44.5,
+                bolder: true
+              },
+              {
+                type: 'text',
+                content: '￥' + that.detail.regular_price,
+                fontSize: 13,
+                color: '#7E7E8B',
+                textAlign: 'left',
+                top: 441,
+                left: 90,
+                textDecoration: 'line-through'
+              }
+            ]
+          }
+        console.log(that.painting)
+      },
+      eventSave () {
+        wx.saveImageToPhotosAlbum({
+          filePath: that.data.shareImage,
+          success (res) {
+            wx.showToast({
+              title: '保存图片成功',
+              icon: 'success',
+              duration: 2000
+            })
+          }
+      })
+      },
+      eventGetImage (event) {
+        console.log(event)
+        wx.hideLoading()
+        const { tempFilePath, errMsg } = event.detail
+        if (errMsg === 'canvasdrawer:ok') {
+          this.shareImage= tempFilePath;
+          // 预览显示图片
+            wx.previewImage({
+              urls: [this.shareImage] // 需要预览的图片http链接列表
+            })
+          }
+      }
   }
 }
 
@@ -1155,7 +1318,7 @@ export default class goodsDetail extends wepy.page {
   width: 600rpx;
   height: 888rpx;
   margin: 0 75rpx;
-  border: 1px solid black;
+
 }
 button::after {
   border: none
