@@ -126,7 +126,8 @@ export default class productCardList extends wepy.component {
 
 .item_container {
     height: 230rpx;
-    padding:20rpx 20rpx 10rpx 20rpx;
+    margin:20rpx 30rpx 20rpx 30rpx;
+    padding:15rpx 0rpx 0rpx 10rpx;
     // border-bottom: 1px solid #ededed;
     .item_image_container {
     .item-img {

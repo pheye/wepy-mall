@@ -61,6 +61,7 @@ export default class CartAdvise extends wepy.component {
     // 随机抽取用户数据
     randomUserInfo:[],
     timer:'',
+    rpx: 0,
   }
   props = {
     type : {
@@ -81,6 +82,15 @@ export default class CartAdvise extends wepy.component {
     });
 
     let am = this;
+
+    //计算rpx比例
+    wx.getSystemInfo({
+      success: function (res) {
+        let rpx = 1 * (res.windowWidth * res.pixelRatio) / (750 * res.pixelRatio);
+        am.rpx = rpx;
+        console.log(am.rpx);
+      }
+    })
     // 清空计时器
     clearInterval(am.timer);
     //生成订单通告
@@ -88,7 +98,7 @@ export default class CartAdvise extends wepy.component {
         // 随机读取订单信息
       am.randomUserInfo = util.getRandomArrayElements(am.shareUserInfo, 1);
       // 通告飞入
-      animation.translateX(200).step();
+      animation.translateX(400*am.rpx).step();
       am.moveData = animation.export();
       am.$apply();
       // 通告飞出（30秒后）

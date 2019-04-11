@@ -751,13 +751,13 @@ export default class goodsDetail extends wepy.page {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: #ffec3d;
+    background-color: #ffd591;
     .price {
-      color: #fa8c16;
+      color: #FF3300;
       font-size: 45rpx;
     }
     .group {
-      background-color: #fa8c16;
+      background-color: #FF3300;
       font-size:70%;
       color: #fff;
       padding:5rpx;
@@ -1136,7 +1136,7 @@ export default class goodsDetail extends wepy.page {
         text-align: center;
         line-height: 50rpx;
         font-weight: 500;
-        background-color: #ffec3d;
+        background-color: #ffd591;
         font-size: 22rpx;
         color: #000;
         border-radius: 30rpx;
