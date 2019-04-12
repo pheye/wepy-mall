@@ -88,7 +88,7 @@ export default class CartAdvise extends wepy.component {
       success: function (res) {
         let rpx = 1 * (res.windowWidth * res.pixelRatio) / (750 * res.pixelRatio);
         am.rpx = rpx;
-        console.log(am.rpx);
+        // console.log(am.rpx);
       }
     })
     // 清空计时器
@@ -109,11 +109,11 @@ export default class CartAdvise extends wepy.component {
       },1000*30);
       // 清空计时器
       clearInterval(am.timer);
-      // 递归调用随机1~5分钟内生成订单
-      am.timer = setInterval(fn, Math.floor(Math.random()*1000*60*3));
+      // 递归调用随机1~3分钟内生成订单
+      am.timer = setInterval(fn, Math.ceil(Math.random()*3)*1000*60);
     }
     // 第一次生成订单
-    am.timer = setInterval(fn, 5000);
+    setTimeout(fn, Math.floor(Math.random()*1000*30));
   }
   computed = {
   }
