@@ -858,8 +858,8 @@ export default class goodsDetail extends wepy.page {
                 fontSize: 12,
                 color: '#7E7E8B',
                 textAlign: 'left',
-                top: 431,
-                left: 100,
+                top: 433,
+                left: 125,
                 textDecoration: 'line-through'
               },
               //
