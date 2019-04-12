@@ -4,7 +4,7 @@
     <view class="shop_item">
       <navigator class="list" wx:for="{{list}}" wx:key="item" url="/pages/goods_detail?id={{item.id}}&purchasetype={{purchasetype}}&special={{special}}">
         <view class="image_box">
-          <image src="{{item.images[0].shop_thumbnail}}">
+          <image src="{{item.images[0].shop_single}}">
           </image>
             <view class="img-textbox" wx:if="{{item.stock_quantity == 0}}" >
                 <p class='img-text' style='padding-top: 25%;font-size: 25px;'>抢光啦!</p>
