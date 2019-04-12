@@ -258,5 +258,10 @@ export default class Classify extends wepy.page {
     }
   }
 }
+.item_container {
+
+    padding:0rpx 0rpx 0rpx 0rpx;
+
+}
 
 </style>

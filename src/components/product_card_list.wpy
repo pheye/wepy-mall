@@ -30,7 +30,11 @@
          <!-- 描述 -->
          <text class="item_desc">{{ descs[index] }}</text>
          <!-- 库存 -->
-         <view><text class="item_rule">库存:{{ item.stock_quantity }}</text></view>
+         <view>
+              <text class="item_rule" wx:if="{{item.stock_quantity != null}}">库存:{{ item.stock_quantity }}</text>
+              <text class="item_rule" wx:elif="{{item.instock }}" >有库存</text>
+              <text class="item_rule" wx:else >没库存</text>
+         </view>
          <van-row>
            <view class="item_price_container">
                <van-col span="4" >
@@ -182,20 +186,30 @@ export default class productCardList extends wepy.component {
       height: 30rpx;
       font-size:70%;
       color:#707070;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+
       }
       .item_rule{
+      margin-top:8rpx;
       height: 30rpx;
       font-size:70%;
-      color:#707070;
-      background-color:#f1f1f1;
+      color:#ffc069;
+      padding-left:10rpx;
+      padding-right: 10rpx;
+      border:1rpx solid #ffc069;
+      border-radius:30rpx
       }
       .item_price_container{
       margin-top: 10rpx;
       padding-right:10rpx;
       height: 50rpx;
          .group {
+
           font-size:60%;
           color:#fa8c16;
+          background-color:#f1f1f1;
          }
          .item_price {
           font-size:130%;
