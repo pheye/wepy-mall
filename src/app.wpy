@@ -100,7 +100,9 @@ export default class extends wepy.app {
         "van-tree-select": "components/van/tree-select/index",
         "van-cell": "components/van/cell/index",
         "van-tab": "components/van/tab/index",
-        "van-tabs": "components/van/tabs/index"
+        "van-tabs": "components/van/tabs/index",
+        "canvasdrawer": "components/canvasdrawer/canvasdrawer",
+        "van-action-sheet": "components/van/action-sheet/index"
     },
     permission: {
       "scope.userLocation": {

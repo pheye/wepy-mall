@@ -1,6 +1,9 @@
 <template>
+
   <view style="height:{{winHeight}}rpx;overflow:hidden">
     <import src="../plugins/wxParse/wxParse.wxml" />
+    <!-- 底部菜单 -->
+    <van-action-sheet show="{{ show }}" actions="{{ actions }}" bind:close="onClose" bind:select="onSelect"/>
     <!--index.wxml-->
     <swiper indicator-dots="true" autoplay="true" interval="5000" duration="500" indicator-active-color="#ffc452" indicator-color="#efefef" class="swiper">
       <block wx:for="{{detail.images}}" key="item" item="item" wx:key="key">
@@ -9,9 +12,8 @@
         </swiper-item>
       </block>
     </swiper>
+<cartAdvise></cartAdvise>
     <view class="details-msg">
-      <view class="details-title">{{detail.name}}</view>
-      <view class="details-introduction">{{detail.short_description}}</view>
       <view class="details_pinfo" wx:if="{{detail.on_sale}}">
         <view class="price_container">
           <view >
@@ -33,6 +35,9 @@
       <view class="detail_not_sale" wx:else>
         <text class="price">￥{{detail.price}} </text> <text class="origin-price">￥{{detail.regular_price}}</text>
       </view>
+      <view class="details-title">{{detail.name}}</view>
+      <view class="details-introduction">{{detail.short_description}}</view>
+
       <!-- <view class="baoyou">满{{detail.freeShipNum}}件包邮</view> -->
       <!-- 分享内容 -->
       <view class="share_container">
@@ -50,11 +55,16 @@
               </van-col>
                <!-- 分享按钮 -->
                 <van-col offset="6" span="10">
-                  <button class="share_btn " data-name="shareBtn" open-type="share">邀请朋友一起抢</button>
-                </van-col>
+                   <button class="share_btn " @tap="showSheet" >邀请朋友一起抢</button>
+           </van-col>
           </van-row>
     </view>
     </view>
+      <view class="container">
+<!--     <image src="{{shareImage}}" class="share-image" wx:if="{{shareImage}}"></image>-->
+      <!-- 画布 -->
+     <canvasdrawer painting="{{painting}}" class="canvasdrawer" bind:getImage="eventGetImage"/>
+  </view>
 
 
     <!-- <view class="order_num"> -->
@@ -112,9 +122,9 @@
       <image src="../images/goods_detail_banner.jpg"  mode="widthFix"  style="width:100%;"/>
     </view>
     <!-- <view class="spacing"></view> -->
-    <view class="block">
+<!--     <view class="block">
       <view class="block_title">商品详情</view>
-    </view>
+    </view> -->
     <view class="big_images">
       <view class="doc">
         <view class="wxParse-p">
@@ -198,6 +208,10 @@ import api from '@/api/api';
 import WxParse from "../plugins/wxParse/wxParse";
 import CommentList from "../components/comment_list"
 import timer from '@/components/common/timer'
+import CartAdvise from "@/components/cart_advise"
+import {
+  USER_INFO
+} from '@/utils/constant';
 export default class goodsDetail extends wepy.page {
   config = {
     navigationBarTitleText: '商品详情'
@@ -294,12 +308,35 @@ export default class goodsDetail extends wepy.page {
     ],
     // 随机抽取用户数据
     randomUserInfo:[],
+    // 画布
+    painting:{},
+    // 分享图片
+    shareImage: '',
+    // 底部菜单显示
+    show: false,
+    actions: [
+      {
+        name: '生成卡片分享'
+      },
+      {
+        name: '发送给朋友',
+        openType: 'share'
+      },
+      {
+        name: '禁用选项',
+        disabled: true
+      }
+    ],
+    // 用户头像
+    avatarUrl: ""
 
   }
 
   components = {
     commentList: CommentList,
-    timer:timer
+    timer:timer,
+    cartAdvise: CartAdvise,
+
   }
   onLoad(option) {
     let that = this;
@@ -310,6 +347,7 @@ export default class goodsDetail extends wepy.page {
     this.canOrder = true;
     this.hidden = true;
     this.winHeight = "100%";
+
     that.detail = {};
     that.$apply();
     //接收上一个页面传过来的参数
@@ -328,11 +366,13 @@ export default class goodsDetail extends wepy.page {
     that.getGoodsDetail();
     // that.addUserBrowser();
     console.log("special===" + this.special);
+    this.shareImage = '';
 
   }
   onShow() {
     // this.goodsIsFavorite();
     //创建动画
+
     var animation = wx.createAnimation({
       transformOrigin: "50% 50%",
       duration: 200,
@@ -684,6 +724,189 @@ export default class goodsDetail extends wepy.page {
         }
       }
     },
+      onClose() {
+        this.show = false;
+      },
+      onSelect(event) {
+        if(event.detail.name =='生成卡片分享'){
+          this.methods.eventDraw(this)
+        }
+      },
+      showSheet() {
+        this.show = true
+      },
+      // 生成卡片
+      eventDraw (value) {
+        let that = value;
+        console.log(that.detail);
+        // 如果已经生成卡片直接预览
+        if (that.shareImage != ''){
+            wx.previewImage({
+              urls: [that.shareImage] // 需要预览的图片http链接列表
+            })
+            return
+        }
+        // 绘制图片loading效果
+        wx.showLoading({
+            title: '绘制分享图片中',
+            mask: true
+          })
+        // 用户头像信息
+        let userInfo = wepy.getStorageSync(USER_INFO);
+        that.avatarUrl = userInfo.avatarUrl;
+        that.painting= {
+            width: 375,
+            height: 555,
+            clear: true,
+            views: [
+              // 背景
+              {
+                type: 'image',
+                url: '../../images/background.jpeg',
+                top: 0,
+                left: 0,
+                width: 375,
+                height: 555
+              },
+              // 用户头像
+              {
+                type: 'image',
+                url: that.avatarUrl,
+                top: 27.5,
+                left: 295,
+                width: 55,
+                height: 55
+              },
+              // 用户头像背景
+              {
+                type: 'image',
+                url: '../../images/avatar_cover.jpeg',
+                top: 27.5,
+                left: 295,
+                width: 55,
+                height: 55
+              },
+              // 标题
+              {
+                type: 'text',
+                content: '邻区乐',
+                fontSize: 30,
+                color: '#402D16',
+                textAlign: 'left',
+                top: 23,
+                left: 56,
+                bolder: true
+              },
+              // 副标题
+              {
+                type: 'text',
+                content: '一个小区的快乐',
+                fontSize: 12,
+                color: '#563D20',
+                textAlign: 'left',
+                top: 59.5,
+                left: 56
+              },
+              // 大图
+              {
+                type: 'image',
+                url: that.detail.images[0].src,
+                top: 126,
+                left: 42.5,
+                width: 290,
+                height: 290
+              },
+              // 二维码
+              {
+                type: 'image',
+                url: '../../images/code.png',
+                top: 433,
+                left: 260,
+                width: 68,
+                height: 68
+              },
+              // 商品名称
+              {
+                type: 'text',
+                content: that.detail.name,
+                fontSize: 16,
+                lineHeight: 21,
+                color: '#383549',
+                textAlign: 'left',
+                top: 456,
+                left: 44,
+                width: 200,
+                MaxLineNumber: 2,
+                breakWord: true,
+                bolder: true
+              },
+              // 商品价格
+              {
+                type: 'text',
+                content: '￥' + that.detail.price,
+                fontSize: 19,
+                color: '#E62004',
+                textAlign: 'left',
+                top: 427,
+                left: 44,
+                bolder: true
+              },
+              // 原价
+              {
+                type: 'text',
+                content: '￥' + that.detail.regular_price,
+                fontSize: 12,
+                color: '#7E7E8B',
+                textAlign: 'left',
+                top: 433,
+                left: 125,
+                textDecoration: 'line-through'
+              },
+              //
+
+            ]
+          }
+          // 如果有限时特卖则显示
+          if(that.detail.date_on_sale_to !=''){
+            let content = {
+                type: 'text',
+                content:  '限时特卖' + that.detail.date_on_sale_to + '结束',
+                fontSize: 15,
+                color: '#E62004',
+                textAlign: 'left',
+                backgroundColor: '#E62004',
+                top: 501,
+                left: 44,
+              }
+            that.painting.views.push(content);
+          }
+        console.log(that.painting)
+      },
+      eventSave () {
+        wx.saveImageToPhotosAlbum({
+          filePath: that.data.shareImage,
+          success (res) {
+            wx.showToast({
+              title: '保存图片成功',
+              icon: 'success',
+              duration: 2000
+            })
+          }
+      })
+      },
+      // 图片生成并预览
+      eventGetImage (event) {
+        console.log(event)
+        wx.hideLoading()
+        const { tempFilePath, errMsg } = event.detail
+        if (errMsg === 'canvasdrawer:ok') {
+          this.shareImage= tempFilePath;
+          // 预览显示图片
+            wx.previewImage({
+              urls: [this.shareImage] // 需要预览的图片http链接列表
+            })
+          }
+      }
   }
 }
 
@@ -719,10 +942,11 @@ export default class goodsDetail extends wepy.page {
 
 .details-msg {
   border-top: 1px solid #ededed;
-  padding-top: 30rpx;
+  // padding-top: 30rpx;
   padding-bottom: 30rpx;
   background: #fff;
   .details-title {
+    margin-top:30rpx;
     overflow: hidden;
     width: 100%;
     box-sizing: border-box;
@@ -736,6 +960,7 @@ export default class goodsDetail extends wepy.page {
     font-size: 28rpx;
     line-height: 40rpx;
     margin-top: 20rpx;
+    margin-bottom:20rpx;
     text-align: center;
   }
   .details_pinfo {
@@ -744,9 +969,9 @@ export default class goodsDetail extends wepy.page {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: #FFDD00;
+    background-color: #ffd591;
     .price {
-      color: #f73c3c;
+      color: #FF3300;
       font-size: 45rpx;
     }
     .group {
@@ -1125,11 +1350,11 @@ export default class goodsDetail extends wepy.page {
       margin-bottom:30rpx;
       }
   .share_btn {
-
+        position:relative;
         text-align: center;
         line-height: 50rpx;
         font-weight: 500;
-        background-color: #FFDD00;
+        background-color: #ffd591;
         font-size: 22rpx;
         color: #000;
         border-radius: 30rpx;
@@ -1141,5 +1366,13 @@ export default class goodsDetail extends wepy.page {
         margin-right:30rpx;
   }
 }
+.share-image {
+  width: 600rpx;
+  height: 888rpx;
+  margin: 0 75rpx;
 
+}
+button::after {
+  border: none
+}
 </style>

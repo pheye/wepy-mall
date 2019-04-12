@@ -1,0 +1,159 @@
+<template>
+      <view class="advise_container" animation="{{moveData}}">
+          <van-row>
+              <van-col span="4">
+                <!-- 订单用户 -->
+                <image class="advise_avatarUrl" src="{{randomUserInfo[0].avatarUrl}}"></image>
+               </van-col>
+               <!-- 订单信息-->
+                <van-col offset="2" span="18">
+                <text class="advise_message" >{{randomUserInfo[0].name}}刚下了一笔订单</text>
+                </van-col>
+          </van-row>
+    </view>
+</template>
+<script>
+import wepy from 'wepy';
+import util from '@/utils/util';
+export default class CartAdvise extends wepy.component {
+  data = {
+     moveData:"",
+        // 模拟用户分享数据（需要根据不同商品ID读取对应的数据）
+    shareUserInfo:[
+      {
+        name:"no1",
+        avatarUrl:"../images/no1.png"
+      },
+      {
+        name:"no2",
+        avatarUrl:"../images/no2.png"
+      },
+      {
+        name:"no3",
+        avatarUrl:"../images/no3.png"
+      },
+      {
+        name:"no4",
+        avatarUrl:"../images/no4.png"
+      },
+      {
+        name:"no5",
+        avatarUrl:"../images/no5.png"
+      },
+      {
+        name:"no6",
+        avatarUrl:"../images/no6.png"
+      },
+      {
+        name:"no7",
+        avatarUrl:"../images/no7.png"
+      },
+            {
+        name:"no8",
+        avatarUrl:"../images/no8.png"
+      },
+            {
+        name:"no9",
+        avatarUrl:"../images/no9.png"
+      },
+
+    ],
+    // 随机抽取用户数据
+    randomUserInfo:[],
+    timer:'',
+    rpx: 0,
+  }
+  props = {
+    type : {
+      default: 0
+    },
+    list: {
+      type: Object,
+      default: []
+    }
+  }
+  components = {
+  }
+  onLoad() {
+    // 动画对象初始化
+    var animation = wx.createAnimation({
+        duration: 1000,
+        timingFunction: 'ease',
+    });
+
+    let am = this;
+
+    //计算rpx比例
+    wx.getSystemInfo({
+      success: function (res) {
+        let rpx = 1 * (res.windowWidth * res.pixelRatio) / (750 * res.pixelRatio);
+        am.rpx = rpx;
+        console.log(am.rpx);
+      }
+    })
+    // 清空计时器
+    clearInterval(am.timer);
+    //生成订单通告
+    function fn(){
+        // 随机读取订单信息
+      am.randomUserInfo = util.getRandomArrayElements(am.shareUserInfo, 1);
+      // 通告飞入
+      animation.translateX(400*am.rpx).step();
+      am.moveData = animation.export();
+      am.$apply();
+      // 通告飞出（30秒后）
+      setTimeout(() =>{
+        animation.translateX(0).step();
+        am.moveData = animation.export();
+        am.$apply();
+      },1000*30);
+      // 清空计时器
+      clearInterval(am.timer);
+      // 递归调用随机1~5分钟内生成订单
+      am.timer = setInterval(fn, Math.floor(Math.random()*1000*60*3));
+    }
+    // 第一次生成订单
+    am.timer = setInterval(fn, 5000);
+  }
+  computed = {
+  }
+
+  methods = {
+
+  }
+
+  events = {
+  }
+}
+
+</script>
+<style lang="less">
+.advise_container{
+    position: fixed;
+  left:-420rpx;
+  top:100rpx;
+  width:300rpx;
+  height:40rpx;
+  padding: 10rpx 20rpx 20rpx 20rpx;
+  margin-left:30rpx;
+  margin-right:30rpx;
+  background-color: rgba(0,0,0,0.75) !important;
+  color:#fff;
+  opacity: 0.8;
+  border-radius: 50rpx;
+  z-index:10;
+
+  .advise_message{
+      font-size: 25rpx;
+      margin-bottom:30rpx;
+      color:#fff;
+      }
+
+  .advise_avatarUrl {
+        width: 50rpx;
+        height: 50rpx;
+        border-radius: 1000px;
+        margin-right:30rpx;
+  }
+}
+</style>
