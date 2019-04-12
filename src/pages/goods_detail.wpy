@@ -14,7 +14,7 @@
     </swiper>
 <cartAdvise></cartAdvise>
     <view class="details-msg">
-      <view class="details_pinfo" wx:if="{{detail.on_sale}}">
+      <view class="details_pinfo" >
         <view class="price_container">
           <view >
              <text class="origin-price">￥{{detail.regular_price}}</text>
@@ -32,9 +32,9 @@
           <text>分享</text>
         </view> -->
       </view>
-      <view class="detail_not_sale" wx:else>
+<!--       <view class="detail_not_sale" wx:else>
         <text class="price">￥{{detail.price}} </text> <text class="origin-price">￥{{detail.regular_price}}</text>
-      </view>
+      </view> -->
       <view class="details-title">{{detail.name}}</view>
       <view class="details-introduction">{{detail.short_description}}</view>
 
@@ -328,7 +328,8 @@ export default class goodsDetail extends wepy.page {
       }
     ],
     // 用户头像
-    avatarUrl: ""
+    avatarUrl: "",
+    qrcode:''
 
   }
 
@@ -364,6 +365,7 @@ export default class goodsDetail extends wepy.page {
       this.special = option.special;
     }
     that.getGoodsDetail();
+    that.getGoodQrcode();
     // that.addUserBrowser();
     console.log("special===" + this.special);
     this.shareImage = '';
@@ -404,6 +406,22 @@ export default class goodsDetail extends wepy.page {
       that.$apply();
     }
   }*/
+  // 动态获取商品的QrCode
+  async getGoodQrcode(){
+    let that = this;
+    const qrcodeJson = await api.getQrcode(that.goodsId);
+    if(qrcodeJson.statusCode == 200) {
+      let qrcode = qrcodeJson.data;
+      that.qrcode =qrcode;
+    }else {
+      if (qrcodeJson.data.message) {
+        tip.error(qrcodeJson.data.message)
+      } else {
+        tip.error('查看QRCode失败')
+      }
+    }
+   that.$apply();
+  }
   async getGoodsDetail() {
     let that = this;
     //const json = await api.getGoodsDetail({
@@ -738,7 +756,6 @@ export default class goodsDetail extends wepy.page {
       // 生成卡片
       eventDraw (value) {
         let that = value;
-        console.log(that.detail);
         // 如果已经生成卡片直接预览
         if (that.shareImage != ''){
             wx.previewImage({
@@ -819,7 +836,7 @@ export default class goodsDetail extends wepy.page {
               // 二维码
               {
                 type: 'image',
-                url: '../../images/code.png',
+                url: that.qrcode,
                 top: 433,
                 left: 260,
                 width: 68,
@@ -896,7 +913,7 @@ export default class goodsDetail extends wepy.page {
       },
       // 图片生成并预览
       eventGetImage (event) {
-        console.log(event)
+        // console.log(event)
         wx.hideLoading()
         const { tempFilePath, errMsg } = event.detail
         if (errMsg === 'canvasdrawer:ok') {
