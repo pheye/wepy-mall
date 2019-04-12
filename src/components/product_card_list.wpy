@@ -15,7 +15,7 @@
            <image class="item-img" src="{{item.images[0].shop_single}}">
            <!-- 商品标签 -->
             <text class="item_tag" style ="position:absolute;" wx:if="{{tags[index] != ''}}" >{{tags[index]}}</text>
-            <view class="img-textbox" wx:if="{{item.stock_quantity == 0}}" >
+            <view class="img-textbox" wx:if="{{!item.in_stock}}" >
                 <p class='img-text' style='padding-top: 25%;font-size: 12px;'>抢光啦!</p>
                 <p class='img-text' style='padding-bottom: 25%;font-size: 8px;'>补货ing...</p>
             </view>
@@ -30,11 +30,11 @@
          <!-- 描述 -->
          <text class="item_desc">{{ descs[index] }}</text>
          <!-- 库存 -->
-         <view><text class="item_rule">库存:{{ item.stock_quantity }}</text></view>
+         <view><text class="item_rule">{{ item.in_stock ? '有库存' : '售罄' }}</text></view>
          <van-row>
            <view class="item_price_container">
                <van-col span="4" >
-                  <view><text class="group">团购价</text></view>
+                  <view><text class="group" wx:if="{{item.on_sale}}">团购价</text></view>
                   <view >
                   <!-- 商品价格 -->
                    <text class="item_price">{{ '￥' +item.price }}</text>
@@ -85,6 +85,14 @@ export default class productCardList extends wepy.component {
                     tags[key] += '精选';
                 }
             }
+        })
+        return tags;
+      },
+      tags2() {
+        let tags = []
+        let pattern = ['express', 'nextday']
+        this.list.map((item, key) => {
+            let selected =  item.tags.filter(item2 => pattern.includes(item2.slug
         })
         return tags;
       },
