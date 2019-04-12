@@ -209,7 +209,9 @@ import WxParse from "../plugins/wxParse/wxParse";
 import CommentList from "../components/comment_list"
 import timer from '@/components/common/timer'
 import CartAdvise from "@/components/cart_advise"
-import CanvasDraw from "@/components/canvas_draw"
+import {
+  USER_INFO
+} from '@/utils/constant';
 export default class goodsDetail extends wepy.page {
   config = {
     navigationBarTitleText: '商品详情'
@@ -306,8 +308,11 @@ export default class goodsDetail extends wepy.page {
     ],
     // 随机抽取用户数据
     randomUserInfo:[],
+    // 画布
     painting:{},
+    // 分享图片
     shareImage: '',
+    // 底部菜单显示
     show: false,
     actions: [
       {
@@ -321,7 +326,9 @@ export default class goodsDetail extends wepy.page {
         name: '禁用选项',
         disabled: true
       }
-    ]
+    ],
+    // 用户头像
+    avatarUrl: ""
 
   }
 
@@ -329,7 +336,6 @@ export default class goodsDetail extends wepy.page {
     commentList: CommentList,
     timer:timer,
     cartAdvise: CartAdvise,
-    canvasDraw: CanvasDraw,
 
   }
   onLoad(option) {
@@ -341,6 +347,7 @@ export default class goodsDetail extends wepy.page {
     this.canOrder = true;
     this.hidden = true;
     this.winHeight = "100%";
+
     that.detail = {};
     that.$apply();
     //接收上一个页面传过来的参数
@@ -359,6 +366,7 @@ export default class goodsDetail extends wepy.page {
     that.getGoodsDetail();
     // that.addUserBrowser();
     console.log("special===" + this.special);
+    this.shareImage = '';
 
   }
   onShow() {
@@ -727,13 +735,31 @@ export default class goodsDetail extends wepy.page {
       showSheet() {
         this.show = true
       },
+      // 生成卡片
       eventDraw (value) {
         let that = value;
+        console.log(that.detail);
+        // 如果已经生成卡片直接预览
+        if (that.shareImage != ''){
+            wx.previewImage({
+              urls: [that.shareImage] // 需要预览的图片http链接列表
+            })
+            return
+        }
+        // 绘制图片loading效果
+        wx.showLoading({
+            title: '绘制分享图片中',
+            mask: true
+          })
+        // 用户头像信息
+        let userInfo = wepy.getStorageSync(USER_INFO);
+        that.avatarUrl = userInfo.avatarUrl;
         that.painting= {
             width: 375,
             height: 555,
             clear: true,
             views: [
+              // 背景
               {
                 type: 'image',
                 url: '../../images/background.jpeg',
@@ -742,22 +768,25 @@ export default class goodsDetail extends wepy.page {
                 width: 375,
                 height: 555
               },
+              // 用户头像
               {
                 type: 'image',
-                url: '../../images/no5.png',
+                url: that.avatarUrl,
                 top: 27.5,
-                left: 29,
+                left: 295,
                 width: 55,
                 height: 55
               },
+              // 用户头像背景
               {
                 type: 'image',
                 url: '../../images/avatar_cover.jpeg',
                 top: 27.5,
-                left: 29,
+                left: 295,
                 width: 55,
                 height: 55
               },
+              // 标题
               {
                 type: 'text',
                 content: '邻区乐',
@@ -765,9 +794,10 @@ export default class goodsDetail extends wepy.page {
                 color: '#402D16',
                 textAlign: 'left',
                 top: 23,
-                left: 96,
+                left: 56,
                 bolder: true
               },
+              // 副标题
               {
                 type: 'text',
                 content: '一个小区的快乐',
@@ -775,24 +805,27 @@ export default class goodsDetail extends wepy.page {
                 color: '#563D20',
                 textAlign: 'left',
                 top: 59.5,
-                left: 96
+                left: 56
               },
+              // 大图
               {
                 type: 'image',
                 url: that.detail.images[0].src,
-                top: 136,
+                top: 126,
                 left: 42.5,
                 width: 290,
                 height: 290
               },
+              // 二维码
               {
                 type: 'image',
                 url: '../../images/code.png',
-                top: 443,
-                left: 255,
+                top: 433,
+                left: 260,
                 width: 68,
                 height: 68
               },
+              // 商品名称
               {
                 type: 'text',
                 content: that.detail.name,
@@ -800,34 +833,52 @@ export default class goodsDetail extends wepy.page {
                 lineHeight: 21,
                 color: '#383549',
                 textAlign: 'left',
-                top: 466,
+                top: 456,
                 left: 44,
-                width: 287,
+                width: 200,
                 MaxLineNumber: 2,
                 breakWord: true,
                 bolder: true
               },
+              // 商品价格
               {
                 type: 'text',
                 content: '￥' + that.detail.price,
                 fontSize: 19,
                 color: '#E62004',
                 textAlign: 'left',
-                top: 437,
-                left: 44.5,
+                top: 427,
+                left: 44,
                 bolder: true
               },
+              // 原价
               {
                 type: 'text',
                 content: '￥' + that.detail.regular_price,
-                fontSize: 13,
+                fontSize: 12,
                 color: '#7E7E8B',
                 textAlign: 'left',
-                top: 441,
-                left: 90,
+                top: 431,
+                left: 100,
                 textDecoration: 'line-through'
-              }
+              },
+              //
+
             ]
+          }
+          // 如果有限时特卖则显示
+          if(that.detail.date_on_sale_to !=''){
+            let content = {
+                type: 'text',
+                content:  '限时特卖' + that.detail.date_on_sale_to + '结束',
+                fontSize: 15,
+                color: '#E62004',
+                textAlign: 'left',
+                backgroundColor: '#E62004',
+                top: 501,
+                left: 44,
+              }
+            that.painting.views.push(content);
           }
         console.log(that.painting)
       },
@@ -843,6 +894,7 @@ export default class goodsDetail extends wepy.page {
           }
       })
       },
+      // 图片生成并预览
       eventGetImage (event) {
         console.log(event)
         wx.hideLoading()
