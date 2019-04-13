@@ -230,7 +230,7 @@ export default class productCardList extends wepy.component {
 
           font-size:60%;
           color:#fa8c16;
-          background-color:#f1f1f1;
+          background-color:#fff7e6;
          }
          .item_price {
           font-size:130%;

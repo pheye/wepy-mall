@@ -337,7 +337,7 @@
     .text-box .group {
           font-size:60%;
           color:#fa8c16;
-          background-color:#f1f1f1;
+          background-color:#fff7e6;
     }
     .text-box .goods-price {
       font-size: 30rpx;
