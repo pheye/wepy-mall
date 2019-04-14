@@ -37,7 +37,7 @@
          <van-row>
            <view class="item_price_container">
                <van-col span="4" >
-                  <view><text class="group" wx:if="{{item.on_sale}}">团购价</text></view>
+                  <view style='height:40rpx;'><text class="group" >{{ item.on_sale ? '秒杀价' : ''}}</text></view>
                   <view >
                   <!-- 商品价格 -->
                    <text class="item_price">{{ '￥' +item.price }}</text>
@@ -48,7 +48,7 @@
                <!-- 购买按钮 -->
                 <van-col offset="12" span="6">
                   <view class="cannot-buy-btn" wx:if="{{item.stock_quantity == 0}}" >售罄</view>
-                  <view class="to-buy-btn " wx:else @tap="buy({{item.id}})">立即抢购</view>
+                  <view class="to-buy-btn " wx:else @tap="buy({{item.id}})">{{ item.on_sale ? '立即秒杀' : '立即抢购'}}</view>
                 </van-col>
             </view>
           </van-row>
@@ -223,11 +223,11 @@ export default class productCardList extends wepy.component {
       margin-right:10rpx;
       }
       .item_price_container{
-      margin-top: 10rpx;
+
       padding-right:10rpx;
       height: 50rpx;
          .group {
-
+          height:50rpx;
           font-size:60%;
           color:#fa8c16;
           background-color:#fff7e6;
@@ -249,11 +249,11 @@ export default class productCardList extends wepy.component {
           width: 130rpx;
         text-align: center;
         line-height: 55rpx;
-        font-weight: 300;
+        font-weight: 700;
         background-color: #808080;
         font-size: 25rpx;
         color: #ffffff;
-        border-radius: 10rpx;
+        border-radius: 30rpx;
         opacity: 0.6;
 
         }
@@ -263,7 +263,7 @@ export default class productCardList extends wepy.component {
         width: 130rpx;
         text-align: center;
         line-height: 55rpx;
-        font-weight: 300;
+        font-weight: 700;
         background-color:#fa8c16;
         font-size: 25rpx;
         color: #ffffff;
