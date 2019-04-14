@@ -26,8 +26,8 @@
     </swiper>
 
     <cartAdvise></cartAdvise>
-        <view class="product-tab">
-        <van-tabs active="{{activeTab}}">
+<!--         <view class="product-tab">
+         <van-tabs active="{{activeTab}}">
             <van-tab title="20:00促销">
                 <productCardListTab1 :list.sync="tabs1"></productCardListTab1>
             </van-tab>
@@ -38,7 +38,44 @@
                 <productCardListTab3 :list.sync="tabs3"></productCardListTab3>
             </van-tab>
         </van-tabs>
+    </view> -->
+    <view class='tabs-box'>
+      <!-- <block wx:for="{{['10','13','16','21']}}" wx:key="id"> -->
+        <view class="tabs-item {{currentTabsIndex == 0 ?'selected':''}} {{tabs0.length == 0?'hidden':''}}" @tap='onTabsItemTap' data-index='0' >
+            <view >10:00</view>
+            <view >{{ 10 >= now ? '促销' : '正在抢购' }}</view>
+        </view>
+        <view class="tabs-item {{currentTabsIndex == 1 ?'selected':''}} {{tabs1.length == 0?'hidden':''}}" @tap='onTabsItemTap' data-index='1' >
+            <view >13:00</view>
+            <view >{{ 13 >= now ? '促销' : '正在抢购' }}</view>
+        </view>
+        <view class="tabs-item {{currentTabsIndex == 2 ?'selected':''}} {{tabs2.length == 0?'hidden':''}}" @tap='onTabsItemTap' data-index='2' >
+            <view >16:00</view>
+            <view >{{ 16 >= now ? '促销' : '正在抢购' }}</view>
+        </view>
+        <view class="tabs-item {{currentTabsIndex == 3 ?'selected':''}} {{tabs3.length == 0?'hidden':''}}" @tap='onTabsItemTap' data-index='3' >
+            <view >21:00</view>
+            <view >{{ 21 >= now ? '促销' : '正在抢购' }}</view>
+        </view>
+      <!-- </block> -->
     </view>
+      <view class='product-detail-box'>
+         <view class='prduct-list' hidden='{{currentTabsIndex !=0}}'>
+         <productCardListTab1 :list.sync="tabs0"></productCardListTab1>
+         </view>
+         <view class='prduct-list' hidden='{{currentTabsIndex !=1}}'>
+         <productCardListTab2 :list.sync="tabs1"></productCardListTab2>
+         </view>
+         <view class='prduct-list' hidden='{{currentTabsIndex !=2}}'>
+         <productCardListTab3 :list.sync="tabs2"></productCardListTab3>
+         </view>
+         <view class='prduct-list' hidden='{{currentTabsIndex !=3}}'>
+         <productCardListTab4 :list.sync="tabs3"></productCardListTab4>
+         </view>
+      </view>
+
+
+
     <!-- <view class="pos"> -->
     <!--   <view class="search_read_only"> -->
     <!--     <navigator class="search_content" open-type="navigate" url="/pages/search"> -->
@@ -73,8 +110,8 @@
     <!-- <discover :list.sync="discoverList"></discover> -->
     <!-- <view style="font-size:40rpx;padding:20rpx;text-align:center;color:black;weight:600;">最新商品</view> -->
 
-    <view style="padding-top:20rpx;">
-      <image src="../images/detail_banner.jpg"  mode="widthFix" style="width:100%;"/>
+    <view style="padding-top:20rpx;padding-left:60rpx;">
+      <image src="../images/detail_banner.png"  mode="widthFix" style="width:100%;"/>
     </view>
     <productCardList :list.sync="discoverList"></productCardList>
     <!--加载更多时动画-->
@@ -114,6 +151,7 @@ export default class Home extends wepy.page {
     productCardListTab1: ProductCardList,
     productCardListTab2: ProductCardList,
     productCardListTab3: ProductCardList,
+    productCardListTab4: ProductCardList,
     cartAdvise: CartAdvise,
   }
   data = {
@@ -140,9 +178,11 @@ export default class Home extends wepy.page {
     currentEstate: {},
     activeTab: 0,
     // wepy的缺陷导致无法使用多维数组传值
+    tabs0: [],
     tabs1: [],
     tabs2: [],
     tabs3: [],
+    currentTabsIndex:0
   }
   async getDiscoverList(currentPage, size) {
     let that = this;
@@ -178,14 +218,18 @@ export default class Home extends wepy.page {
         tip.error(json.data.message);
         return;
     }
-    let pm8 = moment().format('YYYY-MM-DD 20:00:00')
-    let pm9 = moment().format('YYYY-MM-DD 21:00:00')
-    let day2am10 = moment().add(1, 'days').format('YYYY-MM-DD 10:00:00')
-    this.tabs1 = json.data.filter(item => item.date_on_sale_from == pm8)
-    this.tabs2 = json.data.filter(item => item.date_on_sale_from == pm9)
-    this.tabs3 = json.data.filter(item => item.date_on_sale_from == day2am10)
+    let am10 = moment().format('10:00:00')
+    let pm1 = moment().format('13:00:00')
+    let pm4 =  moment().format('16:00:00')
+    let pm9 = moment().format('21:00:00')
+    // let day2am10 = moment().add(1, 'days').format('YYYY-MM-DD 10:00:00')
+    this.tabs0 = json.data.filter(item => item.date_on_sale_from.split(' ')[1] == am10)
+    this.tabs1 = json.data.filter(item => item.date_on_sale_from.split(' ')[1] == pm1)
+    this.tabs2 = json.data.filter(item => item.date_on_sale_from.split(' ')[1] == pm4)
+    this.tabs3 = json.data.filter(item => item.date_on_sale_from.split(' ')[1] == pm9)
+    console.log(this.tabs3);
     this.$apply()
-    console.log('json', this.tabsProducts, json.data, day2am10 )
+    // console.log('json', this.tabsProducts, json.data, now )
   }
   async getAdList() {
     const json = await api.getBanners();
@@ -209,7 +253,12 @@ export default class Home extends wepy.page {
     this.getProductsForTabs()
     // this.currentEstate = wepy.getStorageSync(CURRENT_ESTATE);
   }
-  computed = {}
+  computed = {
+    now() {
+        let now = moment().format('HH')
+        return now;
+      }
+  }
   methods = {
     goToAdvert(url) {
       console.log("url===" + url);
@@ -242,6 +291,10 @@ export default class Home extends wepy.page {
     closeAlert() {
      // tip.alert('关闭');
     },
+    // 点击tab
+    onTabsItemTap(event) {
+      this.currentTabsIndex =event.currentTarget.dataset.index;
+    }
   }
   events = {
   }
@@ -346,24 +399,60 @@ export default class Home extends wepy.page {
   text-align: center;
   color: #333;
 }
-.van-tab__title{
-  color:#000;
-}
+// .van-tab__title{
+//   color:#000;
+// }
 
-.van-tab {
-  background-color:#f5f5f5;
-}
-.van-tab--active {
-  background-color:#fa8c16;
-}
-.van-tabs__line {
-  display: none!important;
-}
-.van-tab__pane--active {
-  background-color:#fa8c16;
-     .item_container{
-        background-color:#fff;
+// .van-tab {
+//   background-color:#f5f5f5;
+// }
+// .van-tab--active {
+//   background-color:#fa8c16;
+// }
+// .van-tabs__line {
+//   display: none!important;
+// }
+// .van-tab__pane--active {
+//   background-color:#fa8c16;
+//      .item_container{
+//         background-color:#fff;
 
+//      }
+// }
+
+.tabs-box{
+      margin:10rpx 20rpx 0 20rpx;
+      display:flex;
+      justify-content:center;
+      height:85rpx;
+  .tabs-item {
+      width:25%;
+      background-color:#f5f5f5;
+      text-align:center;
+      padding-top:5rpx;
+      view{
+      font-size:26rpx;
+      color:#000;
+      font-weight:600;
      }
+  }
+  .tabs-item.selected {
+    background-color:#ffa940;
+  }
 }
+.product-detail-box{
+      overflow: hidden;
+      margin:0rpx 20rpx 0 20rpx;
+      background-color:#ffa940;
+      .prduct-list{
+        margin:20rpx 20rpx 20rpx 20rpx;
+        background-color:#fff;
+        border-radius:10rpx;
+        // .item_container{
+        //   margin:0rpx 0rpx 0rpx 0rpx;
+        //   padding:0prx 10rpx 0prx 10rpx;
+        // }
+      }
+}
+
 </style>

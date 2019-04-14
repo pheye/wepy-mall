@@ -15,12 +15,16 @@
                   {{item.product.name}}
                 </navigator>
               </view>
-              <!--  -->
+              <!-- 库存 -->
               <view class="lable">
-                <view class="goods-lable">{{item.product.sku}}</view>
-                <view class="bo-label" >库存:{{item.product.stock_quantity}}</view>
+                  <view class="bo-label" wx:if="{{item.product.stock_quantity != null}}">库存:{{ item.product.stock_quantity }}</view>
+                  <view class="bo-label" wx:elif="{{item.product.instock }}" >有库存</view>
+                  <view class="bo-label" wx:else >没库存</view>
               </view>
+              <view><text class="group">团购价</text></view>
               <view class="goods-price">¥ {{item.product.price}}</view>
+              <!-- 删除按钮 -->
+              <image class="del-btn"  src="../images/del.png" @tap="handleDelItem({{item}})"  />
               <view class="buy-num">
                 <view class="jian-btn {{item.quantity ==1? 'disabled' : ''}}" catchtap="jianBtnTap" data-index="{{index}}" data-id="{{item.key}}">-</view>
                 <input type="number" value="{{item.quantity}}" disabled/>
@@ -263,7 +267,7 @@
     border-bottom: 1px solid #eee;
     display: flex;
     justify-content: space-between;
-    padding: 70rpx 0 30rpx 0rpx;
+    padding: 30rpx 0 30rpx 0rpx;
     box-sizing: border-box;
     align-items: center;
     position: relative;
@@ -274,31 +278,36 @@
       line-height: 165rpx;
     }
     .img-box {
-      width: 160rpx;
-      height: 160rpx;
+      width: 200rpx;
+      height: 200rpx;
       overflow: hidden;
       margin-right: 20rpx;
       background-color: #d8d8d8;
-      margin-left: 100rpx;
+      margin-left: 80rpx;
     }
     .text-box {
       width: 440rpx;
+      height:200rpx;
       position: relative;
     }
     .text-box .goods-title {
-      font-size: 28rpx;
+      font-size: 30rpx;
+      width:350rpx;
       color: #000;
-      text-overflow: ellipsis;
-      white-space: nowrap;
+      font-weight:700;
+      padding-left: 5rpx;
+      .navigator-hover {
+        text-overflow: ellipsis;
+         white-space: nowrap;
       overflow: hidden;
-      padding: 10rpx 20rpx 5rpx 0;
+      }
     }
     .text-box .lable {
       font-size: 26rpx;
       color: #999;
-      height: 38rpx;
+      height: 30rpx;
       line-height: 38rpx;
-      margin: 8rpx 0 25rpx 0;
+      margin: 20rpx 0 40rpx 0;
     }
     .lable {
       display: flex;
@@ -310,18 +319,40 @@
         font-size: 26rpx
       }
       .bo-label {
-        font-size: 24rpx;
-        background: #e64340;
-        padding: 2rpx 10rpx;
-        color:#fff;
-        border-radius: 2rpx;
-        margin-left: 10rpx;
+        font-size: 20rpx;
+        // background: #e64340;
+        padding: 0rpx 10rpx 0rpx 10rpx;
+        color:#ffc069;
+        // border-radius: 2rpx;
+        // margin-top:8rpx;
 
+        // font-size:70%;
+        // color:#ffc069;
+        // padding-left:10rpx;
+        // padding-right: 10rpx;
+        border:1rpx solid #ffc069;
+        border-radius:30rpx
       }
     }
+    .text-box .group {
+          font-size:60%;
+          color:#fa8c16;
+          background-color:#fff7e6;
+    }
     .text-box .goods-price {
-      font-size: 26rpx;
-      color: #e64340;
+      font-size: 30rpx;
+      color: #fa8c16;
+      font-weight:700;
+    }
+    .text-box .del-btn {
+      width: 32rpx;
+      height: 32rpx;
+      position: absolute;
+      right: 30rpx;
+      top: 0;
+      display: flex;
+      font-size: 24rpx;
+      text-align: center
     }
     .text-box .buy-num {
       width: 164rpx;
@@ -376,8 +407,8 @@
       border: 1rpx solid #ccc;
     }
     .img-box .img {
-      width: 160rpx;
-      height: 160rpx;
+      width: 200rpx;
+      height: 200rpx;
     }
   }
   .jiesuan-box {
