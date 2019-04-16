@@ -21,41 +21,64 @@ export default class CartAdvise extends wepy.component {
         // 模拟用户分享数据（需要根据不同商品ID读取对应的数据）
     shareUserInfo:[
       {
-        name:"no1",
+        name:"李文信",
         avatarUrl:"../images/no1.png"
       },
       {
-        name:"no2",
+        name:"杨惟义",
         avatarUrl:"../images/no2.png"
       },
       {
-        name:"no3",
+        name:"关仁",
         avatarUrl:"../images/no3.png"
       },
       {
-        name:"no4",
+        name:"蔡德霖",
         avatarUrl:"../images/no4.png"
       },
       {
-        name:"no5",
+        name:"王子久",
         avatarUrl:"../images/no5.png"
       },
       {
-        name:"no6",
+        name:"张石山",
         avatarUrl:"../images/no6.png"
       },
       {
-        name:"no7",
+        name:"钱汉祥",
         avatarUrl:"../images/no7.png"
       },
             {
-        name:"no8",
+        name:"孙应吉",
         avatarUrl:"../images/no8.png"
       },
             {
-        name:"no9",
+        name:"吕文达",
         avatarUrl:"../images/no9.png"
+      }, {
+        name:"吴国梁",
+        avatarUrl:"../images/no3.png"
       },
+       {
+        name:"程孝先",
+        avatarUrl:"../images/no2.png"
+      },
+       {
+        name:"朱希亮",
+        avatarUrl:"../images/no5.png"
+      },
+       {
+        name:"玉珍",
+        avatarUrl:"../images/no7.png"
+      },
+       {
+        name:"漫妮",
+        avatarUrl:"../images/no1.png"
+      },{
+        name:"雅静",
+        avatarUrl:"../images/no4.png"
+      }
+
 
     ],
     // 随机抽取用户数据
@@ -132,7 +155,7 @@ export default class CartAdvise extends wepy.component {
     position: fixed;
   left:-420rpx;
   top:100rpx;
-  width:300rpx;
+  width:330rpx;
   height:40rpx;
   padding: 10rpx 20rpx 20rpx 20rpx;
   margin-left:30rpx;
