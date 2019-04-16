@@ -18,7 +18,7 @@
               <!-- 库存 -->
               <view class="lable">
                   <view class="bo-label" wx:if="{{item.product.stock_quantity != null}}">库存:{{ item.product.stock_quantity }}</view>
-                  <view class="bo-label" wx:elif="{{item.product.instock }}" >有库存</view>
+                  <view class="bo-label" wx:elif="{{item.product.in_stock }}" >有库存</view>
                   <view class="bo-label" wx:else >没库存</view>
               </view>
               <view style='height:40rpx;'><text class="group">{{ item.product.on_sale ? '秒杀价' : ''}}</text></view>
@@ -296,10 +296,10 @@
       color: #000;
       font-weight:700;
       padding-left: 5rpx;
-      .navigator-hover {
+      navigator {
         text-overflow: ellipsis;
-         white-space: nowrap;
-      overflow: hidden;
+        white-space: nowrap;
+        overflow: hidden;
       }
     }
     .text-box .lable {
