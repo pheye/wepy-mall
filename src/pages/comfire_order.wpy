@@ -194,9 +194,16 @@ export default class ComfireOrder extends wepy.page {
           return 0;
       }
       this.list = Object.keys(data.cart).map((k) => data.cart[k])
-      this.cartContentsTotal = data.cart_contents_total
+      // this.cartContentsTotal = data.cart_contents_total
       // this.shippingTotal = data.shipping_total;
+      // 没有勾选的不计算总价格
       this.totalPrice = data.cart_total;
+      for (var i = 0; i < this.list.length; i++) {
+          if (!this.list[i].checked) {
+            this.totalPrice -= this.list[i].line_total;
+          }
+      }
+      this.cartContentsTotal = this.totalPrice.toFixed(2);
       this.actualPrice = data.cart_total;
       // this.is_exit_address = data.hasDefaultAddress;
       this.address = data.defaultAddress;
