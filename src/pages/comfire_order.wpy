@@ -318,6 +318,7 @@ console.log("load");
         query:{
           id: json.data.order.id,
           openid: me.openid,
+          ref: 3
         }
       });
 

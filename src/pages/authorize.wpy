@@ -30,7 +30,8 @@ export default class Authorize extends wepy.page {
 
       let token = wepy.getStorageSync(TOKEN);
       let tokenExpired = wepy.getStorageSync(TOKEN_EXPIRED);
-      if (!token || !tokenExpired || moment().isAfter(tokenExpired)) {
+      let me = wepy.getStorageSync(ME);
+      if (!token || !tokenExpired || moment().isAfter(tokenExpired) || !me) {
         wepy.clearStorageSync(TOKEN);
           /*
         let data  = await wepy.getUserInfo()
