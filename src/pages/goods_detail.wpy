@@ -441,6 +441,8 @@ export default class goodsDetail extends wepy.page {
       }
       return finded
     })
+    if (!variant)
+      return;
     this.variantSelected = variant.id
     this.detail.price = variant.price
     this.detail.stock_quantity = variant.stock_quantity
