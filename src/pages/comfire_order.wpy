@@ -465,6 +465,14 @@ console.log("load");
         })
         return false;
       }
+      if (this.chosenShipping.method_id == 'local_pickup' && !this.customer.name) {
+        await tip.confirm('请填写联系人');
+        return false;
+      }
+      if (this.chosenShipping.method_id == 'local_pickup' && !this.customer.phone) {
+        await tip.confirm('请填写联系手机');
+        return false;
+      }
       this.goToPay(fId);
     },
     async setAddress() {
