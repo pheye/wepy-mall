@@ -16,6 +16,7 @@ import {
 } from '@/utils/constant';
 import QQMapWX from 'qqmap-wx-jssdk';
 import tip from '@/utils/tip'
+import api from '@/api/api';
 
 export default class Estate extends wepy.page {
   config = {
@@ -24,12 +25,12 @@ export default class Estate extends wepy.page {
   data = {
     mainActiveIndex: 0,
     items: [],
-    currentEstate: {}
+    currentEstate: {},
+    estates: []
   }
   computed = {}
   async init () {
-    // console.log('es', wepy.$instance.globalData)
-    let items = wepy.$instance.globalData.estates.map(item => {
+    let items = this.estates.map(item => {
       let children = item.items.map(item2 => ({text: item2.title.rendered, id: item2.id, disabled: false})) 
       return {text: item.name, disabled: false, children}
     })
@@ -38,7 +39,7 @@ export default class Estate extends wepy.page {
     this.items = items
     this.currentEstate = wepy.getStorageSync(CURRENT_ESTATE);
     if (this.currentEstate) {
-      this.mainActiveIndex = wepy.$instance.globalData.estates.findIndex(item => this.currentEstate.cities[0] == item.id)
+      this.mainActiveIndex = this.estates.findIndex(item => this.currentEstate.cities[0] == item.id)
     } else {
       let that = this
       let res = await wepy.getSetting()
@@ -66,10 +67,11 @@ export default class Estate extends wepy.page {
             that.mainActiveIndex = items.findIndex(item => city == item.text || city == `${item.text}市` )
           }
           if (that.mainActiveIndex < 0) {
+            that.mainActiveIndex = 0
             wx.showToast({
               title: '未找到您所在城市，请手动选择',
               icon: 'none',
-              mask: true,
+              mask: false,
               duration: 3000
             });
             return
@@ -83,18 +85,47 @@ export default class Estate extends wepy.page {
         }
       })
     }
+    this.$apply()
   }
-  onLoad() {
-    this.init()
+  async loadEstates() {
+    let json = await api.queryCities()
+    if (json.statusCode !== 200) {
+      console.log('获取城市失败');
+      return;
+    }
+    let json2 = await api.queryEstates({})
+    if (json2.statusCode !== 200)  {
+      console.log('获取小区失败');
+      return;
+    }
+
+    let estates = []
+    json.data.map((item, key) => {
+      let subCollection = json2.data.filter(item2 => {
+        return item2.cities.includes(item.id)
+      })
+      subCollection.map((item3, key) => subCollection[key].city = item.name)
+      json.data[key].items = subCollection;
+    })
+
+    // wepy.setStorageSync(ESTATES, json.data);
+    this.estates = json.data;
+    this.$apply()
+    // console.log("cities", this.estates);
+  }
+  async onLoad() {
+    await this.loadEstates()
+    await this.init()
   }
   methods = {
     onClickNav({ detail = {} }) {
       this.mainActiveIndex =  detail.index || 0
     },    
     onClickItem({ detail = {} }) {
-      this.currentEstate = wepy.$instance.globalData.estates[this.mainActiveIndex].items.find(item => item.id == detail.id)
+
+      console.log('estate', detail.id, this.mainActiveIndex, this.estates)
+      this.currentEstate = this.estates[this.mainActiveIndex].items.find(item => item.id == detail.id)
       wepy.setStorageSync(CURRENT_ESTATE, this.currentEstate)
-      // console.log('estate', this.currentEstate, detail.id, this.mainActiveIndex, wepy.$instance.globalData.estates[this.mainActiveIndex])
       // this.$emit('current-estate', this.currentEstate)
       wepy.navigateBack()
     }
