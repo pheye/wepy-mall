@@ -21,61 +21,61 @@ export default class CartAdvise extends wepy.component {
         // 模拟用户分享数据（需要根据不同商品ID读取对应的数据）
     shareUserInfo:[
       {
-        name:"李文信",
+        name:"朝阳",
         avatarUrl:"../images/no1.png"
       },
       {
-        name:"杨惟义",
+        name:"白浅",
         avatarUrl:"../images/no2.png"
       },
       {
-        name:"关仁",
+        name:"艾玛",
         avatarUrl:"../images/no3.png"
       },
       {
-        name:"蔡德霖",
+        name:"无双",
         avatarUrl:"../images/no4.png"
       },
       {
-        name:"王子久",
+        name:"千喜",
         avatarUrl:"../images/no5.png"
       },
       {
-        name:"张石山",
+        name:"凉心",
         avatarUrl:"../images/no6.png"
       },
       {
-        name:"钱汉祥",
+        name:"溺海",
         avatarUrl:"../images/no7.png"
       },
             {
-        name:"孙应吉",
+        name:"匹诺曹",
         avatarUrl:"../images/no8.png"
       },
             {
-        name:"吕文达",
+        name:"心尚温",
         avatarUrl:"../images/no9.png"
       }, {
-        name:"吴国梁",
+        name:"羽化尘",
         avatarUrl:"../images/no3.png"
       },
        {
-        name:"程孝先",
+        name:"心如筝",
         avatarUrl:"../images/no2.png"
       },
        {
-        name:"朱希亮",
+        name:"小鲜肉",
         avatarUrl:"../images/no5.png"
       },
        {
-        name:"玉珍",
+        name:"酒自斟",
         avatarUrl:"../images/no7.png"
       },
        {
-        name:"漫妮",
+        name:"彼得潘",
         avatarUrl:"../images/no1.png"
       },{
-        name:"雅静",
+        name:"荆棘鸟",
         avatarUrl:"../images/no4.png"
       }
 
