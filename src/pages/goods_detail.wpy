@@ -428,6 +428,24 @@ export default class goodsDetail extends wepy.page {
     }
    that.$apply();
   }
+  setDefaultVariant () {
+    if (this.detail.type != 'variable')
+      return;
+    let variant = this.detail.variations.find(v => {
+      let finded = true;
+      for (let attr_key in this.detail.default_attributes) {
+        if (v.attributes[attr_key].option !== this.detail.default_attributes[attr_key].option) {
+          finded = false
+          break
+        }
+      }
+      return finded
+    })
+    this.variantSelected = variant.id
+    this.detail.price = variant.price
+    this.detail.stock_quantity = variant.stock_quantity
+    this.detail.instock = variant.instock
+  }
   async getGoodsDetail() {
     let that = this;
     //const json = await api.getGoodsDetail({
@@ -449,6 +467,7 @@ export default class goodsDetail extends wepy.page {
           this.canOrder = false;
         }
       }
+      this.setDefaultVariant()
     } else {
       if (json.data.message) {
         tip.error(json.data.message)
