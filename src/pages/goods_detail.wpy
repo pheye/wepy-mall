@@ -41,7 +41,8 @@
       <!-- <view class="baoyou">满{{detail.freeShipNum}}件包邮</view> -->
       <!-- 分享内容 -->
       <view class="share_container">
-      <view class="share_message">他们都在买剩余{{detail.stock_quantity}}件</view>
+      <view class="share_message" wx:if="{{detail.stock_quantity != null && detail.stock_quantity != 0}}">他们都在买剩余{{detail.stock_quantity}}件</view>
+      <view class="share_message" wx:else >他们都在买{{ detail.in_stock ? '有库存' : '已售罄' }}</view>
           <van-row>
               <van-col span="2">
                 <!-- 分享用户 -->
@@ -181,8 +182,9 @@
           </view>
           <view class="num_box">
             <view class="title">数量</view>
-            <view class="stock">库存:{{detail.stock_quantity}}件</view>
-            <view class="buy-num">
+            <view class="stock" wx:if="{{detail.stock_quantity != null && detail.stock_quantity != 0}}">库存:{{detail.stock_quantity}}件</view>
+            <view class="stock" wx:else >{{ detail.in_stock ? '有库存' : '已售罄' }}</view>
+            <view class="buy-num" wx:if="{{detail.stock_quantity != 0}}">
               <view class="jian-btn {{item.number==1? 'disabled' : ''}}" catchtap="jianBtnTap" data-index="{{index}}">-</view>
               <input type="number" bindinput="bindOrderNumInput" value="{{orderNum}}" />
               <view class="jia-btn {{item.number >= detail.stock_quantity? 'disabled' : ''}}" catchtap="jiaBtnTap" data-index="{{index}}">+</view>
@@ -328,7 +330,7 @@ export default class goodsDetail extends wepy.page {
     qrcode:'',
     variantSelected: 0
   }
-  
+
   components = {
     commentList: CommentList,
     timer:timer,
@@ -455,6 +457,7 @@ export default class goodsDetail extends wepy.page {
     let time = {};
     if (json.statusCode == 200) {
       let data = json.data;
+      console.log(data);
       that.detail = data;
       that.detail.short_description = that.detail.short_description_html.replace(/<[^>]*>|/g,'');
       // video是shortcode，需要自己手动替换
@@ -504,7 +507,7 @@ export default class goodsDetail extends wepy.page {
       }
     if (this.detail.type == 'variable') {
       query.variation_id = this.variantSelected
-			// for (var attr_key in this.detail.default_attributes) {                              
+			// for (var attr_key in this.detail.default_attributes) {
 			// 	query['variation[' + attr_key + ']'] = this.detail.default_attributes[attr_key].option;
 			// }
     }
@@ -722,7 +725,10 @@ export default class goodsDetail extends wepy.page {
       }
     },
     jiaBtnTap(e) {
-      this.orderNum++;
+      if ((this.orderNum+1) <= this.detail.stock_quantity || !this.detail.stock_quantity) {
+            this.orderNum++;
+        }
+
     },
     jianBtnTap() {
       if (this.orderNum > 1) {

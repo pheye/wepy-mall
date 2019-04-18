@@ -35,7 +35,7 @@ export default class Tips {
       wx.showModal({
         title: title,
         content: text,
-        showCancel: true,
+        showCancel: false,
         success: res => {
           if (res.confirm) {
             resolve(payload);

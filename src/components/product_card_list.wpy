@@ -31,7 +31,8 @@
          <text class="item_desc">{{ descs[index] }}</text>
          <!-- 库存 -->
          <view>
-         <text class="item_rule">{{ item.in_stock ? '有库存' : '售罄' }}</text>
+            <text class="item_rule" wx:if="{{item.stock_quantity != null && item.stock_quantity != 0}}">库存:{{ item.stock_quantity }}</text>
+            <text class="item_rule" wx:else >{{ item.in_stock ? '有库存' : '售罄' }}</text>
           <text wx:for="{{tags2[index]}}" wx:for-item="item2" wx:key="idx2" class="item_rule2" >{{item2}}</text>
          </view>
          <van-row>
