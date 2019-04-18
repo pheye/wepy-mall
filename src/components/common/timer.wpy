@@ -73,13 +73,12 @@ export default class Timer extends wepy.component {
     initTimer(val) {
       console.log(val);
       let date = new Date();
-      this.startTime = moment(val.startTime).format('YYYY-MM-DD h:mm:ss');
-      this.endTime = moment(val.endTime).format('YYYY-MM-DD h:mm:ss');
+      this.startTime = moment(val.startTime).format('YYYY-MM-DD HH:mm:ss');
+      this.endTime = moment(val.endTime).format('YYYY-MM-DD HH:mm:ss');
       //开始时间(.replace(/(-)/g, '/')解决ios 不兼容问题)
       let startDay = new Date(this.startTime.replace(/(-)/g, '/'));
       //结束时间
       let endDay = new Date(this.endTime.replace(/(-)/g, '/'));
-
       //总共时间(单位s)
       let totalDay = Math.floor((endDay - startDay) / 1000);
 
