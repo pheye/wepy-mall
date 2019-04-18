@@ -6,7 +6,7 @@
                 <image class="advise_avatarUrl" src="{{randomUserInfo[0].avatarUrl}}"></image>
                </van-col>
                <!-- 订单信息-->
-                <van-col offset="2" span="18">
+                <van-col offset="1" span="19">
                 <text class="advise_message" >{{randomUserInfo[0].name}}刚下了一笔订单</text>
                 </van-col>
           </van-row>

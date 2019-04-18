@@ -173,10 +173,10 @@
           </view>
         </view>
         <scroll-view scroll-y="true" style="height:400rpx">
-          <view class="rule_box" wx:for="{{detail.goodsSkuNameList}}" item="item" wx:key="key" wx:for-index="ex">
-            <view class="title">{{item.skuName}}</view>
+          <view class="rule_box" wx:if="{{detail.type == 'variable'}}">
+            <view class="title">产品选项</view>
             <view class="items">
-              <view class="item {{item.current?'active':''}}" wx:for="{{item.skuValList}}" item="item" wx:key="key" @tap.stop="selAttr" data-id="{{item.skuValId}}" data-nameid="{{item.skuNameId}}" data-index="{{ex}}">{{item.skuVal}}</view>
+              <view class="item {{variantSelected == item.id ?'active':''}}" wx:for="{{detail.variations}}" item="item" wx:key="index" @tap.stop="selAttr" data-id="{{item.id}}" data-nameid="{{item.id}}" data-index="{{ex}}">{{variantNames[index]}}</view>
             </view>
           </view>
           <view class="num_box">
@@ -325,15 +325,25 @@ export default class goodsDetail extends wepy.page {
     ],
     // 用户头像
     avatarUrl: "",
-    qrcode:''
-
+    qrcode:'',
+    variantSelected: 0
   }
-
+  
   components = {
     commentList: CommentList,
     timer:timer,
     cartAdvise: CartAdvise,
 
+  }
+  computed = {
+    variantNames () {
+      let names = []
+      if (this.detail.type !== 'variable')
+        return []
+      names = this.detail.variations.map(v => Object.keys(v.attributes).map(k => decodeURI(v.attributes[k].name) + v.attributes[k].option).join('/'))
+      // console.log('names', names)
+      return names
+    }
   }
   onLoad(option) {
     let that = this;
@@ -418,6 +428,26 @@ export default class goodsDetail extends wepy.page {
     }
    that.$apply();
   }
+  setDefaultVariant () {
+    if (this.detail.type != 'variable')
+      return;
+    let variant = this.detail.variations.find(v => {
+      let finded = true;
+      for (let attr_key in this.detail.default_attributes) {
+        if (v.attributes[attr_key].option !== this.detail.default_attributes[attr_key].option) {
+          finded = false
+          break
+        }
+      }
+      return finded
+    })
+    if (!variant)
+      return;
+    this.variantSelected = variant.id
+    this.detail.price = variant.price
+    this.detail.stock_quantity = variant.stock_quantity
+    this.detail.instock = variant.instock
+  }
   async getGoodsDetail() {
     let that = this;
     //const json = await api.getGoodsDetail({
@@ -439,6 +469,7 @@ export default class goodsDetail extends wepy.page {
           this.canOrder = false;
         }
       }
+      this.setDefaultVariant()
     } else {
       if (json.data.message) {
         tip.error(json.data.message)
@@ -462,17 +493,23 @@ export default class goodsDetail extends wepy.page {
       }
     });
   }
-  computed = {}
   events = {}
   //加入购物车
   async doTakeCart() {
     let that = this;
-    const json = await api.addCart({
-      query: {
+    let query = {
         product_id: that.goodsId,
         quantity: this.orderNum,
         checked: true
       }
+    if (this.detail.type == 'variable') {
+      query.variation_id = this.variantSelected
+			// for (var attr_key in this.detail.default_attributes) {                              
+			// 	query['variation[' + attr_key + ']'] = this.detail.default_attributes[attr_key].option;
+			// }
+    }
+    const json = await api.addCart({
+      query
     });
     if (json.statusCode == 200) {
       this.winHeight = "100%";
@@ -694,33 +731,41 @@ export default class goodsDetail extends wepy.page {
     },
     selAttr(e) {
       var id = e.currentTarget.dataset.id;
-      var nameid = e.currentTarget.dataset.nameid;
-      var index = e.currentTarget.dataset.index;
-      for (var i = 0; i < this.detail.goodsSkuNameList.length; i++) {
-        var skuValList = this.detail.goodsSkuNameList[i].skuValList;
-        for (var j = 0; j < skuValList.length; j++) {
-          var skuVal = skuValList[j];
-          if (skuVal.skuNameId == nameid) {
-            skuVal.current = false;
-            if (skuVal.skuValId == id) {
-              skuVal.current = true;
-              this.detail.goodsSkuValIds[index] = id;
-              for (var k = 0; k < this.detail.goodsSkuList.length; k++) {
-                var skuValIds = JSON.parse(this.detail.goodsSkuList[k].skuValIds).toArray;
-                console.log("goodskuids..." + this.detail.goodsSkuList[k].skuValIds);
-                console.log("this goodskuids..." + this.detail.goodsSkuValIds);
-                if ("[" + this.detail.goodsSkuValIds.toString() + "]" === this.detail.goodsSkuList[k].skuValIds) {
-                  console.log("goodskuids equals...");
-                  this.detail.stockNum = this.detail.goodsSkuList[k].stockNum;
-                  this.detail.price = this.detail.goodsSkuList[k].price;
-                  this.$apply();
-                  break;
-                }
-              }
-            }
-          }
-        }
-      }
+      // var nameid = e.currentTarget.dataset.nameid;
+      // var index = e.currentTarget.dataset.index;
+
+      let variant = this.detail.variations.find(item => item.id == id)
+      this.detail.price = variant.price
+      this.detail.stock_quantity = variant.stock_quantity
+      this.detail.instock = variant.instock
+
+      this.variantSelected = id
+      this.$apply()
+      // for (var i = 0; i < this.detail.goodsSkuNameList.length; i++) {
+      //   var skuValList = this.detail.goodsSkuNameList[i].skuValList;
+      //   for (var j = 0; j < skuValList.length; j++) {
+      //     var skuVal = skuValList[j];
+      //     if (skuVal.skuNameId == nameid) {
+      //       skuVal.current = false;
+      //       if (skuVal.skuValId == id) {
+      //         skuVal.current = true;
+      //         this.detail.goodsSkuValIds[index] = id;
+      //         for (var k = 0; k < this.detail.goodsSkuList.length; k++) {
+      //           var skuValIds = JSON.parse(this.detail.goodsSkuList[k].skuValIds).toArray;
+      //           console.log("goodskuids..." + this.detail.goodsSkuList[k].skuValIds);
+      //           console.log("this goodskuids..." + this.detail.goodsSkuValIds);
+      //           if ("[" + this.detail.goodsSkuValIds.toString() + "]" === this.detail.goodsSkuList[k].skuValIds) {
+      //             console.log("goodskuids equals...");
+      //             this.detail.stockNum = this.detail.goodsSkuList[k].stockNum;
+      //             this.detail.price = this.detail.goodsSkuList[k].price;
+      //             this.$apply();
+      //             break;
+      //           }
+      //         }
+      //       }
+      //     }
+      //   }
+      // }
     },
     onShareAppMessage: function(res) {
       if (res.from === 'button') {
