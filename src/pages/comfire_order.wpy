@@ -288,6 +288,9 @@ console.log("load");
       params.billing_state = getStateCode('福建');
       params.billing_city = this.estate.city;
       params.billing_address_1 = this.estate.address;
+      if (this.estate.referal) {
+        params.ref = this.estate.referal;
+      }
     } else {
       let address = this.address;
       params.billing_first_name = address.userName;
