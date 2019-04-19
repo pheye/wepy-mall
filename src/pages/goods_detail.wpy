@@ -420,7 +420,7 @@ export default class goodsDetail extends wepy.page {
     const qrcodeJson = await api.getQrcode(that.goodsId);
     if(qrcodeJson.statusCode == 200) {
       let qrcode = qrcodeJson.data;
-      that.qrcode =qrcode;
+      that.qrcode =qrcode.replace(/^http:/, 'https:');
     }else {
       if (qrcodeJson.data.message) {
         tip.error(qrcodeJson.data.message)
