@@ -61,16 +61,16 @@
     </view>
       <view class='product-detail-box'>
          <view class='prduct-list' hidden='{{currentTabsIndex !=0}}'>
-         <productCardListTab1 :list.sync="tabs0"></productCardListTab1>
+         <productCardListTab1 :list.sync="tabs0" :onSale = "onSale"></productCardListTab1>
          </view>
          <view class='prduct-list' hidden='{{currentTabsIndex !=1}}'>
-         <productCardListTab2 :list.sync="tabs1"></productCardListTab2>
+         <productCardListTab2 :list.sync="tabs1" :onSale = "onSale"></productCardListTab2>
          </view>
          <view class='prduct-list' hidden='{{currentTabsIndex !=2}}'>
-         <productCardListTab3 :list.sync="tabs2"></productCardListTab3>
+         <productCardListTab3 :list.sync="tabs2" :onSale = "onSale"></productCardListTab3>
          </view>
          <view class='prduct-list' hidden='{{currentTabsIndex !=3}}'>
-         <productCardListTab4 :list.sync="tabs3"></productCardListTab4>
+         <productCardListTab4 :list.sync="tabs3" :onSale = "onSale"></productCardListTab4>
          </view>
       </view>
 
@@ -184,6 +184,7 @@ export default class Home extends wepy.page {
     tabs3: [],
     currentTabsIndex:0,
     now: 0,
+    onSale: true
   }
   async getDiscoverList(currentPage, size) {
     let that = this;
@@ -250,6 +251,7 @@ export default class Home extends wepy.page {
     this.getProductsForTabs()
     // this.currentEstate = wepy.getStorageSync(CURRENT_ESTATE);
     this.now = moment().format('HH');
+    this.onSale = true;
   }
   computed = {
 
