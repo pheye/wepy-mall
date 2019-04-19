@@ -536,12 +536,16 @@ export default class goodsDetail extends wepy.page {
   //立即购买
   async doTakeOrder() {
     let that = this;
-    const json = await api.addCart({
-      query: {
+    let query = {
         product_id: that.goodsId,
         quantity: this.orderNum,
         checked: true
       }
+    if (this.detail.type == 'variable') {
+      query.variation_id = this.variantSelected
+    }
+    const json = await api.addCart({
+        query
     });
     if (json.statusCode == 200) {
       this.winHeight = "100%";
