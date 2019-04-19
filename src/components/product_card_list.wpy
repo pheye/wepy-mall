@@ -38,7 +38,10 @@
          <van-row>
            <view class="item_price_container">
                <van-col span="4" >
-                  <view style='height:40rpx;'><text class="group" >{{ onSale ? '秒杀价' : '团购价'}}</text></view>
+                  <view style='height:40rpx;'>
+                  <text class="group" wx:if="{{onSale}}">秒杀价</text>
+                  <text class="group" wx:else >{{ item.on_sale ? '团购价' : ''}}</text>
+                  </view>
                   <view >
                   <!-- 商品价格 -->
                    <text class="item_price">{{ '￥' +item.price }}</text>
