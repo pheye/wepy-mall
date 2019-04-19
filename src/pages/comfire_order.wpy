@@ -12,7 +12,7 @@
         </view>
         <view class="text-box">
           <view class="goods-title">{{item.product.name}}</view>
-          <view class="goods-label">{{item.variantName}}</view>
+          <view class="goods-label">{{item.variantNames}}</view>
           <view class="goods-price">¥ {{item.product.price}}</view>
           <view class="buy-num">
             <input type="number" value="{{item.quantity}}" disabled/>
@@ -178,7 +178,7 @@ export default class ComfireOrder extends wepy.page {
     chosenShipping: {},
     estate: {},
     wpnonce: "",
-    variantName:''
+    variantNames:[]
   }
 
   //获取订单详情
@@ -205,9 +205,13 @@ export default class ComfireOrder extends wepy.page {
           }
           // 读取规格数据
           if (this.list[i].product.type == 'variation'){
-           let attrKey = (Object.keys(this.list[i].product.attributes)[0]);
-           this.list[i].variantName = decodeURI(this.list[i].product.attributes[attrKey].name).split('_')[1] + this.list[i].product.attributes[attrKey].option;
+           let attrKey = Object.keys(this.list[i].product.attributes);
+           this.list[i].variantNames = [];
+           for (let j = 0; j < attrKey.length; j++) {
+             this.list[i].variantNames.push(decodeURI(this.list[i].product.attributes[attrKey[j]].name).split('_')[1] + this.list[i].product.attributes[attrKey[j]].option);
+           }
           }
+
       }
       this.cartContentsTotal = this.totalPrice.toFixed(2);
       this.actualPrice = data.cart_total;

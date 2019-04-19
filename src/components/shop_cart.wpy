@@ -16,7 +16,7 @@
                 </navigator>
               </view>
               <!-- 规格参数 -->
-              <view style='height:40rpx;'><text class="variant" wx:if="{{item.variantName != null }}">{{item.variantName}}</text></view>
+              <view style='height:40rpx;'><text class="variant" wx:if="{{item.variantNames != null }}">{{item.variantNames}}</text></view>
               <!-- 库存 -->
               <view class="lable">
                   <view class="bo-label" wx:if="{{item.product.stock_quantity != null && item.product.stock_quantity != 0}}">库存:{{ item.product.stock_quantity }}</view>
@@ -80,7 +80,7 @@
       shippingTotal: 0,
       operating: false,
       allChecked: true,
-      variantName:''
+      variantNames:[]
     }
     fillCart(json) {
       let that = this;
@@ -104,9 +104,13 @@
           }
           // 读取规格数据
           if (this.list[i].product.type == 'variation'){
-           let attrKey = (Object.keys(this.list[i].product.attributes)[0]);
-           this.list[i].variantName = decodeURI(this.list[i].product.attributes[attrKey].name).split('_')[1] + this.list[i].product.attributes[attrKey].option;
+           let attrKey = Object.keys(this.list[i].product.attributes);
+           this.list[i].variantNames = [];
+           for (let j = 0; j < attrKey.length; j++) {
+             this.list[i].variantNames.push(decodeURI(this.list[i].product.attributes[attrKey[j]].name).split('_')[1] + this.list[i].product.attributes[attrKey[j]].option);
+           }
           }
+
         }
         this.totalPrice = this.totalPrice.toFixed(2);
         return 0;
