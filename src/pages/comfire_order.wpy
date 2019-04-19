@@ -186,7 +186,8 @@ export default class ComfireOrder extends wepy.page {
     let that = this;
     const json = await api.getCart({
       query: {
-        shipping: true
+        shipping: true,
+        coupons: true,
       }
     });
     if (json.statusCode == 200) {
