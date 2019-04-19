@@ -12,7 +12,7 @@
         </view>
         <view class="text-box">
           <view class="goods-title">{{item.product.name}}</view>
-          <view class="goods-label">{{item.product.sku}}</view>
+          <view class="goods-label">{{item.variantName}}</view>
           <view class="goods-price">¥ {{item.product.price}}</view>
           <view class="buy-num">
             <input type="number" value="{{item.quantity}}" disabled/>
@@ -178,6 +178,7 @@ export default class ComfireOrder extends wepy.page {
     chosenShipping: {},
     estate: {},
     wpnonce: "",
+    variantName:''
   }
 
   //获取订单详情
@@ -201,6 +202,11 @@ export default class ComfireOrder extends wepy.page {
       for (var i = 0; i < this.list.length; i++) {
           if (!this.list[i].checked) {
             this.totalPrice -= this.list[i].line_total;
+          }
+          // 读取规格数据
+          if (this.list[i].product.type == 'variation'){
+           let attrKey = (Object.keys(this.list[i].product.attributes)[0]);
+           this.list[i].variantName = decodeURI(this.list[i].product.attributes[attrKey].name).split('_')[1] + this.list[i].product.attributes[attrKey].option;
           }
       }
       this.cartContentsTotal = this.totalPrice.toFixed(2);
@@ -687,7 +693,7 @@ console.log("load");
 }
 
 .goods-info .text-box .goods-label {
-  font-size: 26rpx;
+  font-size: 24rpx;
   color: #999;
   height: 38rpx;
   line-height: 38rpx;

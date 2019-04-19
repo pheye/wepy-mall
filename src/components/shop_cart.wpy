@@ -15,13 +15,15 @@
                   {{item.product.name}}
                 </navigator>
               </view>
+              <!-- 规格参数 -->
+              <view style='height:40rpx;'><text class="variant" wx:if="{{item.variantName != null }}">{{item.variantName}}</text></view>
               <!-- 库存 -->
               <view class="lable">
-                  <view class="bo-label" wx:if="{{item.product.stock_quantity != null}}">库存:{{ item.product.stock_quantity }}</view>
+                  <view class="bo-label" wx:if="{{item.product.stock_quantity != null && item.product.stock_quantity != 0}}">库存:{{ item.product.stock_quantity }}</view>
                   <view class="bo-label" wx:elif="{{item.product.in_stock }}" >有库存</view>
-                  <view class="bo-label" wx:else >没库存</view>
+                  <view class="bo-label" wx:else >售罄</view>
               </view>
-              <view style='height:40rpx;'><text class="group">{{ item.product.on_sale ? '秒杀价' : ''}}</text></view>
+              <view style='height:40rpx;'><text class="group">{{ item.product.on_sale ? '团购价' : ''}}</text></view>
               <view class="goods-price">¥ {{item.product.price}}</view>
               <!-- 删除按钮 -->
               <image class="del-btn"  src="../images/del.png" @tap="handleDelItem({{item}})"  />
@@ -77,7 +79,8 @@
       totalPrice: 0,
       shippingTotal: 0,
       operating: false,
-      allChecked: true
+      allChecked: true,
+      variantName:''
     }
     fillCart(json) {
       let that = this;
@@ -88,6 +91,7 @@
             return 0;
         }
         this.list = Object.keys(data.cart).map((k) => data.cart[k])
+        console.log(this.list);
         this.totalPrice = data.cart_total;
         this.shippingTotal = data.shipping_total;
         this.noSelect = true;
@@ -97,6 +101,11 @@
             this.totalPrice -= this.list[i].line_total;
           } else {
             this.noSelect = false;
+          }
+          // 读取规格数据
+          if (this.list[i].product.type == 'variation'){
+           let attrKey = (Object.keys(this.list[i].product.attributes)[0]);
+           this.list[i].variantName = decodeURI(this.list[i].product.attributes[attrKey].name).split('_')[1] + this.list[i].product.attributes[attrKey].option;
           }
         }
         this.totalPrice = this.totalPrice.toFixed(2);
@@ -312,7 +321,11 @@
       color: #999;
       height: 30rpx;
       line-height: 38rpx;
-      margin: 20rpx 0 40rpx 0;
+      margin: 10rpx 0 10rpx 0;
+    }
+    .text-box .variant {
+      font-size: 20rpx;
+      color: #999;
     }
     .lable {
       display: flex;
