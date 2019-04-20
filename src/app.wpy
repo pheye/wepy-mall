@@ -17,6 +17,16 @@ import {
   TOKEN,
   TOKEN_EXPIRED,
 } from '@/utils/constant';
+import fundebug from '@/utils/fundebug.1.1.0.min.js'
+// import bugOut from 'bugout-miniprogram';
+
+// bugOut.usePlugins = true
+// bugOut.init(true, 'f87ae256619008e61cfe2945c0e5bea9', '0.3.0')
+
+fundebug.init(
+{
+    apikey : '31e9e1d6f79fce7ccdd3d215613082394e157b89358fc9caaca3089eaf6797df'
+})
 
 export default class extends wepy.app {
   config = {
@@ -115,7 +125,8 @@ export default class extends wepy.app {
   }
 
   globalData = {
-    estates:[]
+    estates:[],
+    // bugOut: bugOut
   }
 
   constructor() {
@@ -129,6 +140,10 @@ export default class extends wepy.app {
     // this.loadEstates()
     this.checkUsers()
   }
+  // onError(res) {
+     // console.log('on error', res)
+     // bugOut.track(res)
+  // }
   async checkUsers() {
     let me = wepy.getStorageSync(ME);
     console.log("me", me)

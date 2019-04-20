@@ -296,6 +296,7 @@ export default class Index extends wepy.page {
       text-align: center;
       }
       .badge {
+        display:none;
         position: absolute;
         top: 32rpx;
         right: 43rpx;
