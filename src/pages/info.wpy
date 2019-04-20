@@ -17,7 +17,7 @@
 
         <navigator url="/pages/order?type=1">
           <view class="cart_menu">
-              <view class="dot" >15</view>
+              <view class="badge" >15</view>
               <image class="cart_img" src="../images/pay.png"></image>
               <view class="cart_text">待付款</view>
           </view>
@@ -25,7 +25,7 @@
 
         <navigator url="/pages/order?type=2">
           <view class="cart_menu">
-              <view class="dot" >7</view>
+              <view class="badge" >7</view>
               <image class="cart_img" src="../images/post.png"></image>
               <view class="cart_text">待发货</view>
           </view>
@@ -33,7 +33,7 @@
 
         <navigator url="/pages/order?type=2">
           <view class="cart_menu">
-              <view class="dot" >3</view>
+              <view class="badge" >3</view>
               <image class="cart_img" src="../images/ship.png"></image>
               <view class="cart_text">配送中</view>
           </view>
@@ -41,7 +41,7 @@
 
         <navigator url="/pages/order?type=3">
           <view class="cart_menu">
-              <view class="dot" >5</view>
+              <view class="badge" >5</view>
               <image class="cart_img" src="../images/transfer.png"></image>
               <view class="cart_text">交易成功</view>
           </view>
@@ -49,7 +49,7 @@
 
         <navigator url="/pages/order?type=4">
           <view class="cart_menu">
-                <view class="dot" >2</view>
+                <view class="badge" >2</view>
               <image class="cart_img" src="../images/reject.png"></image>
               <view class="cart_text">已取消</view>
           </view>
@@ -295,23 +295,27 @@ export default class Index extends wepy.page {
       margin-top:10rpx;
       text-align: center;
       }
-      .dot {
+      .badge {
         position: absolute;
-        font-size:80%;
-        width: 30rpx;
-        height: 30rpx;
-        font-weight: 700;
-        line-height: 30rpx;
-        text-align: center;
-        align-items:center;
-        justify-content: center;
+        top: 32rpx;
+        right: 43rpx;
+        height: 1.6em;
+        min-width: 1.6em;
+        line-height: 1.6;
+        padding: 0 .4em;
+        font-size: 20px;
+        border-radius: .8em;
         background: #fff;
         border-radius: 100rpx;
         border:4rpx solid;
-        color: #707070;
-        z-index: 999;
-        top: 35rpx;
-        right: 35rpx;
+        color: #fa8c16;
+        text-align: center;
+        white-space: nowrap;
+        transform: translateX(50%) scale(0.5);
+        transform-origin: center;
+        z-index: 10;
+        box-shadow: 0 0 0 2px #fff;
+        box-sizing: border-box;
       }
   }
   .item_content {
