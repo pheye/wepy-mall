@@ -342,8 +342,8 @@ export default class goodsDetail extends wepy.page {
       let names = []
       if (this.detail.type !== 'variable')
         return []
-      names = this.detail.variations.map(v => Object.keys(v.attributes).map(k => decodeURI(v.attributes[k].name) + v.attributes[k].option).join('/'))
-      // console.log('names', names)
+      names = this.detail.variations.map(v => Object.keys(v.attributes).map(k => decodeURI(k).split('_').slice(-1)[0] + ':' + decodeURI(v.attributes[k].option)).join('/'))
+      console.log('names', names)
       return names
     }
   }

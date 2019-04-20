@@ -110,9 +110,9 @@
     <!-- <discover :list.sync="discoverList"></discover> -->
     <!-- <view style="font-size:40rpx;padding:20rpx;text-align:center;color:black;weight:600;">最新商品</view> -->
 
-<!--     <view style="padding-top:20rpx;padding-left:60rpx;">
+    <view style="padding-top:20rpx;padding-left:60rpx;">
       <image src="../images/detail_banner.png"  mode="widthFix" style="width:100%;"/>
-    </view> -->
+    </view>
     <productCardList :list.sync="discoverList"></productCardList>
     <!--加载更多时动画-->
     <bottomLoadMore :show.sync="showLoading" message="正在加载"></bottomLoadMore>

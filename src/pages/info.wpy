@@ -17,6 +17,7 @@
 
         <navigator url="/pages/order?type=1">
           <view class="cart_menu">
+              <view class="badge" >15</view>
               <image class="cart_img" src="../images/pay.png"></image>
               <view class="cart_text">待付款</view>
           </view>
@@ -24,6 +25,7 @@
 
         <navigator url="/pages/order?type=2">
           <view class="cart_menu">
+              <view class="badge" >7</view>
               <image class="cart_img" src="../images/post.png"></image>
               <view class="cart_text">待发货</view>
           </view>
@@ -31,6 +33,7 @@
 
         <navigator url="/pages/order?type=2">
           <view class="cart_menu">
+              <view class="badge" >3</view>
               <image class="cart_img" src="../images/ship.png"></image>
               <view class="cart_text">配送中</view>
           </view>
@@ -38,6 +41,7 @@
 
         <navigator url="/pages/order?type=3">
           <view class="cart_menu">
+              <view class="badge" >5</view>
               <image class="cart_img" src="../images/transfer.png"></image>
               <view class="cart_text">交易成功</view>
           </view>
@@ -45,6 +49,7 @@
 
         <navigator url="/pages/order?type=4">
           <view class="cart_menu">
+                <view class="badge" >2</view>
               <image class="cart_img" src="../images/reject.png"></image>
               <view class="cart_text">已取消</view>
           </view>
@@ -277,7 +282,7 @@ export default class Index extends wepy.page {
   .cart_menu {
           width: 150rpx;
           height: 150rpx;
-
+        position: relative;
       .cart_img {
           margin-left:50rpx;
           margin-top:50rpx;
@@ -289,6 +294,28 @@ export default class Index extends wepy.page {
       color:#707070;
       margin-top:10rpx;
       text-align: center;
+      }
+      .badge {
+        position: absolute;
+        top: 32rpx;
+        right: 43rpx;
+        height: 1.6em;
+        min-width: 1.6em;
+        line-height: 1.6;
+        padding: 0 .4em;
+        font-size: 20px;
+        border-radius: .8em;
+        background: #fff;
+        border-radius: 100rpx;
+        border:4rpx solid;
+        color: #fa8c16;
+        text-align: center;
+        white-space: nowrap;
+        transform: translateX(50%) scale(0.5);
+        transform-origin: center;
+        z-index: 10;
+        box-shadow: 0 0 0 2px #fff;
+        box-sizing: border-box;
       }
   }
   .item_content {
