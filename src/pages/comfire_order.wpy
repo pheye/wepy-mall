@@ -114,11 +114,44 @@
         <view class="right"><input type="number" class="dk-jf" value="{{jf_num}}" bindinput="jfInput" placeholder="输入抵扣积分"/></view>
       </view>
       <view class="spacing"></view>
-      <view class="block">
-        <view class="left tongji">商品金额</view>
-        <view><view class="right price" wx:if="{{jf_num>0}}">商品金额:￥{{cartContentsTotal}} + 运费:￥{{chosenShipping.cost}} - 积分:￥{{reduce_fee}}</view><view class="right price">应付:￥{{cartContentsTotal + chosenShipping.cost - reduce_fee}}<text wx:if="{{chosenShipping.cost != 0}}"> (运费:￥{{chosenShipping.cost}})</text></view></view>
+       <view class="block">
+        <view class="left input_box"><input  value="{{couponId}}" @input="onCouponIdChange" placeholder="优惠券代码" /></view>
+        <view class="right">
+          <button @tap="addCoupons" class="coupons_button">使用优惠券</button>
+        </view>
       </view>
+      <view class="couponsList">
+        <repeat for="{{coupons}}" key="index2" index="index2" item="item2">
+        <view class="coupons_box" >
+              <view class="coupons-info" style='height: 100rpx;'>
+                <view class="coupons-price" style="width:200rpx;">
+                  <text wx:if="{{item2.discount_type == 'percent'}}">-{{item2.amount}}%</text>
+                  <text wx:else if="{{item2.discount_type == 'fixed_cart'}}">-￥{{item2.amount}}</text>
+                </view>
+                <view >
+                  <view class="coupons-title">优惠券：{{item2.description}}</view>
+<!--                   <view class="coupons-label">使用规则:{{}}</view>
+ -->                </view>
+                <!-- 删除按钮 -->
+                <image class="del-btn"  src="../images/del.png" @tap="delCoupons({{item2.code}})"  />
+              </view>
+        </view>
+        </repeat>
+      </view>
+      <view class="count_block">
+        <view class="left tongji">合计</view>
+        <view>
+          <view class="right price" wx:if="{{discountCart>0}}" >
+            <view>商品金额:￥{{cartSubtotal}}</view>
+            <view>+ 运费:￥{{chosenShipping.cost}}</view>
+            <view> - 优惠:￥{{discountCart}}</view>
+          </view>
+          <view class="right price">应付:￥{{cartContentsTotal + chosenShipping.cost}}<text wx:if="{{chosenShipping.cost != 0}}"> (运费:￥{{chosenShipping.cost}})</text></view>
+        </view>
+      </view>
+
     </view>
+
     <view class="pay_box">
       <form report-submit bindsubmit="goPay" >
         <button form-type="submit" class="button type_green">微信支付</button>
@@ -178,7 +211,12 @@ export default class ComfireOrder extends wepy.page {
     chosenShipping: {},
     estate: {},
     wpnonce: "",
-    variantNames:[]
+    variantNames:[],
+    couponId:'',
+    coupons:[],
+    discountCart: 0,
+    cartSubtotal: 0
+
   }
 
   //获取订单详情
@@ -192,14 +230,17 @@ export default class ComfireOrder extends wepy.page {
     });
     if (json.statusCode == 200) {
       let data = json.data;
+      console.log(data);
       if (!data.cart) {
           return 0;
       }
       this.list = Object.keys(data.cart).map((k) => data.cart[k])
       // this.cartContentsTotal = data.cart_contents_total
-      // this.shippingTotal = data.shipping_total;
-      // 没有勾选的不计算总价格
-      this.totalPrice = data.cart_total;
+      // this.shippingTotal = data.shipping_total;没有勾选的不计算总价格
+      //
+      // 总价格
+      this.totalPrice = data.cart_subtotal;
+
       for (var i = 0; i < this.list.length; i++) {
           if (!this.list[i].checked) {
             this.totalPrice -= this.list[i].line_total;
@@ -214,9 +255,17 @@ export default class ComfireOrder extends wepy.page {
           }
 
       }
-      this.cartContentsTotal = this.totalPrice.toFixed(2);
-      this.actualPrice = data.cart_total;
+
+      // 勾选物品总金额
+      this.cartSubtotal = this.totalPrice.toFixed(2);
+      // 折扣价
+      this.discountCart = data.discount_cart;
+      // 优惠券后总金额
+      this.cartContentsTotal = data.cart_contents_total;
       // this.is_exit_address = data.hasDefaultAddress;
+      // 优惠券使用情况
+      this.coupons = Object.keys(data.coupons).map((k) => data.coupons[k])
+
       this.address = data.defaultAddress;
       this.total_jf_num = data.userScore;
       this.can_use_score = data.canUseScore;
@@ -255,11 +304,11 @@ console.log("load");
       tip.error(json.data.msg)
     }
   }
-
   onLoad(option) {
     let that = this;
     this.actualPrice = 0;
     this.totalPrice = 0;
+    this.discountPrice = 0;
     this.total_jf_num = 0;
     this.can_use_score = 0;
     this.deduScore = 0;
@@ -281,11 +330,10 @@ console.log("load");
     if (storgeCustomer) {
       this.customer = storgeCustomer;
     }
+    this.couponId = '';
 
   }
-  computed = {
-
-  }
+  computed = {}
 
   async goToPay(formId) {
     //测试调用接口用，可注释
@@ -329,7 +377,7 @@ console.log("load");
       let pattern = new RegExp('.+(?=</li>)');
       // var pattern=(?<=\b<li>)\w+.+(?=</li>\b);
       let result = pattern.exec(message)[0];
-       tip.noCancel(result);
+       tip.confirm(result,{},"提示",false);
     }
 
     if (json.statusCode  == 200 && json.data.result == 'success') {
@@ -487,11 +535,11 @@ console.log("load");
         return false;
       }
       if (this.chosenShipping.method_id == 'local_pickup' && !this.customer.name) {
-         tip.noCancel('请填写联系人');
+         tip.confirm('请填写联系人',{},"提示",false);
         return false;
       }
       if (this.chosenShipping.method_id == 'local_pickup' && !this.customer.phone) {
-         tip.noCancel('请填写联系手机');
+         tip.confirm('请填写联系手机',{},"提示",false);
         return false;
       }
       this.goToPay(fId);
@@ -578,8 +626,57 @@ console.log("load");
 
       console.log("shipping", e, this.chosenShipping)
       this.$apply()
-    }
-
+    },
+    // 添加优惠券
+    async addCoupons() {
+        let that = this;
+          // 检查输入
+        if(this.couponId){
+          // 输入已经使用的优惠券
+          for (var i = 0; i < that.coupons.length; i++) {
+            if(that.coupons[i].code == this.couponId){
+              tip.confirm('优惠券已添加',{},"提示",false);
+              return;
+            }
+          };
+          // 调用API
+          const json = await api.addCoupons({
+              query: {
+                  coupons: [this.couponId]
+              }
+          });
+          // 优惠券输入正确
+          console.log(json.data.errors);
+          if (json.data.errors.length == 0) {
+              tip.success("成功加入优惠券");
+              that.getOrderDetailInfo();
+          }
+          // 优惠券输入错误
+           else {
+              tip.confirm(json.data.errors[0],{},"提示",false);
+            }
+         }else{
+            tip.confirm('请输入优惠券代码',{},"提示",false);
+         }
+      },
+    // 优惠券输入
+    onCouponIdChange(e) {
+      let couponId = e.detail.value ;
+      this.couponId = couponId;
+    },
+    // 删除
+    async delCoupons(couponId) {
+          let that = this;
+          const json = await api.delCoupons({
+              query: {
+                  coupons: [couponId]
+              }
+          });
+          if (json.data.errors.length == 0) {
+              tip.success("成功删除优惠券");
+              that.getOrderDetailInfo();
+          }
+      }
   }
   events = {
 
@@ -666,7 +763,47 @@ console.log("load");
 .list_box {
   height: 250rpx;
 }
-
+.coupons-info {
+  border-bottom: 1px solid #eee;
+  display: flex;
+  padding: 20rpx;
+  box-sizing: border-box;
+  position: relative;
+  background: #fff;
+  .coupons-price{
+    color: #fa8c16;
+    font-size:120%;
+    font-weight:700;
+    text-align: center;
+    padding:5rpx;
+  }
+  .coupons-title{
+    color: #000;
+    font-weight:700;
+    padding:10rpx;
+  }
+  .coupons-label {
+    font-size:80%;
+  }
+  .del-btn {
+      width: 32rpx;
+      height: 32rpx;
+      position: absolute;
+      right: 30rpx;
+      top: 30rpx;
+      display: flex;
+      font-size: 24rpx;
+      text-align: center;
+    }
+}
+.coupons_button {
+  color: #fff;
+  background-color:#fa8c16;
+  width:200rpx;
+  height:70rpx;
+  font-size:28rpx;
+  font-weight:700;
+}
 .goods-info {
   border-bottom: 1px solid #eee;
   display: flex;
@@ -783,4 +920,26 @@ console.log("load");
   text-align: right;
   color: #666;
 }
+ .count_block {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 30rpx 35rpx 30rpx 40rpx;
+    border-bottom: 1px solid #efefef;
+    background: #fff;
+    .left {
+      color: #000;
+    }
+    .right {
+      color: #9a9a9a;
+      text-align: right;
+    }
+    .price {
+      color: #ea4a3a;
+      font-size: 32rpx;
+    }
+    .tongji {
+      font-size: 32rpx;
+    }
+  }
 </style>
