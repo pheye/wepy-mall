@@ -296,27 +296,8 @@ export default class Index extends wepy.page {
       text-align: center;
       }
       .badge {
-        display:none;
-        position: absolute;
-        top: 32rpx;
-        right: 43rpx;
-        height: 1.6em;
-        min-width: 1.6em;
-        line-height: 1.6;
-        padding: 0 .4em;
-        font-size: 20px;
-        border-radius: .8em;
-        background: #fff;
-        border-radius: 100rpx;
-        border:4rpx solid;
-        color: #fa8c16;
-        text-align: center;
-        white-space: nowrap;
-        transform: translateX(50%) scale(0.5);
-        transform-origin: center;
-        z-index: 10;
-        box-shadow: 0 0 0 2px #fff;
-        box-sizing: border-box;
+        top: 30rpx;
+        right: 30rpx;
       }
   }
   .item_content {

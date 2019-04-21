@@ -183,7 +183,7 @@ export default class extends wepy.app {
   async initCart() {
     const json = await api.getCart()
 
-    if (json.statusCode !== 200) 
+    if (json.statusCode !== 200)
         return;
     this.globalData.cart = json.data
   }

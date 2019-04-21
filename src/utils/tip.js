@@ -30,12 +30,12 @@ export default class Tips {
   /**
    * 弹出确认窗口
    */
-  static confirm(text, payload = {}, title = "提示") {
+  static confirm(text, payload = {}, title = "提示", showCancel = true) {
     return new Promise((resolve, reject) => {
       wx.showModal({
         title: title,
         content: text,
-        showCancel: true,
+        showCancel: showCancel,
         success: res => {
           if (res.confirm) {
             resolve(payload);
@@ -49,28 +49,7 @@ export default class Tips {
       });
     });
   }
-  /**
-   * 弹出确认窗口(无取消)
-   */
-  static noCancel(text, payload = {}, title = "提示") {
-    return new Promise((resolve, reject) => {
-      wx.showModal({
-        title: title,
-        content: text,
-        showCancel: false,
-        success: res => {
-          if (res.confirm) {
-            resolve(payload);
-          } else if (res.cancel) {
-            reject(payload);
-          }
-        },
-        fail: res => {
-          reject(payload);
-        }
-      });
-    });
-  }
+
   static toast(title, onHide, icon = "success") {
     setTimeout(() => {
       wx.showToast({
