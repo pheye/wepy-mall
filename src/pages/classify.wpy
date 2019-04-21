@@ -34,9 +34,10 @@ import wepy from 'wepy';
 import api from '@/api/api';
 import {
   SYSTEM_INFO,
-  SEL_CLASS_CODE
+  SEL_CLASS_CODE,
+  CART,
 } from '@/utils/constant';
-
+import PubSub from 'pubsub-js'
 import tip from '@/utils/tip'
 import BottomLoadMore from "../components/common/bottomLoadMore"
 import Placeholder from "../components/common/placeholder"
@@ -128,6 +129,7 @@ export default class Classify extends wepy.page {
 
   onShow() {
     this.getRootCateTopLevel();
+    PubSub.publish(CART)
   }
 
   computed = {

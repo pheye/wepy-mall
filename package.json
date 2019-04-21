@@ -17,6 +17,7 @@
   "license": "MIT",
   "dependencies": {
     "moment": "^2.24.0",
+    "pubsub-js": "^1.7.0",
     "qqmap-wx-jssdk": "^1.0.0",
     "vant-weapp": "^0.5.7",
     "wepy": "^1.7.2",

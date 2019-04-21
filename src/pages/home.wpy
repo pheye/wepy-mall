@@ -132,8 +132,10 @@ import BottomLoadMore from "../components/common/bottomLoadMore"
 import Placeholder from "../components/common/placeholder"
 import ProductCardList from "@/components/product_card_list"
 import CartAdvise from "@/components/cart_advise"
+import PubSub from 'pubsub-js'
 import {
   CURRENT_ESTATE,
+  CART,
 } from '@/utils/constant';
 import moment from 'moment'
 
@@ -297,6 +299,7 @@ export default class Home extends wepy.page {
   }
   onShow () {
     this.currentEstate = wepy.getStorageSync(CURRENT_ESTATE);
+    PubSub.publish(CART)
   }
   //加载更多
   onReachBottom() {
