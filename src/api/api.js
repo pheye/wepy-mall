@@ -54,8 +54,8 @@ const cartUpdateNum = (params) => request(`${host}/wp-json/w2w/v1/cart/update_qu
 //直接购买商品
 const preOrder = (params) => wxRequest(params, apiMall + '/api/mall/goodsOrder/commitData');
 
-// 我的订单
-const getMyOrders = (params) => request(`${host}/wp-json/w2w/v1/customers/orderinfo`, params);
+// 订单状态汇总
+const getOrderStatics = (params) => request(`${host}/wp-json/w2w/v1/customers/orderinfo`, params);
 
 //支付前生成订单
 const saveByCart = ({query}) => request(`${host}/wp-json/w2w/v1/orders`, {query, method: 'POST', header: {'content-type': 'application/x-www-form-urlencoded'}});
@@ -252,5 +252,5 @@ export default {
   queryPages,
   addCoupons,
   delCoupons,
-  getMyOrders
+  getOrderStatics
 }

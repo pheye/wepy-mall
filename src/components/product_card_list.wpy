@@ -15,7 +15,7 @@
            <image class="item-img" src="{{item.images[0].shop_single}}">
            <!-- 商品标签 -->
             <text class="item_tag" style ="position:absolute;" wx:if="{{tags[index] != ''}}" >{{tags[index]}}</text>
-            <view class="img-textbox" wx:if="{{!item.in_stock}}" >
+            <view class="img-textbox" wx:if="{{!item.in_stock || item.stock_quantity == 0}}" >
                 <p class='img-text' style='padding-top: 25%;font-size: 12px;'>抢光啦!</p>
                 <p class='img-text' style='padding-bottom: 25%;font-size: 8px;'>补货ing...</p>
             </view>
@@ -52,7 +52,7 @@
                </van-col>
                <!-- 购买按钮 -->
                 <van-col offset="12" span="6">
-                  <view class="cannot-buy-btn" wx:if="{{item.stock_quantity == 0}}" >售罄</view>
+                  <view class="cannot-buy-btn" wx:if="{{!item.in_stock || item.stock_quantity == 0}}" >售罄</view>
                   <view class="to-buy-btn " wx:else @tap="getGoodsDetail({{item.id}})">{{ onSale ? '立即秒杀' : '立即抢购'}}</view>
                 </van-col>
             </view>
