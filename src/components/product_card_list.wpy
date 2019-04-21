@@ -52,7 +52,7 @@
                <!-- 购买按钮 -->
                 <van-col offset="12" span="6">
                   <view class="cannot-buy-btn" wx:if="{{item.stock_quantity == 0}}" >售罄</view>
-                  <view class="to-buy-btn " wx:else @tap="buy({{item.id}})">{{ onSale ? '立即秒杀' : '立即抢购'}}</view>
+                  <view class="to-buy-btn " wx:else @tap="getGoodsDetail({{item.id}})">{{ onSale ? '立即秒杀' : '立即抢购'}}</view>
                 </van-col>
             </view>
           </van-row>
@@ -135,8 +135,29 @@ export default class productCardList extends wepy.component {
                   tip.error('无法加入购物车')
               }
           }
-      }
+    },
+    async getGoodsDetail(productId) {
+        let that = this;
+        const json = await api.getProducts(productId);
+        if (json.statusCode == 200) {
+          let data = json.data;
+          if (data.type == 'variable'){
+            wepy.navigateTo({
+              url: "/pages/goods_detail?id="+data.id + "&confirmData=" + 1
+            })
+          }else{
+            that.methods.buy(productId);
+          }
+        } else {
+          if (json.data.message) {
+            tip.error(json.data.message)
+          } else {
+            tip.error('查看商品失败')
+          }
+        }
+    }
   }
+
 }
 </script>
 <style lang="less">

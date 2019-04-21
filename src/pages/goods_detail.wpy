@@ -333,7 +333,8 @@ export default class goodsDetail extends wepy.page {
     avatarUrl: "",
     qrcode:'',
     variantSelected: 0,
-    cartQuantity: 0
+    cartQuantity: 0,
+    confirmData: 0
   }
 
   components = {
@@ -348,7 +349,6 @@ export default class goodsDetail extends wepy.page {
       if (this.detail.type !== 'variable')
         return []
       names = this.detail.variations.map(v => Object.keys(v.attributes).map(k => decodeURI(k).split('_').slice(-1)[0] + ':' + decodeURI(v.attributes[k].option)).join('/'))
-      console.log('names', names)
       return names
     }
   }
@@ -367,6 +367,7 @@ export default class goodsDetail extends wepy.page {
     that.$apply();
     //接收上一个页面传过来的参数
     that.goodsId = option.id;
+    that.confirmData =option.confirmData;
     if (option.purchasetype != undefined) {
       this.purchasetype = option.purchasetype;
     }
@@ -398,6 +399,10 @@ export default class goodsDetail extends wepy.page {
     this.animation = animation;
 
     this.randomUserInfo = util.getRandomArrayElements(this.shareUserInfo, 3);
+    // 页面读取后判断参数打开规格选择菜单
+    if (this.confirmData == 1) {
+      this.showConfirmData();
+    };
   }
   wxParseImgLoad(e) {}
 
