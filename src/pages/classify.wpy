@@ -155,7 +155,7 @@ export default class Classify extends wepy.page {
         console.log(res.target)
       }
       return {
-        title: this.detail.name,
+        title: "邻区乐",
         path: '/pages/classify',
         success: function(res) {
           // 转发成功
