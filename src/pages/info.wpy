@@ -204,7 +204,7 @@ export default class Index extends wepy.page {
   }
   async getMyOrders() {
     let that = this;
-    // 调用订单汇总API
+    // 调用我的订单API
     const json = await api.getMyOrders();
     if (json.statusCode == 200) {
         that.myOrders = json.data.orders_info;

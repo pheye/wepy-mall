@@ -54,7 +54,7 @@ const cartUpdateNum = (params) => request(`${host}/wp-json/w2w/v1/cart/update_qu
 //直接购买商品
 const preOrder = (params) => wxRequest(params, apiMall + '/api/mall/goodsOrder/commitData');
 
-// 订单汇总
+// 我的订单
 const getMyOrders = (params) => request(`${host}/wp-json/w2w/v1/customers/orderinfo`, params);
 
 //支付前生成订单
