@@ -259,7 +259,7 @@ export default class OrderDetail extends wepy.page {
 <style lang="less">
 .order_detail {
   position: relative;
-  margin-bottom:200rpx;
+  padding-bottom:200rpx;
 }
 
 .order_state {
