@@ -66,6 +66,10 @@
 import wepy from 'wepy';
 import api from '@/api/api';
 import tip from '@/utils/tip';
+import PubSub from 'pubsub-js'
+import {
+  CART,
+} from '@/utils/constant';
 
 export default class productCardList extends wepy.component {
   props = {
@@ -123,10 +127,7 @@ export default class productCardList extends wepy.component {
           });
           if (json.statusCode == 200) {
               tip.success("成功加入购物车");
-              wepy.setTabBarBadge({
-                  index:2,
-                  text: "" + json.data.cart_contents_count
-              })
+              PubSub.publish(CART, json.data)
           } else {
               if (json.data.message) {
                   tip.error(json.data.message)

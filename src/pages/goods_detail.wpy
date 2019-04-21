@@ -150,6 +150,7 @@
         <contact-button class="contact">
         </contact-button>
         <view class="item" @tap="cartPage">
+        <view class="badge" wx:if="{{cartQuantity > 0}}">{{cartQuantity}}</view>
           <van-icon name="cart-o" size="16px"></van-icon>
           <view class="doc">购物车</view>
         </view>
@@ -212,8 +213,11 @@ import CommentList from "../components/comment_list"
 import timer from '@/components/common/timer'
 import CartAdvise from "@/components/cart_advise"
 import {
-  USER_INFO
+  USER_INFO,
+  CART
 } from '@/utils/constant';
+import PubSub from 'pubsub-js'
+
 export default class goodsDetail extends wepy.page {
   config = {
     navigationBarTitleText: '商品详情'
@@ -328,7 +332,8 @@ export default class goodsDetail extends wepy.page {
     // 用户头像
     avatarUrl: "",
     qrcode:'',
-    variantSelected: 0
+    variantSelected: 0,
+    cartQuantity: 0
   }
 
   components = {
@@ -356,6 +361,7 @@ export default class goodsDetail extends wepy.page {
     this.canOrder = true;
     this.hidden = true;
     this.winHeight = "100%";
+    this.cartQuantity = wepy.$instance.globalData.cart.cart_contents_count
 
     that.detail = {};
     that.$apply();
@@ -515,6 +521,8 @@ export default class goodsDetail extends wepy.page {
       query
     });
     if (json.statusCode == 200) {
+      PubSub.publish(CART, json.data)
+      this.cartQuantity = json.data.cart_contents_count
       this.winHeight = "100%";
       this.animation.height(0).step();
       this.setData({
@@ -548,6 +556,8 @@ export default class goodsDetail extends wepy.page {
         query
     });
     if (json.statusCode == 200) {
+      PubSub.publish(CART, json.data)
+      this.cartQuantity = json.data.cart_contents_count
       this.winHeight = "100%";
       this.animation.height(0).step();
       this.setData({
@@ -1202,6 +1212,7 @@ export default class goodsDetail extends wepy.page {
   .item {
     flex: 1;
     text-align: center;
+    position: relative;
     .doc {
       font-size: 24rpx;
     }

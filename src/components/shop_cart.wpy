@@ -68,9 +68,11 @@
   import api from '@/api/api';
   import tip from '@/utils/tip';
   import {
-    USER_SPECICAL_INFO
+    CART, 
   } from '@/utils/constant';
   import swipeDelete from './common/wepy-swipe-delete'
+  import PubSub from 'pubsub-js'
+
   export default class shopCart extends wepy.component {
     components = {
       swipeDelete
@@ -90,6 +92,7 @@
       let that = this;
       if (json.statusCode == 200) {
         let data = json.data;
+        PubSub.publish(CART, data)
         if (!data.cart) {
             this.list = []
             return 0;
