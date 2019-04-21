@@ -166,6 +166,10 @@ export default class extends wepy.app {
           // 不用处理
       }
     })
+    let systemInfo = wepy.getSystemInfoSync()
+    if (systemInfo.platform == "devtools") {
+        // 在开发环境下     
+    }
   }
   // onError(res) {
      // console.log('on error', res)
@@ -173,7 +177,7 @@ export default class extends wepy.app {
   // }
   async checkUsers() {
     let me = wepy.getStorageSync(ME);
-    console.log("me", me)
+    // console.log("me", me)
     if (!me) {
         wx.navigateTo({
             url: '/pages/authorize'

@@ -44,9 +44,10 @@
                   </view>
                   <view >
                   <!-- 商品价格 -->
-                   <text class="item_price">{{ '￥' +item.price }}</text>
+                  <text class="item_price" wx:if="{{item.min_price == item.max_price}}">{{ '￥' +item.price }}</text>
+                   <text class="item_price" wx:else >{{ '￥' + item.min_price}}</text>
                    <!-- 原始价格 -->
-                   <text class="item_origin_price" wx:if="{{item.on_sale}}">{{  '￥' +  item.regular_price }}</text>
+                   <text class="item_origin_price" wx:if="{{item.on_sale && item.regular_price}}">{{  '￥' +  item.regular_price }}</text>
                  </view>
                </van-col>
                <!-- 购买按钮 -->

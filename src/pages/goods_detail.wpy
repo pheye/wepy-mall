@@ -17,10 +17,11 @@
       <view class="details_pinfo" >
         <view class="price_container">
           <view >
-             <text class="origin-price">￥{{detail.regular_price}}</text>
+             <text class="origin-price" wx:if="{{item.on_sale && item.regular_price}}">￥{{detail.regular_price}}</text>
           </view>
           <view >
-              <text class="price">￥{{detail.price}} </text>
+              <text class="price" wx:if="{{detail.min_price == detail.max_price}}">{{ '￥' +detail.price }}</text>
+              <text class="price" wx:else>{{ '￥' +detail.min_price }}</text>
               <text class="group">团购价</text>
           </view>
         </view>
