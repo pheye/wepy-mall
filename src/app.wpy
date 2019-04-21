@@ -16,8 +16,11 @@ import {
   ME,
   TOKEN,
   TOKEN_EXPIRED,
+  CART,
 } from '@/utils/constant';
 import fundebug from '@/utils/fundebug.1.1.0.min.js'
+import PubSub from 'pubsub-js'
+
 // import bugOut from 'bugout-miniprogram';
 
 // bugOut.usePlugins = true
@@ -127,6 +130,7 @@ export default class extends wepy.app {
   globalData = {
     estates:[],
     // bugOut: bugOut
+    cart: {}
   }
 
   constructor() {
@@ -139,6 +143,28 @@ export default class extends wepy.app {
   async onLaunch(option) {
     // this.loadEstates()
     this.checkUsers()
+    this.initCart()
+    PubSub.subscribe(CART, async (msg, data) => {
+      // console.log('msg', msg, data)
+      if (data) {
+          this.globalData.cart = data
+      }
+      if (!this.globalData.cart.cart_contents_count) {
+          wepy.removeTabBarBadge({
+              index:2
+          })
+          return
+      }
+      try {
+          // 只有在tabbar page调用才能成功，否则会报错，这种情况下不用处理
+          await wepy.setTabBarBadge({
+              index:2,
+              text: "" + this.globalData.cart.cart_contents_count
+          })
+      } catch (e) {
+          // 不用处理
+      }
+    })
   }
   // onError(res) {
      // console.log('on error', res)
@@ -152,6 +178,13 @@ export default class extends wepy.app {
             url: '/pages/authorize'
         })
     }
+  }
+  async initCart() {
+    const json = await api.getCart()
+
+    if (json.statusCode !== 200) 
+        return;
+    this.globalData.cart = json.data
   }
 }
 

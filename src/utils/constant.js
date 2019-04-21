@@ -35,4 +35,4 @@ export const CUSTOMER = 'customer';
 
 export const SEARCH_LIST = 'searchList';
 
-
+export const CART = 'CART';
