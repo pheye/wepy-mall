@@ -26,9 +26,9 @@
         <!-- 商品详情 -->
         <view class="item_detail_container">
           <!-- 名称 -->
-         <text class="item_title">{{item.name}}</text>
+         <view class="item_title">{{item.name}}</view>
          <!-- 描述 -->
-         <text class="item_desc">{{ descs[index] }}</text>
+         <view class="item_desc">{{ descs[index] }}</view>
          <!-- 库存 -->
          <view>
             <text class="item_rule" wx:if="{{item.stock_quantity != null && item.stock_quantity != 0}}">库存:{{ item.stock_quantity }}</text>
@@ -214,7 +214,6 @@ export default class productCardList extends wepy.component {
       font-size: 30rpx;
       font-weight: 700;
       color:#333;
-      padding-bottom:5rpx;
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
