@@ -17,23 +17,23 @@
 
         <navigator url="/pages/order?type=1">
           <view class="cart_menu">
-              <view class="badge" >15</view>
+              <view class="badge" wx:if="{{orderStatics.pending > 0}}">{{orderStatics.pending}}</view>
               <image class="cart_img" src="../images/pay.png"></image>
               <view class="cart_text">待付款</view>
           </view>
         </navigator>
 
-        <navigator url="/pages/order?type=2">
+<!--         <navigator url="/pages/order?type=2">
           <view class="cart_menu">
-              <view class="badge" >7</view>
+              <view class="badge" wx:if="{{orderStatics.on-hold > 0}}">{{orderStatics.on-hold}}</view>
               <image class="cart_img" src="../images/post.png"></image>
               <view class="cart_text">待发货</view>
           </view>
-        </navigator>
+        </navigator> -->
 
         <navigator url="/pages/order?type=2">
           <view class="cart_menu">
-              <view class="badge" >3</view>
+              <view class="badge" wx:if="{{orderStatics.processing > 0}}">{{orderStatics.processing}}</view>
               <image class="cart_img" src="../images/ship.png"></image>
               <view class="cart_text">配送中</view>
           </view>
@@ -41,7 +41,7 @@
 
         <navigator url="/pages/order?type=3">
           <view class="cart_menu">
-              <view class="badge" >5</view>
+              <view class="badge" wx:if="{{orderStatics.completed > 0}}">{{orderStatics.completed}}</view>
               <image class="cart_img" src="../images/transfer.png"></image>
               <view class="cart_text">交易成功</view>
           </view>
@@ -49,7 +49,7 @@
 
         <navigator url="/pages/order?type=4">
           <view class="cart_menu">
-                <view class="badge" >2</view>
+                <view class="badge" wx:if="{{orderStatics.cancelled > 0}}">{{orderStatics.cancelled}}</view>
               <image class="cart_img" src="../images/reject.png"></image>
               <view class="cart_text">已取消</view>
           </view>
@@ -180,6 +180,7 @@ export default class Index extends wepy.page {
     avatarUrl: "",
     nickName: "",
     bShowBind:false,
+    orderStatics:""
 
   }
   async getUserInfo(phone,code) {
@@ -201,16 +202,29 @@ export default class Index extends wepy.page {
     }
     that.showLoading = false;
   }
-
+  async getOrderStatics() {
+    let that = this;
+    // 调用订单状态汇总API
+    const json = await api.getOrderStatics();
+    if (json.statusCode == 200) {
+        that.orderStatics = json.data.orders_info;
+        that.$apply();
+    } else {
+      tip.error(json.data.message)
+    }
+    that.showLoading = false;
+  }
   onLoad() {
     let that = this;
     let userInfo = wepy.getStorageSync(USER_INFO);
     that.avatarUrl = userInfo.avatarUrl;
     that.nickName = userInfo.nickName;
+    this.getOrderStatics();
   }
   onShow(){
     let that = this;
     this.getUserInfo();
+
   }
   onGetPhoneNumber() {
     console.log(e.detail.errMsg)

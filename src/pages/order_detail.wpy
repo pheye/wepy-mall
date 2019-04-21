@@ -33,7 +33,11 @@
     <view class="address_block">
       <view class="name">
         <text class="title"> 收货人:</text>
-        <text class="content">{{obj.billing.first_name}}\t\t{{obj.billing.phone}}</text>
+        <text class="content">{{obj.billing.first_name}}</text>
+      </view>
+      <view class="name">
+        <text class="title"> 收货人电话:</text>
+        <text class="content">{{obj.billing.phone}}</text>
       </view>
       <view class="address">
         <text class="title"> 收货地址:</text>
@@ -61,20 +65,28 @@
         <text class="content">{{obj.date_paid}}</text>
       </view>
     </view>
+        <view class="count_block">
+          <text >商品金额:</text> <text class="price">￥{{obj.subtotal}}</text>
+        </view>
+        <view class="count_block" wx:if="{{obj.shipping_total>0}}">
+          <text >运费:</text><text class="price">+￥{{obj.shipping_total}}</text>
+          </view>
+        <view class="count_block" wx:if="{{obj.discount_total>0}}">
+          <text >优惠:</text><text class="price">-￥{{obj.discount_total}}</text>
+        </view>
+    </view>
     <view class="footer">
-      <view class="money">应付款:
-        <text class="receive_money">{{obj.total}}</text>
-      </view>
+      <view class="money">应付款:<text class="receive_money">￥{{obj.total}}</text>
       <view class="btn_group">
-
         <view class="btn" @tap="goLogistics" wx:if="{{obj.status==2}}" data-id="{{obj.orderNo}}">查看物流</view>
         <view class="btn type_pick dsh" @tap="completion" wx:if="{{obj.status==2}}" data-id="{{obj.orderNo}}">待收货</view>
         <view class="btn type_pick dsh" @tap="payMoney" wx:if="{{obj.status==0}}" data-id="{{obj.orderNo}}" data-orderno="{{obj.payOrderNo}}">立即付款</view>
 <!--<view class="btn" @tap="delOrder" wx:if="{{obj.status==0 || obj.status==4}}" data-id="{{obj.orderNo}}">删除订单</view>-->
         <!--<view class="btn type_pick dsh" @tap="refund" wx:if="{{obj.status==4}}" data-id="{{obj.orderNo}}">申请退货</view>-->
       </view>
+      </view>
     </view>
-  </view>
+
 </template>
 <script>
 import wepy from 'wepy';
@@ -247,6 +259,7 @@ export default class OrderDetail extends wepy.page {
 <style lang="less">
 .order_detail {
   position: relative;
+  margin-bottom:200rpx;
 }
 
 .order_state {
@@ -292,7 +305,6 @@ export default class OrderDetail extends wepy.page {
   background: #fff;
   margin-top: 10rpx;
   .address {
-    padding-top: 20rpx;
   }
   .title {
     color: #858585;
@@ -306,14 +318,16 @@ export default class OrderDetail extends wepy.page {
 .goods_block {
   margin-top: 10rpx;
   background: #fff;
+  padding-left: 30rpx;
 }
 
 .info_block {
   margin-top: 10rpx;
-  padding: 18rpx;
+  padding: 30rpx;
   background: #fff;
+  margin-bottom: 10rpx;
   .item {
-    padding-top: 40rpx;
+    padding-top: 10rpx;
     .title {
       font-size: 28rpx;
     }
@@ -354,9 +368,30 @@ export default class OrderDetail extends wepy.page {
       margin-left: 20rpx;
     }
   }
-  .receive_money {
-    color: #ff4856;
+  .money{
+      font-size:30rpx;
+      padding-left:20rpx;
+      font-weight:600;
+      color:#000;
+     .receive_money {
+      color: #ff4856;
+    }
   }
-}
 
+}
+ .count_block {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10rpx 35rpx 10rpx 40rpx;
+    border-bottom: 1px solid #efefef;
+    background: #fff;
+
+    .price {
+      color: #ff4856;
+      font-size: 28rpx;
+      text-align: right;
+
+    }
+  }
 </style>
