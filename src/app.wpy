@@ -149,14 +149,15 @@ export default class extends wepy.app {
       if (data) {
           this.globalData.cart = data
       }
-      if (!this.globalData.cart.cart_contents_count) {
-          wepy.removeTabBarBadge({
-              index:2
-          })
-          return
-      }
+
       try {
           // 只有在tabbar page调用才能成功，否则会报错，这种情况下不用处理
+          if (!this.globalData.cart.cart_contents_count) {
+              await wepy.removeTabBarBadge({
+                  index:2
+              })
+              return
+          }
           await wepy.setTabBarBadge({
               index:2,
               text: "" + this.globalData.cart.cart_contents_count
