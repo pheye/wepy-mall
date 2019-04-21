@@ -20,8 +20,8 @@
              <text class="origin-price" wx:if="{{item.on_sale && item.regular_price}}">￥{{detail.regular_price}}</text>
           </view>
           <view >
-              <text class="price" wx:if="{{detail.min_price == detail.max_price}}">{{ '￥' +detail.price }}</text>
-              <text class="price" wx:else>{{ '￥' +detail.min_price }}</text>
+              <text class="price" wx:if="{{detail.min_price == detail.max_price}}">{{ '￥' + (detail.price || ' ') }}</text>
+              <text class="price" wx:else>{{ '￥' + (detail.min_price || ' ') }}</text>
               <text class="group">团购价</text>
           </view>
         </view>
@@ -349,7 +349,7 @@ export default class goodsDetail extends wepy.page {
       if (this.detail.type !== 'variable')
         return []
       names = this.detail.variations.map(v => Object.keys(v.attributes).map(k => decodeURI(k).split('_').slice(-1)[0] + ':' + decodeURI(v.attributes[k].option)).join('/'))
-      console.log('names', names)
+      // console.log('names', names)
       return names
     }
   }
