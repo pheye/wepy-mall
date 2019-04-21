@@ -14,9 +14,7 @@
           <view class="goods-title">{{item.product.name}}</view>
           <view class="goods-label">{{item.variantNames}}</view>
           <view class="goods-price">¥ {{item.product.price}}</view>
-          <view class="buy-num">
-            <input type="number" value="{{item.quantity}}" disabled/>
-          </view>
+          <view class="buy-num">x{{item.quantity}}</view>
         </view>
       </view>
   </swipeDelete>
@@ -482,32 +480,23 @@ console.log("load");
   }
 
   async deleteGoods(itemData) {
-    var id = itemData.id;
+    let that = this;
+    var id = itemData.key;
     let userSpecialInfo = wepy.getStorageSync(USER_SPECICAL_INFO) || {};
     let openId = userSpecialInfo.openid;
     const json = await api.cartDel({
       query: {
         openId: openId,
-        cartIdList: [id],
+        cart_key: id,
       }
     });
-    if (json.data.code == 0) {
-      // 购物车数据
-      let retList = [];
-      for (var i = 0; i < this.list.length; i++) {
-        if (this.list[i].id == id) {
-          this.totalPrice -= parseInt(this.list[i].priceSubtotal);
-          this.actualPrice = this.totalPrice - this.reduce_fee;
-          continue;
-        } else {
-          retList.push(this.list[i]);
-        }
-      }
-      this.list = retList;
+    if (json.statusCode == 200) {
+      // 刷新订单详情
+      that.getOrderDetailInfo();
+      that.$apply();
     } else {
       tip.error(json.data.msg)
     }
-    this.$apply();
   }
 
   methods = {
@@ -761,7 +750,7 @@ console.log("load");
   }
 }
 .list_box {
-  height: 250rpx;
+  height: 200rpx;
 }
 .coupons-info {
   border-bottom: 1px solid #eee;
@@ -847,18 +836,17 @@ console.log("load");
 
 .goods-info .text-box .goods-price {
   font-size: 34rpx;
-  color: #e64340;
+  color: #fa8c16;
 }
 
 .goods-info .text-box .buy-num {
-  width: 164rpx;
-  height: 48rpx;
+
   line-height: 48rpx;
   position: absolute;
   right: 30rpx;
-  bottom: 30rpx;
+  bottom: 15rpx;
   display: flex;
-  font-size: 24rpx;
+  font-size: 26rpx;
   text-align: center
 }
 
