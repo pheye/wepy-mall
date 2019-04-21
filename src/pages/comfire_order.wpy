@@ -346,7 +346,7 @@ console.log("load");
       params.billing_country = 'CN';
       params.billing_state = getStateCode('福建');
       params.billing_city = this.estate.city;
-      params.billing_address_1 = this.estate.address;
+      params.billing_address_1 = this.estate.title.rendered + " " + this.estate.address;
       if (this.estate.referal) {
         params.ref = this.estate.referal;
       }
