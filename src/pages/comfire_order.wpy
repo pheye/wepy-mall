@@ -115,7 +115,7 @@
       </view>
       <view class="spacing"></view>
        <view class="block">
-        <view class="left input_box"><input  value="{{couponInput}}" bindinput="couponIdInput" placeholder="优惠券代码" /></view>
+        <view class="left input_box"><input  value="{{couponId}}" @input="onCouponIdChange" placeholder="优惠券代码" /></view>
         <view class="right">
           <button @tap="addCoupons" class="coupons_button">使用优惠券</button>
         </view>
@@ -129,9 +129,9 @@
                   <text wx:else if="{{item2.discount_type == 'fixed_cart'}}">-￥{{item2.amount}}</text>
                 </view>
                 <view >
-                  <view class="coupons-title">优惠券：{{item2.code}}</view>
-                  <view class="coupons-label">使用规则:{{item2.description}}</view>
-                </view>
+                  <view class="coupons-title">优惠券：{{item2.description}}</view>
+<!--                   <view class="coupons-label">使用规则:{{}}</view>
+ -->                </view>
                 <!-- 删除按钮 -->
                 <image class="del-btn"  src="../images/del.png" @tap="delCoupons({{item2.code}})"  />
               </view>
@@ -141,10 +141,10 @@
       <view class="count_block">
         <view class="left tongji">合计</view>
         <view>
-          <view class="right price" wx:if="{{discount_cart>0}}" >
-            <view>商品金额:￥{{cart_subtotal}}</view>
+          <view class="right price" wx:if="{{discountCart>0}}" >
+            <view>商品金额:￥{{cartSubtotal}}</view>
             <view>+ 运费:￥{{chosenShipping.cost}}</view>
-            <view> - 优惠:￥{{discount_cart}}</view>
+            <view> - 优惠:￥{{discountCart}}</view>
           </view>
           <view class="right price">应付:￥{{cartContentsTotal + chosenShipping.cost}}<text wx:if="{{chosenShipping.cost != 0}}"> (运费:￥{{chosenShipping.cost}})</text></view>
         </view>
@@ -212,10 +212,10 @@ export default class ComfireOrder extends wepy.page {
     estate: {},
     wpnonce: "",
     variantNames:[],
-    couponInput:'',
+    couponId:'',
     coupons:[],
-    discount_cart: 0,
-    cart_subtotal: 0
+    discountCart: 0,
+    cartSubtotal: 0
 
   }
 
@@ -257,9 +257,9 @@ export default class ComfireOrder extends wepy.page {
       }
 
       // 勾选物品总金额
-      this.cart_subtotal = this.totalPrice.toFixed(2);
+      this.cartSubtotal = this.totalPrice.toFixed(2);
       // 折扣价
-      this.discount_cart = data.discount_cart;
+      this.discountCart = data.discount_cart;
       // 优惠券后总金额
       this.cartContentsTotal = data.cart_contents_total;
       // this.is_exit_address = data.hasDefaultAddress;
@@ -330,7 +330,7 @@ console.log("load");
     if (storgeCustomer) {
       this.customer = storgeCustomer;
     }
-    this.couponInput = '';
+    this.couponId = '';
 
   }
   computed = {}
@@ -377,7 +377,7 @@ console.log("load");
       let pattern = new RegExp('.+(?=</li>)');
       // var pattern=(?<=\b<li>)\w+.+(?=</li>\b);
       let result = pattern.exec(message)[0];
-       tip.confirm(result,false);
+       tip.confirm(result,{},"提示",false);
     }
 
     if (json.statusCode  == 200 && json.data.result == 'success') {
@@ -535,11 +535,11 @@ console.log("load");
         return false;
       }
       if (this.chosenShipping.method_id == 'local_pickup' && !this.customer.name) {
-         tip.confirm('请填写联系人',false);
+         tip.confirm('请填写联系人',{},"提示",false);
         return false;
       }
       if (this.chosenShipping.method_id == 'local_pickup' && !this.customer.phone) {
-         tip.confirm('请填写联系手机',false);
+         tip.confirm('请填写联系手机',{},"提示",false);
         return false;
       }
       this.goToPay(fId);
@@ -631,18 +631,18 @@ console.log("load");
     async addCoupons() {
         let that = this;
           // 检查输入
-        if(this.couponInput){
+        if(this.couponId){
           // 输入已经使用的优惠券
           for (var i = 0; i < that.coupons.length; i++) {
-            if(that.coupons[i].code == this.couponInput){
-              tip.confirm('优惠券已添加',false);
+            if(that.coupons[i].code == this.couponId){
+              tip.confirm('优惠券已添加',{},"提示",false);
               return;
             }
           };
           // 调用API
           const json = await api.addCoupons({
               query: {
-                  coupons: [this.couponInput]
+                  coupons: [this.couponId]
               }
           });
           // 优惠券输入正确
@@ -653,16 +653,16 @@ console.log("load");
           }
           // 优惠券输入错误
            else {
-              tip.confirm(json.data.errors[0],false);
+              tip.confirm(json.data.errors[0],{},"提示",false);
             }
          }else{
-            tip.confirm('请输入优惠券代码',false);
+            tip.confirm('请输入优惠券代码',{},"提示",false);
          }
       },
     // 优惠券输入
-    couponIdInput(e) {
+    onCouponIdChange(e) {
       let couponId = e.detail.value ;
-      this.couponInput = couponId;
+      this.couponId = couponId;
     },
     // 删除
     async delCoupons(couponId) {
@@ -775,10 +775,12 @@ console.log("load");
     font-size:120%;
     font-weight:700;
     text-align: center;
+    padding:5rpx;
   }
   .coupons-title{
     color: #000;
     font-weight:700;
+    padding:10rpx;
   }
   .coupons-label {
     font-size:80%;
