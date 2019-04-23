@@ -36,7 +36,7 @@ export default class Order extends wepy.page {
   data = {
     winHeight: 0,
     totalCount: 0,
-    tabList: ["全部订单", "待付款", "配送中", "已完成", "已取消"],
+    tabList: ["全部订单", "待付款", "待发货","已发货", "已完成", "已取消"],
     orderList: [],
     currentPage: 1,
     is_empty: false,
@@ -57,10 +57,25 @@ export default class Order extends wepy.page {
     receiveFlg : 0
   }
 
-  async getMyOrder(currentPage, size,refresh) {
+  async getMyOrder(currentTab,currentPage, size,refresh) {
 
     console.log("refresh值："+refresh);
     let that = this;
+
+    if (currentTab == 0) {
+        that.orderStatus = "any";
+      } else if (currentTab == 1) {
+        that.orderStatus = "pending";
+      } else if (currentTab == 2) {
+        that.orderStatus = "processing";
+      } else if (currentTab == 3) {
+        that.orderStatus = "shipped";
+      } else if (currentTab == 4) {
+        that.orderStatus = "completed";
+      } else if (currentTab == 5) {
+        that.orderStatus = "cancelled";
+    }
+    // that.orderStatus = orderStatus;
     console.log("orderStatus值");
     console.log("orderStatus值" + that.orderStatus);
     // let userSpecialInfo = wepy.getStorageSync(USER_SPECICAL_INFO) || {};
@@ -83,6 +98,7 @@ export default class Order extends wepy.page {
         that.orderList = [...that.orderList, ...json.data];
       }
       that.pageTotal = json.header['X-WP-TotalPages'];
+      console.log(that.pageTotal);
       that.totalCount = json.header['X-WP-Total'];
 
       console.log("条目数：" + that.totalCount);
@@ -133,21 +149,7 @@ export default class Order extends wepy.page {
     let title = "";
     that.orderList = [];
     that.currentTab = opts.type;
-    if (that.currentTab == 0) {
-        that.orderStatus = "any";
-      } else if (that.currentTab == 1) {
-        that.orderStatus = "pending";
-      } else if (that.currentTab == 2) {
-        that.orderStatus = "processing";
-        that.receiveFlg=2;
-      } else if (that.currentTab == 3) {
-        that.orderStatus = "completed";
-        that.receiveFlg=4;
-      } else if (that.currentTab == 4) {
-        that.orderStatus = "cancelled";
-        that.receiveFlg=5;
-    }
-    that.getMyOrder();
+    that.getMyOrder(that.currentTab);
     //设置滚动高度
     let systemInfo = wepy.getStorageSync(SYSTEM_INFO);
     that.winHeight = systemInfo.windowHeight;
@@ -166,29 +168,7 @@ export default class Order extends wepy.page {
       that.currentTab = cur;
       console.log("cur");
       console.log(cur);
-      if (cur == 0) {
-        // console.log("所有订单类型");
-        that.orderStatus = "any";
-        that.getMyOrder();
-      } else if (cur == 1) {
-        // console.log("未付款订单类型");
-        that.orderStatus = "pending";
-        that.getMyOrder();
-      } else if (cur == 2) {
-        // console.log("待收货订单类型");
-        that.orderStatus = "processing";
-        that.receiveFlg=2;
-        that.getMyOrder();
-      } else if (cur == 3) {
-        // console.log("已完成订单类型");
-        that.orderStatus = "completed";
-        that.receiveFlg=4;
-        that.getMyOrder();
-      } else if (cur == 4) {
-        that.orderStatus = "cancelled";
-        that.receiveFlg=5;
-        that.getMyOrder();
-      }
+      that.getMyOrder(that.currentTab);
       that.$apply();
     },
     /**
@@ -209,7 +189,7 @@ export default class Order extends wepy.page {
         this.$apply();
         this.orderStatus = 4;
       }
-      this.getMyOrder(1,10,1);
+      this.getMyOrder(this.currentTab,1,10,1);
     }
   }
   watch = {
@@ -233,23 +213,8 @@ export default class Order extends wepy.page {
       that.preventRepeatReuqest = true;
       that.currentPage++;
       console.log(this.currentTab);
-      if (this.currentTab == 0) {
-        console.log("所有订单类型");
-        that.getMyOrder(that.currentPage);
-      } else if (this.currentTab == 1) {
-        console.log("未付款订单类型");
-        that.orderStatus = 0;
-        that.getMyOrder(that.currentPage);
-      } else if (this.currentTab == 2) {
-        console.log("待发货订单类型");
-        that.orderStatus = 2;
-        that.receiveFlg=2;
-        that.getMyOrder(that.currentPage);
-      } else if (this.currentTab == 3) {
-        console.log("已完成订单类型");
-        that.orderStatus = 4;
-        that.getMyOrder(that.currentPage);
-      }
+      that.getMyOrder(this.currentTab,that.currentPage);
+
       that.preventRepeatReuqest = false;
     } else {
       that.showLoading = false;

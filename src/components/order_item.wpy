@@ -23,11 +23,12 @@
             <view class="order_state">待支付</view>
           </text>
           <view class="order_state" wx:if="{{item.status=='pending'}}">待付款</view>
-          <view class="order_state" wx:if="{{item.status=='processing'}}">待收货</view>
+          <view class="order_state" wx:if="{{item.status=='processing'}}">待发货</view>
           <view class="order_state" wx:if="{{item.status=='completed'}}">已完成</view>
           <view class="order_state" wx:if="{{item.status=='cancelled'}}">已取消</view>
           <view class="order_state" wx:if="{{item.status=='refunded'}}">已退款</view>
           <view class="order_state" wx:if="{{item.status=='on-hold'}}">预订</view>
+          <view class="order_state" wx:if="{{item.status=='shipped'}}">已发货</view>
         </view>
     </view>
 
