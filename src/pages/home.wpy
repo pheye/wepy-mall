@@ -43,19 +43,19 @@
       <!-- <block wx:for="{{['10','13','16','21']}}" wx:key="id"> -->
         <view class="tabs-item {{currentTabsIndex == 0 ?'selected':''}} {{tabs0.length == 0?'hidden':''}}" @tap='onTabsItemTap' data-index='0' >
             <view >10:00</view>
-            <view >{{ 10 >= now ? '促销' : '正在抢购' }}</view>
+            <view >{{ 10 >= now ? '抢购' : '正在抢购' }}</view>
         </view>
         <view class="tabs-item {{currentTabsIndex == 1 ?'selected':''}} {{tabs1.length == 0?'hidden':''}}" @tap='onTabsItemTap' data-index='1' >
             <view >13:00</view>
-            <view >{{ 13 >= now ? '促销' : '正在抢购' }}</view>
+            <view >{{ 13 >= now ? '抢购' : '正在抢购' }}</view>
         </view>
         <view class="tabs-item {{currentTabsIndex == 2 ?'selected':''}} {{tabs2.length == 0?'hidden':''}}" @tap='onTabsItemTap' data-index='2' >
             <view >16:00</view>
-            <view >{{ 16 >= now ? '促销' : '正在抢购' }}</view>
+            <view >{{ 16 >= now ? '抢购' : '正在抢购' }}</view>
         </view>
         <view class="tabs-item {{currentTabsIndex == 3 ?'selected':''}} {{tabs3.length == 0?'hidden':''}}" @tap='onTabsItemTap' data-index='3' >
             <view >21:00</view>
-            <view >{{ 21 >= now ? '促销' : '正在抢购' }}</view>
+            <view >{{ 21 >= now ? '抢购' : '正在抢购' }}</view>
         </view>
       <!-- </block> -->
     </view>
