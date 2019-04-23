@@ -25,7 +25,7 @@
               <text class="group">团购价</text>
           </view>
         </view>
-        <view class="order_time {{detail.date_on_sale_to ? '' : 'hidden'}}">
+        <view class="order_time {{detail.date_on_sale_to || detail.auto_shelf_days != 0 ? '' : 'hidden'}}">
           <timer :startTime.sync="startTime" :endTime.sync="endTime"></timer>
         </view>
 <!--         <view class="share-box">
@@ -218,7 +218,7 @@ import {
   CART
 } from '@/utils/constant';
 import PubSub from 'pubsub-js'
-
+import moment from 'moment'
 export default class goodsDetail extends wepy.page {
   config = {
     navigationBarTitleText: '商品详情'
@@ -478,8 +478,19 @@ export default class goodsDetail extends wepy.page {
       let description_html =  that.detail.description_html.replace(/\[video(.*)mp4=(.*)\]\[\/video\]/g, "<video $1 src=$2 class='video'></video>")
       // console.log("description_html", description_html);
       WxParse.wxParse('detailInfo', 'html', description_html, this);
-      time.endTime = that.detail.date_on_sale_to;
-      time.startTime = that.detail.date_on_sale_from;
+      if(that.detail.auto_shelf_days == 0){
+        time.endTime = that.detail.date_on_sale_to;
+        time.startTime = that.detail.date_on_sale_from;
+      } else {
+          // 有自动上下架情况
+          let date = new Date();
+          time.startTime= that.detail.date_created;
+          while ( moment(time.startTime).add(that.detail.auto_shelf_days, 'd')._d < date ) {
+            time.startTime = moment(time.startTime).add(that.detail.auto_shelf_days, 'd')._d;
+          }
+          time.endTime = moment(time.startTime).add(that.detail.auto_shelf_days, 'd')._d;
+      }
+
       if (json.data.validDate == "0") {
         that.isValidDate = false;
         if (this.purchasetype == 1 && this.special != 1) {

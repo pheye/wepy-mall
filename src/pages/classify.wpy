@@ -10,8 +10,8 @@
   <view class="classify" style="height:{{windowHeight-50}}px;">
     <scroll-view class="classify_catetory" scroll-y scroll-with-animation="true" style="height:{{windowHeight-50}}px">
       <view class="name {{item.active? 'active':''}}" wx:for="{{rootcateList}}" wx:key="item" @tap="changeCate" data-code="{{item.id}}">
-        <image style="width:72rpx;margin:0 auto;display:block;" src="{{item.image}}" mode="widthFix" />
-        <view>{{item.name}}</view>
+<!--         <image style="width:72rpx;margin:0 auto;display:block;" src="{{item.image}}" mode="widthFix" />
+ -->        <view style="height:100rpx;line-height:100rpx;">{{item.name}}</view>
       </view>
     </scroll-view>
     <scroll-view class="classify_detail" scroll-y scroll-with-animation="true" style="height:{{windowHeight-50}}px" lower-threshold="100" @scrolltolower="loadMore" >

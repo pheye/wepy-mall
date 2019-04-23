@@ -117,8 +117,9 @@
     <!--加载更多时动画-->
     <bottomLoadMore :show.sync="showLoading" message="正在加载"></bottomLoadMore>
     <!--暂无数据显示-->
-    <placeholder :show.sync="is_empty" message="暂无发现数据"></placeholder>
-    <!--弹屏  types:0 图片  1：领红包   show 是否显示  @close 关闭回调  @callback 点击图片回调 或确定回调-->
+    <view wx:if="{{is_empty}}" style="text-align:center;"> 没有数据了 </view>
+<!--     <placeholder :show.sync="is_empty" message="暂无发现数据"></placeholder>
+ -->    <!--弹屏  types:0 图片  1：领红包   show 是否显示  @close 关闭回调  @callback 点击图片回调 或确定回调-->
     <bombscreen :types.sync="tps" :show.sync="is_show_alert" @close.user="closeAlert" @callback.user="alertCallback"></bombscreen>
   </view>
 </template>
@@ -316,7 +317,7 @@ export default class Home extends wepy.page {
   }
   //加载更多
   onReachBottom() {
-      /*
+
     let that = this;
     that.showLoading = true;
     console.log(that.page_total + "===" + that.currentPage);
@@ -332,7 +333,7 @@ export default class Home extends wepy.page {
       that.preventRepeatReuqest = false;
     } else {
       that.showLoading = false;
-    }*/
+    }
   };
 }
 
