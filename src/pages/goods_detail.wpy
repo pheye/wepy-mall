@@ -17,7 +17,7 @@
       <view class="details_pinfo" >
         <view class="price_container">
           <view >
-             <text class="origin-price" wx:if="{{item.on_sale && item.regular_price}}">￥{{detail.regular_price}}</text>
+             <text class="origin-price" wx:if="{{detail.on_sale && detail.regular_price}}">￥{{detail.regular_price}}</text>
           </view>
           <view >
               <text class="price" wx:if="{{detail.min_price == detail.max_price}}">{{ '￥' + (detail.price || ' ') }}</text>
