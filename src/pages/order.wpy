@@ -133,6 +133,20 @@ export default class Order extends wepy.page {
     let title = "";
     that.orderList = [];
     that.currentTab = opts.type;
+    if (that.currentTab == 0) {
+        that.orderStatus = "any";
+      } else if (that.currentTab == 1) {
+        that.orderStatus = "pending";
+      } else if (that.currentTab == 2) {
+        that.orderStatus = "processing";
+        that.receiveFlg=2;
+      } else if (that.currentTab == 3) {
+        that.orderStatus = "completed";
+        that.receiveFlg=4;
+      } else if (that.currentTab == 4) {
+        that.orderStatus = "cancelled";
+        that.receiveFlg=5;
+    }
     that.getMyOrder();
     //设置滚动高度
     let systemInfo = wepy.getStorageSync(SYSTEM_INFO);
