@@ -88,15 +88,18 @@ export default class productCardList extends wepy.component {
   computed = {
       tags () {
         let tags = [];
+        let pattern = ['onsale']
         this.list.map((item, key) => {
+            let selected =  item.tags.filter(item2 => pattern.includes(item2.slug))
+            tags[key] = selected.map(item2 => item2.name)
             if (!item.tag) {
-                tags[key] = item.on_sale ? '促销' : '';
+                // tags[key] = item.on_sale ? '促销' : '';
                 if (item.stock_quantity == 0) {
                     // 缺货不显示tag
                     tags[key] += '';
                 }
                 if (item.featured) {
-                    tags[key] += '精选';
+                    tags[key] += ' 精选 ';
                 }
             }
         })
