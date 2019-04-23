@@ -168,7 +168,7 @@ export default class extends wepy.app {
     })
     let systemInfo = wepy.getSystemInfoSync()
     if (systemInfo.platform == "devtools") {
-        // 在开发环境下     
+        // 在开发环境下
     }
   }
   // onError(res) {
