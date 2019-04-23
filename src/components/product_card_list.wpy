@@ -53,7 +53,7 @@
                <!-- 购买按钮 -->
                 <van-col offset="12" span="6">
                   <view class="cannot-buy-btn" wx:if="{{!item.in_stock || item.stock_quantity == 0}}" >售罄</view>
-                  <view class="to-buy-btn " wx:else @tap="getGoodsDetail({{item.id}})">{{ onSale ? '立即秒杀' : '立即抢购'}}</view>
+                  <view class="to-buy-btn {{ redBtn ?'redBtn':''}}" wx:else @tap="getGoodsDetail({{item.id}})">{{ onSale ? '立即秒杀' : '立即抢购'}}</view>
                 </van-col>
             </view>
           </van-row>
@@ -77,7 +77,8 @@ export default class productCardList extends wepy.component {
       list: {
           default: []
       },
-      onSale:Boolean
+      onSale:Boolean,
+      redBtn:Boolean
   }
   addExtra() {
   }
@@ -296,7 +297,9 @@ export default class productCardList extends wepy.component {
         color: #ffffff;
         border-radius: 30rpx;
         }
-
+        .redBtn {
+        background-color:#f5222d;
+        }
 
       }
   }

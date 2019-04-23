@@ -7,7 +7,7 @@
       </view>
     </view>
     <view class="info_block">
-      <navigator class="item" url="/pages/order">
+      <navigator class="item" url="/pages/order?type=0">
         <view class="item_content ">
           <view class="text " >我的订单</view>
         </view>
@@ -23,23 +23,23 @@
           </view>
         </navigator>
 
-<!--         <navigator url="/pages/order?type=2">
-          <view class="cart_menu">
-              <view class="badge" wx:if="{{orderStatics.on-hold > 0}}">{{orderStatics.on-hold}}</view>
-              <image class="cart_img" src="../images/post.png"></image>
-              <view class="cart_text">待发货</view>
-          </view>
-        </navigator> -->
-
         <navigator url="/pages/order?type=2">
           <view class="cart_menu">
               <view class="badge" wx:if="{{orderStatics.processing > 0}}">{{orderStatics.processing}}</view>
-              <image class="cart_img" src="../images/ship.png"></image>
-              <view class="cart_text">配送中</view>
+              <image class="cart_img" src="../images/post.png"></image>
+              <view class="cart_text">待发货</view>
           </view>
         </navigator>
 
         <navigator url="/pages/order?type=3">
+          <view class="cart_menu">
+              <view class="badge" wx:if="{{orderStatics.shipped > 0}}">{{orderStatics.shipped}}</view>
+              <image class="cart_img" src="../images/ship.png"></image>
+              <view class="cart_text">已发货</view>
+          </view>
+        </navigator>
+
+        <navigator url="/pages/order?type=4">
           <view class="cart_menu">
               <view class="badge" wx:if="{{orderStatics.completed > 0}}">{{orderStatics.completed}}</view>
               <image class="cart_img" src="../images/transfer.png"></image>
@@ -47,7 +47,7 @@
           </view>
         </navigator>
 
-        <navigator url="/pages/order?type=4">
+        <navigator url="/pages/order?type=5">
           <view class="cart_menu">
                 <view class="badge" wx:if="{{orderStatics.cancelled > 0}}">{{orderStatics.cancelled}}</view>
               <image class="cart_img" src="../images/reject.png"></image>
@@ -219,12 +219,12 @@ export default class Index extends wepy.page {
     let userInfo = wepy.getStorageSync(USER_INFO);
     that.avatarUrl = userInfo.avatarUrl;
     that.nickName = userInfo.nickName;
-    this.getOrderStatics();
+    // this.getOrderStatics();
   }
   onShow(){
     let that = this;
     this.getUserInfo();
-
+    this.getOrderStatics();
   }
   onGetPhoneNumber() {
     console.log(e.detail.errMsg)
