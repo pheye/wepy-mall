@@ -358,7 +358,7 @@ console.log("load");
       params.billing_first_name = this.customer.name;
       params.billing_phone =  this.customer.phone;
       // 新增门牌号字段
-      params.billing_roomNo =  this.customer.roomNo;
+      params.billing_room_no =  this.customer.roomNo;
       params.billing_country = 'CN';
       params.billing_state = getStateCode('福建');
       params.billing_city = this.estate.city;
