@@ -484,11 +484,9 @@ export default class goodsDetail extends wepy.page {
       } else {
           // 有自动上下架情况
           let date = new Date();
-          time.startTime= that.detail.date_created;
-          while ( moment(time.startTime).add(that.detail.auto_shelf_days, 'd')._d < date ) {
-            time.startTime = moment(time.startTime).add(that.detail.auto_shelf_days, 'd')._d;
-          }
-          time.endTime = moment(time.startTime).add(that.detail.auto_shelf_days, 'd')._d;
+          let seconds =(((date.getTime() -new Date(that.detail.date_created).getTime())/1000)) %  (that.detail.auto_shelf_days*24*60*60);
+          time.startTime = moment(date).add(-seconds, 'seconds')._d;
+          time.endTime = moment(time.startTime).add(that.detail.auto_shelf_days, 'day')._d ;
       }
 
       if (json.data.validDate == "0") {
