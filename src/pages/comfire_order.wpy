@@ -257,7 +257,7 @@ export default class ComfireOrder extends wepy.page {
 
       for (var i = 0; i < this.list.length; i++) {
           if (!this.list[i].checked) {
-            this.totalPrice -= this.list[i].line_total;
+            // this.totalPrice -= this.list[i].line_total;
           }
           // 读取规格数据
           if (this.list[i].product.type == 'variation'){

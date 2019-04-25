@@ -106,7 +106,7 @@
         for (var i = 0; i < this.list.length; i++) {
           if (!this.list[i].checked) {
             this.allChecked = false;
-            this.totalPrice -= this.list[i].line_total;
+            // this.totalPrice -= this.list[i].line_total;
           } else {
             this.noSelect = false;
           }
