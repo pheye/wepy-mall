@@ -201,7 +201,7 @@ export default class Home extends wepy.page {
     });
     if (json.statusCode == 200) {
       that.discoverList = [...that.discoverList, ...json.data];
-      that.page_total = json.header['X-WP-Total'];
+      that.page_total = json.header['X-WP-TotalPages'];
       if (that.page_total == 0) {
         //暂无数据
         that.is_empty = true;
@@ -319,6 +319,8 @@ export default class Home extends wepy.page {
   onReachBottom() {
 
     let that = this;
+    if (that.is_empty)
+      return;
     that.showLoading = true;
     console.log(that.page_total + "===" + that.currentPage);
     //判断总页数是否大于翻页数
@@ -333,6 +335,7 @@ export default class Home extends wepy.page {
       that.preventRepeatReuqest = false;
     } else {
       that.showLoading = false;
+      that.is_empty = true;
     }
   };
 }
