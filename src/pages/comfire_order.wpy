@@ -400,8 +400,9 @@ console.log("load");
       let me = wepy.getStorageSync(ME) || {};
       //保存成功了后进行微信支付
       if (!json.data.order) {
+          let orderId = json.data.redirect.split('/')[5];
           wepy.navigateTo({
-                url: "/pages/order?type=2"
+                url: "/pages/pay_success?orderNo=" + orderId
           })
           return;
       };
