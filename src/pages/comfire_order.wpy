@@ -657,14 +657,14 @@ console.log("load");
               }
           });
           // 优惠券输入正确
-          console.log(json.data.errors);
           if (json.data.errors.length == 0) {
               tip.success("成功加入优惠券");
               that.getOrderDetailInfo();
           }
           // 优惠券输入错误
            else {
-              tip.confirm(json.data.errors[0],{},"提示",false);
+              let error = json.data.errors[0].replace(/<[^>]*>|/g,'');
+              tip.confirm(error,{},"提示",false);
             }
          }else{
             tip.confirm('请输入优惠券代码',{},"提示",false);
