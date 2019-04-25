@@ -52,7 +52,7 @@
       <view class="btn_group">
         <view class="btn btn_del" @tap="cancelOrder" data-id="{{item.id}}" wx:if="{{item.status=='pending'}}">取消订单</view>
         <view class="btn btn_pay" @tap="payMoney" data-id="{{item.id}}" data-tradeno="{{item.id}}" wx:if="{{item.status== 'pending'}}">立即付款</view>
-        <view class="btn btn_pay" @tap="completion" data-id="{{item.id}}" wx:if="{{item.status== 'processing'}}">确认收货</view>
+        <view class="btn btn_pay" @tap="completion" data-id="{{item.id}}" wx:if="{{item.status== 'shipped'}}">确认收货</view>
       </view>
     </view>
   </view>

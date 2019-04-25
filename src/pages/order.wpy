@@ -8,7 +8,7 @@
     <!--加载更多时动画-->
     <bottomLoadMore :show.sync="showLoading" message="正在加载"></bottomLoadMore>
     <!--暂无数据显示-->
-    <placeholder :show.sync="is_empty" message="暂无发现数据"></placeholder>
+    <view wx:if="{{is_empty}}" style="text-align:center;"> 没有数据了 </view>
   </scroll-view>
 </template>
 <script>
@@ -90,15 +90,13 @@ export default class Order extends wepy.page {
       }
     });
     if (json.statusCode == 200) {
-      console.log("json.data.list");
-      console.log(json.data.list);
       if (refresh) {
         that.orderList = json.data;
       } else {
         that.orderList = [...that.orderList, ...json.data];
       }
       that.pageTotal = json.header['X-WP-TotalPages'];
-      console.log(that.pageTotal);
+      console.log("pageTotal" + that.pageTotal);
       that.totalCount = json.header['X-WP-Total'];
 
       console.log("条目数：" + that.totalCount);
@@ -109,8 +107,6 @@ export default class Order extends wepy.page {
         that.is_empty = false;
       }
       // that.getMyOrderSize();
-      console.log("list返回数据");
-      console.log(that.orderList);
     } else {
       tip.error(json.data.message)
     }
@@ -202,8 +198,10 @@ export default class Order extends wepy.page {
   onReachBottom() {
     console.log("加载更多");
     let that = this;
+    if (that.is_empty)
+      return;
     that.showLoading = true;
-    console.log(that.pageTotal + "232===" + that.currentPage);
+    console.log(that.pageTotal + "===" + that.currentPage);
     //判断总页数是否大于翻页数
     if ((that.pageTotal) > that.currentPage) {
       //防止重复加载
@@ -218,6 +216,7 @@ export default class Order extends wepy.page {
       that.preventRepeatReuqest = false;
     } else {
       that.showLoading = false;
+      that.is_empty = true;
     }
   };
 
