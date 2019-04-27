@@ -200,7 +200,26 @@ export default class Home extends wepy.page {
       }
     });
     if (json.statusCode == 200) {
-      that.discoverList = [...that.discoverList, ...json.data];
+      for (var i = 0; i < json.data.length; i++) {
+        let item = {};
+        item.id = json.data[i].id;
+        item.images = json.data[i].images;
+        item.in_stock = json.data[i].in_stock;
+        item.stock_quantity = json.data[i].stock_quantity;
+        item.name = json.data[i].name;
+        item.on_sale = json.data[i].on_sale;
+        item.min_price = json.data[i].min_price;
+        item.max_price = json.data[i].max_price;
+        item.price = json.data[i].price;
+        item.regular_price = json.data[i].regular_price;
+        item.slug = json.data[i].slug;
+        item.tags = json.data[i].tags;
+        item.featured = json.data[i].featured;
+        item.short_description_html = json.data[i].short_description_html;
+        console.log(item);
+        that.discoverList.push(item);
+      };
+      // that.discoverList = [...that.discoverList, ...json.data];
       that.page_total = json.header['X-WP-TotalPages'];
       if (that.page_total == 0) {
         //暂无数据
