@@ -176,6 +176,7 @@ export default class productCardList extends wepy.component {
     // border-bottom: 1px solid #ededed;
     .item_image_container {
     .item-img {
+    background-color:#666;
      position:relative;
      float:right;
     width: 210rpx !important;

@@ -121,6 +121,7 @@ export default class ShopItemList extends wepy.component {
   image {
     width: 180rpx;
     height: 180rpx;
+    background-color: #666;
   }
 }
 

@@ -37,23 +37,27 @@
     </view>
   </navigator>
   <view class="order_list_footer">
-    <view class="reveiveMoney c333">付款总金额：
-      <text class="num">¥ {{item.total}}</text>
+      <view >
+      <text >总金额:</text>
+      <text class="num"> ¥{{item.total}}</text>
+      </view>
+      <view class="order_state" wx:if="{{item.auditStatus==5}}">
+      </view>
+      <view wx:elif="{{item.auditStatus==-1}}">
+        <view class="btn_group">
+          <view class="btn btn_del" @tap="cancelOrder" data-id="{{item.id}}">取消订单</view>
+        </view>
+      </view>
+      <view wx:else>
+        <view class="btn_group">
+          <view class="btn btn_del" @tap="cancelOrder" data-id="{{item.id}}" wx:if="{{item.status=='pending'}}">取消订单</view>
+          <view class="btn btn_pay" @tap="payMoney" data-id="{{item.id}}" data-tradeno="{{item.id}}" wx:if="{{item.status== 'pending'}}">立即付款</view>
+          <view class="btn btn_pay" @tap="completion" data-id="{{item.id}}" wx:if="{{item.status== 'shipped'}}">确认收货</view>
+        </view>
+
     </view>
 
-    <view class="order_state" wx:if="{{item.auditStatus==5}}">
-    </view>
-    <view wx:elif="{{item.auditStatus==-1}}">
-      <view class="btn_group">
-        <view class="btn btn_del" @tap="cancelOrder" data-id="{{item.id}}">取消订单</view>
-      </view>
-    </view>
-    <view wx:else>
-      <view class="btn_group">
-        <view class="btn btn_del" @tap="cancelOrder" data-id="{{item.id}}" wx:if="{{item.status=='pending'}}">取消订单</view>
-        <view class="btn btn_pay" @tap="payMoney" data-id="{{item.id}}" data-tradeno="{{item.id}}" wx:if="{{item.status== 'pending'}}">立即付款</view>
-        <view class="btn btn_pay" @tap="completion" data-id="{{item.id}}" wx:if="{{item.status== 'shipped'}}">确认收货</view>
-      </view>
+
     </view>
   </view>
 
@@ -218,8 +222,8 @@ export default class orderItem extends wepy.component {
     display: flex;
     align-items: center;
     .btn {
-      font-size: 30rpx;
-      padding: 22rpx 35rpx;
+      font-size: 26rpx;
+      padding: 12rpx 20rpx;
       text-align: center;
       margin: 0 auto;
       width: 100%;

@@ -30,18 +30,29 @@
         <text class="time_num">59:30:30</text>
       </view>
     </view>
+    </view>
     <view class="address_block">
-      <view class="name">
-        <text class="title"> 收货人:</text>
-        <text class="content">{{obj.billing.first_name}}</text>
+      <view>
+        <view class="name">
+          <text class="title"> 收货人:</text>
+          <text class="content">{{obj.billing.first_name}}</text>
+        </view>
+        <view class="name">
+          <text class="title"> 收货人电话:</text>
+          <text class="content">{{obj.billing.phone}}</text>
+        </view>
+        <view class="address">
+          <text class="title"> 收货地址:</text>
+          <text class="content">{{obj.billing.city}} {{obj.billing.address_1}} </text>
+        </view>
       </view>
-      <view class="name">
-        <text class="title"> 收货人电话:</text>
-        <text class="content">{{obj.billing.phone}}</text>
-      </view>
-      <view class="address">
-        <text class="title"> 收货地址:</text>
-        <text class="content">{{obj.billing.city}} {{obj.billing.address_1}} </text>
+      <view>
+          <view class="status" wx:if="{{obj.status=='pending'}}">待付款</view>
+          <view class="status" wx:if="{{obj.status=='processing'}}">待发货</view>
+          <view class="status" wx:if="{{obj.status=='completed'}}">已完成</view>
+          <view class="status" wx:if="{{obj.status=='cancelled'}}">已取消</view>
+          <view class="status" wx:if="{{obj.status=='refunded'}}">已退款</view>
+          <view class="status" wx:if="{{obj.status=='shipped'}}">已发货</view>
       </view>
     </view>
     <view class="goods_block">
@@ -119,8 +130,8 @@ export default class OrderDetail extends wepy.page {
       // that.list = [...that.list, ...json.data.obj.orderItemList];
       that.$invoke('shopItemList', 'refreshList', that.list);
 
-      console.log("========list返回数据========");
-      console.log(that.list);
+      // console.log("========obj返回数据========");
+      // console.log(this.obj);
       // console.log(json.data.obj.orderItemList);
     } else {
       tip.error(json.data.message)
@@ -303,6 +314,9 @@ export default class OrderDetail extends wepy.page {
 .address_block {
   padding: 30rpx;
   background: #fff;
+  display:flex;
+  justify-content:space-between;
+
   margin-top: 10rpx;
   .address {
   }
@@ -312,6 +326,10 @@ export default class OrderDetail extends wepy.page {
   .content {
     color: #000;
     padding-left: 24rpx;
+  }
+  .status{
+    color: #ff4856;
+    font-size: 32rpx;
   }
 }
 
