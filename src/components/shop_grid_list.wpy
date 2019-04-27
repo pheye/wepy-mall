@@ -76,7 +76,6 @@ export default class ShopGridList extends wepy.component {
     image {
       width: 100%;
       height: 345rpx;
-      background-color: #666;
     }
       .img-textbox {
         display: flex;
