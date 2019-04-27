@@ -399,11 +399,6 @@ console.log("load");
     if (json.statusCode  == 200 && json.data.result == 'success') {
       let me = wepy.getStorageSync(ME) || {};
       //保存成功了后进行微信支付
-          wepy.navigateTo({
-                url: "/pages/order?type=2"
-          })
-          return;
-      };
       const pay = await api.toPay({
         query:{
           id: json.data.order.id,
