@@ -113,7 +113,7 @@
     <view style="padding-top:20rpx;padding-left:60rpx;">
       <image src="../images/detail_banner.png"  mode="widthFix" style="width:100%;"/>
     </view>
-    <productCardList :list.sync="discoverList"></productCardList>
+    <productCardList :list.sync="discoverList" :rootImages.sync="rootImages" ></productCardList>
     <!--加载更多时动画-->
     <bottomLoadMore :show.sync="showLoading" message="正在加载"></bottomLoadMore>
     <!--暂无数据显示-->
@@ -188,18 +188,62 @@ export default class Home extends wepy.page {
     currentTabsIndex:0,
     now: 0,
     onSale: true,
-    redBtn:true
+    redBtn:true,
+    //一级分类数据
+    rootcateList: [],
+    //当前分类
+    currentRootCate: 0,
+    // 类目图片
+    rootImages:[],
+    // 类目图目录
+    imageIdx: 0
   }
-  async getDiscoverList(currentPage, size) {
+  //读取一级分类数据
+   async getRootCateTopLevel() {
+    const json = await api.rootCtegoryList({
+      query: {}
+    });
+    if (json.data instanceof Array) {
+      this.rootcateList = json.data;
+      // 类目图
+      for (var i = 0; i < this.rootcateList.length; i++) {
+        this.rootImages[this.rootcateList[i].id] = this.rootcateList[i].image;
+      };
+      // 读取二级分类数据
+      if (this.rootcateList.length > 0) {
+          this.getDiscoverList(this.rootcateList[this.currentRootCate].id);
+      }
+    } else {
+      tip.error("无数据");
+    }
+    this.$apply();
+  }
+  //读取当前类目数据
+  async getDiscoverList(categoryID, currentPage, size) {
     let that = this;
     const json = await api.queryProducts({
       query: {
+        category: categoryID,
         page: currentPage || 1,
-        size: size || 10,
-        on_sale: 1,
+        size: size || 10
+        // on_sale: 1,
       }
     });
     if (json.statusCode == 200) {
+      //没有数据
+      if (json.data.length == 0) {
+        console.log("没有数据" + that.rootcateList[that.currentRootCate].name);
+        that.currentRootCate++;
+        that.currentPage = 1;
+        that.getDiscoverList(that.rootcateList[that.currentRootCate].id);
+        return;
+      } else if (that.currentPage == 1){
+        // 有数据添加类目图
+        console.log("新分类" + that.rootcateList[that.currentRootCate].name);
+        that.imageIdx = that.rootcateList[that.currentRootCate].id;
+        console.log("imageIdx" ,that.imageIdx);
+      }
+      // 读取二级数据
       for (var i = 0; i < json.data.length; i++) {
         let item = {};
         item.id = json.data[i].id;
@@ -216,11 +260,26 @@ export default class Home extends wepy.page {
         item.tags = json.data[i].tags;
         item.featured = json.data[i].featured;
         item.short_description_html = json.data[i].short_description_html;
+        item.imageIdx = that.imageIdx;
         console.log(item);
         that.discoverList.push(item);
+        that.imageIdx =0;
       };
-      // that.discoverList = [...that.discoverList, ...json.data];
+      //不足10条
+      if (json.data.length < 10 ) {
+          that.currentRootCate++;
+          if (that.currentRootCate < that.rootcateList.length ) {
+            that.currentPage = 1;
+            that.getDiscoverList(that.rootcateList[that.currentRootCate].id);
+            return;
+          } else {
+            that.showLoading = false;
+            that.is_empty = true;
+          }
+      }
+
       that.page_total = json.header['X-WP-TotalPages'];
+      console.log("page_total" + that.page_total);
       if (that.page_total == 0) {
         //暂无数据
         that.is_empty = true;
@@ -273,7 +332,9 @@ export default class Home extends wepy.page {
   onLoad() {
     let that = this;
     this.discoverList = [];
-    that.getDiscoverList();
+    this.rootImages = [];
+    this.currentRootCate = 0;
+    that.getRootCateTopLevel();
     this.getAdList();
 
     let currentEstate = wepy.getStorageSync(CURRENT_ESTATE);
@@ -350,7 +411,7 @@ export default class Home extends wepy.page {
       }
       that.preventRepeatReuqest = true;
       that.currentPage++;
-      that.getDiscoverList(that.currentPage);
+      that.getDiscoverList(that.rootcateList[that.currentRootCate].id,that.currentPage);
       that.preventRepeatReuqest = false;
     } else {
       that.showLoading = false;
