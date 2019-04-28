@@ -1,12 +1,12 @@
 <template>
   <view wx:for="{{list}}" wx:for-item="item" wx:key="index">
+  <image class="cateImage" wx:if="{{rootImages[item.imageIdx]}}" src="{{rootImages[item.imageIdx]}}" mode="widthFix"/>
   <!--
   <van-card price="{{item.price + '/ 件'}}" origin-price="{{item.regular_price != item.price ? item.regular_price :  null}}" title="{{item.name}}" thumb="{{item.images[0].shop_thumbnail}}" thumb-link="/pages/goods_detail?id={{item.id}}" custom-class="item" tag="{{tags[index]}}" num="{{'库存:' + item.stock_quantity}}" desc="{{descs[index] }}" >
       <view slot="footer" style="border-top:1rpx solid #ededed;margin-top:8rpx"></view>
     </van-card>
   -->
    <!--商品内容-->
-
   <van-row gutter="15">
     <view class="item_container">
       <van-col span="8" class="item_image_container">
@@ -78,7 +78,10 @@ export default class productCardList extends wepy.component {
           default: []
       },
       onSale:Boolean,
-      redBtn:Boolean
+      redBtn:Boolean,
+      rootImages: {
+          default: []
+      }
   }
   addExtra() {
   }
@@ -309,5 +312,8 @@ export default class productCardList extends wepy.component {
   }
 
 }
+.cateImage{
+  width: 750rpx;
 
+}
 </style>
