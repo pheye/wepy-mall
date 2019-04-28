@@ -310,6 +310,9 @@
       margin-right: 20rpx;
       background-color: #d8d8d8;
       margin-left: 80rpx;
+      .img {
+        background-color: #666;
+      }
     }
     .text-box {
       width: 440rpx;

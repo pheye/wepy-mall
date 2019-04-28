@@ -1,6 +1,6 @@
 <!--订单详情-->
 <template>
-  <view class="order_detail">
+<!--   <view class="order_detail">
   <navigator class="item_content" url="/pages/logistics?orderNo={{orderNo}}">
     <view class="order_state" wx:if="{{obj.status==2 || obj.status==1}}">
       <view class="left">
@@ -15,7 +15,6 @@
       <view class="right">
         <view>&gt;</view>
       </view>
-
     </view>
   </navigator>
     <view class="order_state" wx:if="{{obj.status==0}}">
@@ -30,18 +29,29 @@
         <text class="time_num">59:30:30</text>
       </view>
     </view>
+    </view> -->
     <view class="address_block">
-      <view class="name">
-        <text class="title"> 收货人:</text>
-        <text class="content">{{obj.billing.first_name}}</text>
-      </view>
-      <view class="name">
-        <text class="title"> 收货人电话:</text>
-        <text class="content">{{obj.billing.phone}}</text>
-      </view>
-      <view class="address">
-        <text class="title"> 收货地址:</text>
-        <text class="content">{{obj.billing.city}} {{obj.billing.address_1}} </text>
+      <view>
+          <view class="name">
+            <text class="title"> 收货人:</text>
+            <text class="content">{{obj.billing.first_name}}</text>
+          </view>
+          <view class="name">
+            <text class="title"> 收货人电话:</text>
+            <text class="content">{{obj.billing.phone}}</text>
+          </view>
+          <view class="address">
+            <text class="title"> 收货地址:</text>
+            <text class="content">{{obj.billing.city}} {{obj.billing.address_1}} </text>
+          </view>
+        </view>
+        <view>
+          <view class="status" wx:if="{{obj.status=='pending'}}">待付款</view>
+          <view class="status" wx:if="{{obj.status=='processing'}}">待发货</view>
+          <view class="status" wx:if="{{obj.status=='completed'}}">已完成</view>
+          <view class="status" wx:if="{{obj.status=='cancelled'}}">已取消</view>
+          <view class="status" wx:if="{{obj.status=='refunded'}}">已退款</view>
+          <view class="status" wx:if="{{obj.status=='shipped'}}">已发货</view>
       </view>
     </view>
     <view class="goods_block">
@@ -304,6 +314,8 @@ export default class OrderDetail extends wepy.page {
   padding: 30rpx;
   background: #fff;
   margin-top: 10rpx;
+    display:flex;
+  justify-content:space-between;
   .address {
   }
   .title {
@@ -312,6 +324,10 @@ export default class OrderDetail extends wepy.page {
   .content {
     color: #000;
     padding-left: 24rpx;
+  }
+    .status{
+    color: #ff4856;
+    font-size: 32rpx;
   }
 }
 
