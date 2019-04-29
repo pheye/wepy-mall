@@ -113,6 +113,8 @@
     <view style="padding-top:20rpx;padding-left:60rpx;">
       <image src="../images/detail_banner.png"  mode="widthFix" style="width:100%;"/>
     </view>
+
+    <productCardList2 :list.sync="featuredList" ></productCardList2>
     <productCardList :list.sync="discoverList" :rootImages.sync="rootImages" ></productCardList>
     <!--加载更多时动画-->
     <bottomLoadMore :show.sync="showLoading" message="正在加载"></bottomLoadMore>
@@ -155,6 +157,7 @@ export default class Home extends wepy.page {
     productCardListTab2: ProductCardList,
     productCardListTab3: ProductCardList,
     productCardListTab4: ProductCardList,
+    productCardList2: ProductCardList,
     cartAdvise: CartAdvise,
   }
   data = {
@@ -196,7 +199,9 @@ export default class Home extends wepy.page {
     // 类目图片
     rootImages:[],
     // 类目图目录
-    imageIdx: 0
+    imageIdx: 0,
+    // 精选商品
+    featuredList:[]
   }
   //读取一级分类数据
    async getRootCateTopLevel() {
@@ -329,11 +334,28 @@ export default class Home extends wepy.page {
       this.$apply();
     } else {}
   }
+  // 加载精选商品
+  async getFeaturedProducts(currentPage,size) {
+    const json = await api.queryProducts({
+      query: {
+        page: currentPage || 1,
+        size: size || 10,
+        featured: true
+      }
+    });
+    if (json.statusCode !== 200) {
+        tip.error(json.data.message);
+        return;
+    }
+    this.featuredList = json.data;
+    this.$apply()
+  }
   onLoad() {
     let that = this;
     this.discoverList = [];
     this.rootImages = [];
     this.currentRootCate = 0;
+    that.getFeaturedProducts();
     that.getRootCateTopLevel();
     this.getAdList();
 
