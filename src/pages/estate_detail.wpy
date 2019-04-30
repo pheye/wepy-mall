@@ -5,6 +5,7 @@
     <van-cell title="联系电话" value="{{estate.phone}}"/>
     <van-cell title="地址" value="{{estate.address}}"/>
     <van-cell title="营业时间" value="{{estate.timerange}}"/>
+    <image class="qrcode" src="{{estate.qrcode.guid}}" mode="widthFix" data-src="{{estate.qrcode.guid}}" @tap="previewImage"></image>
   </view>
 </template>
 <script>
@@ -24,13 +25,26 @@ export default class Provider extends wepy.page {
   }
   computed = {}
   onLoad() {
-    this.init()      
+    this.init()
   }
   async init() {
     this.estate= wepy.getStorageSync(CURRENT_ESTATE);
+  }
+  methods = {
+    previewImage(e) {
+    let current = e.target.dataset.src;
+      wx.previewImage({
+        current: current,
+        urls: [current]
+      })
+    }
   }
 }
 
 </script>
 <style lang="less" >
+.qrcode{
+  width:750rpx;
+  height: 750rpx;
+}
 </style>
