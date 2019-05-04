@@ -26,7 +26,7 @@
         <!-- 商品详情 -->
         <view class="item_detail_container">
           <!-- 名称 -->
-         <view class="item_title">{{item.name}}</view>
+         <navigator class="item_title" url="/pages/goods_detail?id={{item.id}}">{{item.name}}</navigator>
          <!-- 描述 -->
          <view class="item_desc">{{ descs[index] }}</view>
          <!-- 库存 -->
