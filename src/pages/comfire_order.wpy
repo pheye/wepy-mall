@@ -354,7 +354,6 @@ console.log("load");
     tip.loading("提交订单中");
     let params = {}
     if (this.chosenShipping.method_id == 'local_pickup') {
-      // TODO
       params.billing_first_name = this.customer.name;
       params.billing_phone =  this.customer.phone;
       // 新增门牌号字段
@@ -362,7 +361,8 @@ console.log("load");
       params.billing_country = 'CN';
       params.billing_state = getStateCode('福建');
       params.billing_city = this.estate.city;
-      params.billing_address_1 = this.estate.title.rendered + " " + this.estate.address;
+      params.billing_address_1 = this.estate.title.rendered;
+      // params.shipping_address_1 = this.estate.title.rendered + " " + this.estate.address;
       if (this.estate.referal) {
         params.ref = this.estate.referal;
       }
