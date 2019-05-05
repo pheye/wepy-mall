@@ -4,7 +4,7 @@ import {
 } from '@/utils/wxRequest';
 
 let env = "-test" //-dev 或者 -test
-const apiMall = 'https://sujiefs.com/'
+// const apiMall = 'https://sujiefs.com/'
 const host = "https://lingqule.papamk.com"
 // const apiMall = 'http://localhost:8080/'
 
@@ -13,18 +13,18 @@ const host = "https://lingqule.papamk.com"
  * @param  {[type]} params [description]
  * @return {[type]}        [description]
  */
-const getDiscoverList = (params) => wxRequest(params, apiMall + '/goods/list?cateidOne=1&cateidTwo=0&price=0&sales=2');
+// const getDiscoverList = (params) => wxRequest(params, apiMall + '/goods/list?cateidOne=1&cateidTwo=0&price=0&sales=2');
 
 //微信的jscode换取sessionKey
 const wxJsCode2Session = (params) => request(host + "/wp-json/w2w/v1/customers/login", {...params, method: 'POST'});
-const user2session = (params) => wxRequest(params, apiMall + "/api/wechat/user2session?jsoncallback=?");
+// const user2session = (params) => wxRequest(params, apiMall + "/api/wechat/user2session?jsoncallback=?");
 
 const getToken = (params) => request(`${host}/wp-json/jwt-auth/v1/token`, {...params, method:'POST'});
 const getMe= (params) => request(`${host}/wp-json/wp/v2/users/me`, {...params});
 //商品接口---begin
 //首页发现商品接口
-const hostGoodsList = (params) => wxRequest(params, apiMall + '/api/home/hostGoodsList');
-const getHomeDisvocerList = (params) => wxRequest(params, apiMall + '/api/mall/discoverList');
+// const hostGoodsList = (params) => wxRequest(params, apiMall + '/api/home/hostGoodsList');
+// const getHomeDisvocerList = (params) => wxRequest(params, apiMall + '/api/mall/discoverList');
 
 //查询商品列表
 const queryProducts = ({query}) => request(`${host}/wp-json/w2w/v1/products`, {query: {...query, status: 'publish'}});
@@ -52,7 +52,7 @@ const delCoupons = (params) => request(`${host}/wp-json/w2w/v1/cart/coupon`, {..
 //购物车的商品数量更新
 const cartUpdateNum = (params) => request(`${host}/wp-json/w2w/v1/cart/update_quantity`, {...params, method: 'POST'});
 //直接购买商品
-const preOrder = (params) => wxRequest(params, apiMall + '/api/mall/goodsOrder/commitData');
+// const preOrder = (params) => wxRequest(params, apiMall + '/api/mall/goodsOrder/commitData');
 
 // 订单状态汇总
 const getOrderStatics = (params) => request(`${host}/wp-json/w2w/v1/customers/orderinfo`, params);
@@ -64,65 +64,65 @@ const saveByCart = ({query}) => request(`${host}/wp-json/w2w/v1/orders`, {query,
 const toPay = (params) => request(`${host}/wp-json/w2w/v1/payment`, params);
 
 //商品收藏
-const goodsFavorite = (params) => wxRequest(params, apiMall + '/api/mall/goodsFavorite/add');
+// const goodsFavorite = (params) => wxRequest(params, apiMall + '/api/mall/goodsFavorite/add');
 
 //商品收藏删除
-const goodsUnFavorite = (params) => wxRequest(params, apiMall + '/api/mall/goodsFavorite/delete');
+// const goodsUnFavorite = (params) => wxRequest(params, apiMall + '/api/mall/goodsFavorite/delete');
 
 //商品是否已收藏
-const goodsIsFavorite = (params) => wxRequest(params, apiMall + '/api/mall/goodsFavorite/goodsIsFavorite');
+// const goodsIsFavorite = (params) => wxRequest(params, apiMall + '/api/mall/goodsFavorite/goodsIsFavorite');
 
 //商品接口---end
 
 //用户相关信息--begin
 //用户的当天签到信息
-const userSginInfo = (params) => wxRequest(params, apiMall + '/api/userSign/signInfo');
-const doSign = (params) => wxRequest(params, apiMall + '/api/userSign/doSign');
+// const userSginInfo = (params) => wxRequest(params, apiMall + '/api/userSign/signInfo');
+// const doSign = (params) => wxRequest(params, apiMall + '/api/userSign/doSign');
 //获取最近七天签到情况
-const getSignDate = (params) => wxRequest(params, apiMall + '/api/userSign/getSignDate');
+// const getSignDate = (params) => wxRequest(params, apiMall + '/api/userSign/getSignDate');
 
 //用户积分信息
-const pointInfo = (params) => wxRequest(params, apiMall + '/api/userPoint/pointInfo');
+// const pointInfo = (params) => wxRequest(params, apiMall + '/api/userPoint/pointInfo');
 
-//用户足迹信息
-const browseInfo = (params) => wxRequest(params, apiMall + '/api/userBrowse/browseInfo');
-//添加用户足迹
-const addBrowser = (params) => wxRequest(params, apiMall + '/api/userBrowse/add');
-//添加用户足迹
-const delUserBrowser = (params) => wxRequest(params, apiMall + '/api/userBrowse/delete');
+// //用户足迹信息
+// const browseInfo = (params) => wxRequest(params, apiMall + '/api/userBrowse/browseInfo');
+// //添加用户足迹
+// const addBrowser = (params) => wxRequest(params, apiMall + '/api/userBrowse/add');
+// //添加用户足迹
+// const delUserBrowser = (params) => wxRequest(params, apiMall + '/api/userBrowse/delete');
 
-//用户收藏的商品
-const favoriteInfo = (params) => wxRequest(params, apiMall + '/api/goodsFavorite/favoriteInfo');
+// //用户收藏的商品
+// const favoriteInfo = (params) => wxRequest(params, apiMall + '/api/goodsFavorite/favoriteInfo');
 
-//用户消息
-const messageInfo = (params) => wxRequest(params, apiMall + '/api/systemMessage/messageInfo');
+// //用户消息
+// const messageInfo = (params) => wxRequest(params, apiMall + '/api/systemMessage/messageInfo');
 
-//用户手机绑定
-const registerUser = (params) => wxRequest(params, apiMall + '/api/userCenter/register');
-//发送短信
-const sendRandCode = (params) => wxRequest(params, apiMall + '/api/sms/send');
+// //用户手机绑定
+// const registerUser = (params) => wxRequest(params, apiMall + '/api/userCenter/register');
+// //发送短信
+// const sendRandCode = (params) => wxRequest(params, apiMall + '/api/sms/send');
 
 //用户是否绑定手机号
 const getUserInfo = (id) => request(`${host}/wp-json/wc/v3/customers/${id}`);
 
 //用户收货地址
-const getUserAddress = (params) => wxRequest(params, apiMall + '/api/receiverInfo/list');
+// const getUserAddress = (params) => wxRequest(params, apiMall + '/api/receiverInfo/list');
 
-//保存用户收货地址
-const saveAddress = (params) => wxRequest(params, apiMall + '/api/receiverInfo/saveOrUpdate');
+// //保存用户收货地址
+// const saveAddress = (params) => wxRequest(params, apiMall + '/api/receiverInfo/saveOrUpdate');
 
-//用户收货地址根据id查询
-const receiverInfoById = (params) => wxRequest(params, apiMall + '/api/receiverInfo/receiverInfoById');
+// //用户收货地址根据id查询
+// const receiverInfoById = (params) => wxRequest(params, apiMall + '/api/receiverInfo/receiverInfoById');
 
-//根据Id删除收货地址
-const delUserAddress = (params) => wxRequest(params, apiMall + '/api/receiverInfo/operation');
+// //根据Id删除收货地址
+// const delUserAddress = (params) => wxRequest(params, apiMall + '/api/receiverInfo/operation');
 
-//查询关键字保存
-const addSearchKeyword = (params) => wxRequest(params, apiMall + '/api/searchkeyword/add');
-//查询关键字列表
-const searchKeywordList = (params) => wxRequest(params, apiMall + '/api/searchkeyword/list');
-//查询关键字清除
-const clearSearchKeyword = (params) => wxRequest(params, apiMall + '/api/searchkeyword/clear');
+// //查询关键字保存
+// const addSearchKeyword = (params) => wxRequest(params, apiMall + '/api/searchkeyword/add');
+// //查询关键字列表
+// const searchKeywordList = (params) => wxRequest(params, apiMall + '/api/searchkeyword/list');
+// //查询关键字清除
+// const clearSearchKeyword = (params) => wxRequest(params, apiMall + '/api/searchkeyword/clear');
 
 //查询我的订单
 // const getMyOrderList = (params) => wxRequest(params, apiMall + '/api/mall/goodsOrder/getMyOrderList');
@@ -153,25 +153,25 @@ const queryOrders = async (params) => {
 const updateOrders = (id, params) => request(`${host}/wp-json/wc/v3/orders/${id}`, {...params, method: 'PUT'})
 
 //查询我的订单数量
-const getMyOrderSize = (params) => wxRequest(params, apiMall + '/api/mall/goodsOrder/getMyOrderSize');
+// const getMyOrderSize = (params) => wxRequest(params, apiMall + '/api/mall/goodsOrder/getMyOrderSize');
 
-//根据订单号查询详情
-const getOrderInfo = (params) => wxRequest(params, apiMall + '/api/mall/goodsOrder/getOrderDetail');
+// //根据订单号查询详情
+// const getOrderInfo = (params) => wxRequest(params, apiMall + '/api/mall/goodsOrder/getOrderDetail');
 
 //根据订单号查询详情
 const getOrders = (id, params) => request(`${host}/wp-json/w2w/v1/orders/${id}`, params);
 
 //根据订单号查询详情
-const editOrderInfo = (params) => wxRequest(params, apiMall + '/api/mall/goodsOrder/opt');
+// const editOrderInfo = (params) => wxRequest(params, apiMall + '/api/mall/goodsOrder/opt');
 
-//根据订单号查询物流
-const orderExpressInfo = (params) => wxRequest(params, apiMall + '/api/orderExpress/orderExpressInfo');
+// //根据订单号查询物流
+// const orderExpressInfo = (params) => wxRequest(params, apiMall + '/api/orderExpress/orderExpressInfo');
 
-//查询用户的已订购产品
-const goodsUserOrderList = (params) => wxRequest(params, apiMall + '/api/mall/goodsOrder/goodsUserOrderList');
+// //查询用户的已订购产品
+// const goodsUserOrderList = (params) => wxRequest(params, apiMall + '/api/mall/goodsOrder/goodsUserOrderList');
 
-//退货操作
-const refundApply = (params) => wxRequest(params, apiMall + '/api/mall/refund/saveRefundApply');
+// //退货操作
+// const refundApply = (params) => wxRequest(params, apiMall + '/api/mall/refund/saveRefundApply');
 
 //用户相关信息--end
 
@@ -179,7 +179,7 @@ const refundApply = (params) => wxRequest(params, apiMall + '/api/mall/refund/sa
 //一级分类
 const rootCtegoryList = (params) => request(`${host}/wp-json/w2w/v1/products/categories?parent=0&per_page=100`, params);
 //二级三级分类
-const childGoodsCatetoryList = (params) => wxRequest(params, apiMall + '/api/mall/childGoodsCatetoryList');
+// const childGoodsCatetoryList = (params) => wxRequest(params, apiMall + '/api/mall/childGoodsCatetoryList');
 //商品分类--end
 
 //查询广告列表
@@ -194,59 +194,59 @@ const queryEstates = ({query = {}}) => request(`${host}/wp-json/wp/v2/estates`, 
 const queryPages =  (params) => request(`${host}/wp-json/wp/v2/pages`, params)
 
 export default {
-  hostGoodsList,
-  getDiscoverList,
-  getHomeDisvocerList,
+  // hostGoodsList,
+  // getDiscoverList,
+  // getHomeDisvocerList,
   queryProducts,
   getProducts,
   getQrcode,
   getToken,
   getMe,
   wxJsCode2Session,
-  user2session,
-  userSginInfo,
-  doSign,
+  // user2session,
+  // userSginInfo,
+  // doSign,
   addCart,
   getCart,
   cartCheck,
   cartDel,
   cartUpdateNum,
-  preOrder,
-  refundApply,
-  pointInfo,
-  browseInfo,
-  addBrowser,
-  delUserBrowser,
-  favoriteInfo,
-  messageInfo,
-  registerUser,
-  sendRandCode,
+  // preOrder,
+  // refundApply,
+  // pointInfo,
+  // browseInfo,
+  // addBrowser,
+  // delUserBrowser,
+  // favoriteInfo,
+  // messageInfo,
+  // registerUser,
+  // sendRandCode,
   getUserInfo,
-  getUserAddress,
-  saveAddress,
-  receiverInfoById,
-  getUserAddress,
-  addSearchKeyword,
-  searchKeywordList,
-  clearSearchKeyword,
+  // getUserAddress,
+  // saveAddress,
+  // receiverInfoById,
+  // getUserAddress,
+  // addSearchKeyword,
+  // searchKeywordList,
+  // clearSearchKeyword,
   queryOrders,
   updateOrders,
   saveByCart,
   toPay,
   rootCtegoryList,
-  childGoodsCatetoryList,
-  getOrderInfo,
-  editOrderInfo,
-  goodsUserOrderList,
-  orderExpressInfo,
-  delUserAddress,
-  goodsFavorite,
-  goodsUnFavorite,
-  goodsIsFavorite,
-  getMyOrderSize,
+  // childGoodsCatetoryList,
+  // getOrderInfo,
+  // editOrderInfo,
+  // goodsUserOrderList,
+  // orderExpressInfo,
+  // delUserAddress,
+  // goodsFavorite,
+  // goodsUnFavorite,
+  // goodsIsFavorite,
+  // getMyOrderSize,
   getOrders,
   getBanners,
-  getSignDate,
+  // getSignDate,
   queryCities,
   queryEstates,
   queryPages,
