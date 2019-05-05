@@ -14,6 +14,7 @@
 <script>
 import wepy from 'wepy';
 import {SEARCH_LIST} from '@/utils/constant';
+const app = getApp()
 export default class Search extends wepy.component {
   data = {
     searchInputValue: '',
@@ -39,6 +40,7 @@ export default class Search extends wepy.component {
       this.searchList.push({keyword : this.searchInputValue});
       wepy.setStorageSync(SEARCH_LIST,this.searchList);
       this.$emit('searchValue', this.searchInputValue);
+      app.aldstat.sendEvent('用户点击了搜索')
     },
     delText() {
       this.searchInputValue = "";
