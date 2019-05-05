@@ -20,7 +20,7 @@ import {
 } from '@/utils/constant';
 import fundebug from '@/utils/fundebug.1.1.0.min.js'
 import PubSub from 'pubsub-js'
-
+import './utils/sdk/ald-stat'
 // import bugOut from 'bugout-miniprogram';
 
 // bugOut.usePlugins = true
