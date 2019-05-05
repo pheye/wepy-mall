@@ -42,7 +42,7 @@
           </view>
           <view class="address">
             <text class="title"> 收货地址:</text>
-            <text class="content">{{obj.billing.city}} {{obj.billing.address_1}} </text>
+            <text class="content">{{obj.billing.city}} {{obj.billing.address_1}} {{ obj.billing.room_no ? obj.billing.room_no : '' }}</text>
           </view>
         </view>
         <view>
