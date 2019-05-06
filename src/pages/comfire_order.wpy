@@ -41,9 +41,16 @@
             <van-radio name="local_pickup" value="local_pickup" checked-color="#5abb6a"  ></van-radio>
           </view>
         </view>
+        <view class="block" @tap="changeShipping('free_shipping')">
+          <view class="left">送货上门</view>
+          <view class="right">
+            <van-radio name="free_shipping" value="free_shipping" checked-color="#5abb6a"  ></van-radio>
+          </view>
+        </view>
       </van-radio-group>
     <view class="spacing"></view>
-    <view class="address" @tap="setAddress" wx:if="{{chosenShipping.method_id != 'local_pickup'}}">
+    <view class="address" @tap="setAddress" wx:if="{{chosenShipping.method_id == 'flat_rate'}}">
+
       <view class="empty_address" wx:if="{{!is_exit_address}}">
         <view class="title">设置收货地址</view>
         <view class="arrow">&gt;</view>
@@ -62,17 +69,19 @@
         <view class="arrow">&gt;</view>
       </view>
     </view>
-    <view wx:if="{{chosenShipping.method_id == 'local_pickup'}}">
+    <view wx:if="{{chosenShipping.method_id == 'local_pickup' }}">
+
       <navigator  url="/pages/estate">
       <view class="block" style="height:150rpx;">
         <view class="left">
-          <view ><text class='imp'>[提货地址]</text><text class='address_content'>{{estate.title.rendered}}{{estate.address}}</text></view>
-          <view ><text>营业时间:{{estate.timerange}}</text></view>
-          <view ><text>小区代理:{{estate.contact}}  {{estate.phone}}</text></view>
+          <view><text class='imp'>[提货地址]</text><text class='address_content'>{{estate.title.rendered}}{{estate.address}}</text></view>
+          <view><text>营业时间:{{estate.timerange}}</text></view>
+          <view><text>小区代理:{{estate.contact}}  {{estate.phone}}</text></view>
         </view>
         <view class="arrow">&gt;</view>
       </view>
       </navigator>
+
 <!--       <navigator  url="/pages/estate">
       <view class="block">
         <view class="left">自提点:</view>
@@ -96,13 +105,31 @@
         <view class="left">营业时间</view>
         <view class="right">{{estate.timerange}}</view>
       </view> -->
-    </view>
+
       <view class="spacing"></view>
       <view class="block">
-        <view class="left"><text class='imp'>*</text> 提货人:</view>
+        <view class="left"><text class='imp'>*</text>提货人:</view>
         <view class="right input_box">
           <input @input="changeCustomerName" value="{{customer.name}}" placeholder="请输入姓名" />
         </view>
+      </view>
+      </view>
+      <view wx:elif="{{ chosenShipping.method_id == 'free_shipping'}}">
+      <navigator  url="/pages/estate">
+      <view class="block" style="height:100rpx;">
+        <view class="left">
+          <view ><text class='imp'>[小区]</text><text class='address_content'>{{estate.title.rendered}}</text></view>
+        </view>
+        <view class="arrow">&gt;</view>
+      </view>
+      </navigator>
+      <view class="spacing"></view>
+      <view class="block">
+        <view class="left"><text class='imp'>*</text>收货人:</view>
+        <view class="right input_box">
+          <input @input="changeCustomerName" value="{{customer.name}}" placeholder="请输入姓名" />
+        </view>
+      </view>
       </view>
       <view class="block">
         <view class="left"><text class='imp'>*</text> 手机号:</view>
@@ -122,6 +149,7 @@
           <input bindinput="bindKeyInput" placeholder="对本次交易的说明" />
         </view>
       </view>
+
       <view class="spacing"></view>
         <view class="block">
         <view class="left total_jf">积分 \t共{{total_jf_num}}\t可用{{can_use_score}}</view>
@@ -353,7 +381,8 @@ console.log("load");
     //测试调用接口用，可注释
     tip.loading("提交订单中");
     let params = {}
-    if (this.chosenShipping.method_id == 'local_pickup') {
+    if (this.chosenShipping.method_id == 'local_pickup' || this.chosenShipping.method_id == 'free_shipping') {
+
       params.billing_first_name = this.customer.name;
       params.billing_phone =  this.customer.phone;
       // 新增门牌号字段
@@ -544,18 +573,21 @@ console.log("load");
     },
     async goPay(e) {
       var fId = e.detail.formId;
-      if (this.chosenShipping.method_id !== 'local_pickup' && !this.is_exit_address) {
+      if (this.chosenShipping.method_id == 'flat_rate' && !this.is_exit_address) {
+
         await tip.confirm('你未设置收货地址，请设置地址');
         wepy.navigateTo({
           url: "/pages/address?type=order"
         })
         return false;
       }
-      if (this.chosenShipping.method_id == 'local_pickup' && !this.customer.name) {
+      if (this.chosenShipping.method_id !== 'flat_rate' && !this.customer.name) {
+
          tip.confirm('请填写联系人',{},"提示",false);
         return false;
       }
-      if (this.chosenShipping.method_id == 'local_pickup' && !this.customer.phone) {
+      if (this.chosenShipping.method_id !== 'flat_rate' && !this.customer.phone) {
+
          tip.confirm('请填写联系手机',{},"提示",false);
         return false;
       }
