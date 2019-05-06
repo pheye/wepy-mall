@@ -92,7 +92,8 @@ export default class replenishmentGoods extends wepy.page {
     that.winHeight = systemInfo.windowHeight;
     this.list = [];
     this.is_empty = false;
-    this.getMyOrderGoodsList();
+    // 残留的API请求需要删除
+    // this.getMyOrderGoodsList();
     /*that.list = bb.result.products;
     console.log(bb.result.products)*/
   }

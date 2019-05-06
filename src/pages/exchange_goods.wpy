@@ -70,7 +70,8 @@ export default class exchangeGoods extends wepy.page {
 
   onLoad() {
     this.list = [];
-    this.getMyOrderGoodsList();
+    // 残留的API请求需要删除
+    // this.getMyOrderGoodsList();
     /*that.list = bb.result.products;
     console.log(bb.result.products)*/
 
