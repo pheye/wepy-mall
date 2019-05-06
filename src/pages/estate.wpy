@@ -33,7 +33,7 @@ export default class Estate extends wepy.page {
     let items = this.estates.map(item => {
       let children = item.items.map(item2 => {
         if(item2.contact =='')
-        return {text: item2.title.rendered +'（招募中）', id: item2.id,disabled: true}
+        return {text: item2.title.rendered +'（区长招募中）', id: item2.id,disabled: true}
         else return {text: item2.title.rendered, id: item2.id, disabled: false}
         })
       return {text: item.name, disabled: false, children}

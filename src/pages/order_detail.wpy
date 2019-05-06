@@ -44,6 +44,10 @@
             <text class="title"> 收货地址:</text>
             <text class="content">{{obj.billing.city}} {{obj.billing.address_1}} {{ obj.billing.room_no ? obj.billing.room_no : '' }}</text>
           </view>
+          <view class="address" wx:if="{{obj.billing.room_no !=''}}">
+            <text class="title"> 门牌号:</text>
+            <text class="content">{{ obj.billing.room_no }}</text>
+          </view>
         </view>
         <view>
           <view class="status" wx:if="{{obj.status=='pending'}}">待付款</view>
