@@ -69,19 +69,19 @@
         <view class="arrow">&gt;</view>
       </view>
     </view>
-    <view wx:if="{{chosenShipping.method_id == 'local_pickup' || chosenShipping.method_id == 'free_shipping'}}">
+    <view wx:if="{{chosenShipping.method_id == 'local_pickup' }}">
 
       <navigator  url="/pages/estate">
       <view class="block" style="height:150rpx;">
         <view class="left">
-          <view ><text class='imp'>[提货地址]</text><text class='address_content'>{{estate.title.rendered}}{{estate.address}}</text></view>
-          <view ><text>营业时间:{{estate.timerange}}</text></view>
-          <view wx:if="{{chosenShipping.method_id == 'local_pickup'}}"><text>小区代理:{{estate.contact}}  {{estate.phone}}</text></view>
-
+          <view><text class='imp'>[提货地址]</text><text class='address_content'>{{estate.title.rendered}}{{estate.address}}</text></view>
+          <view><text>营业时间:{{estate.timerange}}</text></view>
+          <view><text>小区代理:{{estate.contact}}  {{estate.phone}}</text></view>
         </view>
         <view class="arrow">&gt;</view>
       </view>
       </navigator>
+
 <!--       <navigator  url="/pages/estate">
       <view class="block">
         <view class="left">自提点:</view>
@@ -108,16 +108,30 @@
 
       <view class="spacing"></view>
       <view class="block">
-        <view class="left"><text class='imp'>*</text>
-
-            <text wx:if="{{chosenShipping.method_id == 'local_pickup'}}">提货人:</text>
-            <text wx:elif="{{chosenShipping.method_id == 'free_shipping'}}">收货人:</text>
-        </view>
+        <view class="left"><text class='imp'>*</text>提货人:</view>
         <view class="right input_box">
           <input @input="changeCustomerName" value="{{customer.name}}" placeholder="请输入姓名" />
         </view>
       </view>
-
+      </view>
+      <view wx:elif="{{ chosenShipping.method_id == 'free_shipping'}}">
+      <navigator  url="/pages/estate">
+      <view class="block" style="height:150rpx;">
+        <view class="left">
+          <view ><text class='imp'>[提货地址]</text><text class='address_content'>{{estate.title.rendered}}{{estate.address}}</text></view>
+          <view ><text>营业时间:{{estate.timerange}}</text></view>
+        </view>
+        <view class="arrow">&gt;</view>
+      </view>
+      </navigator>
+      <view class="spacing"></view>
+      <view class="block">
+        <view class="left"><text class='imp'>*</text>收货人:</view>
+        <view class="right input_box">
+          <input @input="changeCustomerName" value="{{customer.name}}" placeholder="请输入姓名" />
+        </view>
+      </view>
+      </view>
       <view class="block">
         <view class="left"><text class='imp'>*</text> 手机号:</view>
         <view class="right input_box">
@@ -136,7 +150,7 @@
           <input bindinput="bindKeyInput" placeholder="对本次交易的说明" />
         </view>
       </view>
-      </view>
+
       <view class="spacing"></view>
         <view class="block">
         <view class="left total_jf">积分 \t共{{total_jf_num}}\t可用{{can_use_score}}</view>
