@@ -591,6 +591,11 @@ console.log("load");
          tip.confirm('请填写联系手机',{},"提示",false);
         return false;
       }
+      if (this.chosenShipping.method_id == 'local_pickup' && !this.estate.contact) {
+
+         tip.confirm('抱歉 ，该小区没有小区长信息，无法下单！',{},"提示",false);
+        return false;
+      }
       this.goToPay(fId);
     },
     async setAddress() {
