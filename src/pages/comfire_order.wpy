@@ -33,7 +33,7 @@
         <view class="left">配送方式</view>
       </view>
 
-      <van-radio-group value="{{chosenShipping.method_id}}" @change="changeShipping('')">
+      <van-radio-group value="{{chosenShipping.method_id}}">
         <view class="block" @tap.="changeShipping('flat_rate')">
           <view class="left">邮寄</view>
           <view class="right">
