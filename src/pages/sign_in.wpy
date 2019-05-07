@@ -106,7 +106,8 @@
         that.signed = true;
         that.conDays = that.conDays + 1;
         that.siging = false;
-        this.getUserSign();
+        // 残留的API请求需要删除
+        // this.getUserSign();
         this.$invoke("wepySignTime","refreshList", "");
         that.$apply();
       } else {

@@ -5,7 +5,7 @@
     <!-- 底部菜单 -->
     <van-action-sheet class='sheet_container' show="{{ show }}" actions="{{ actions }}" bind:close="onClose" bind:select="onSelect"/>
     <!--index.wxml-->
-    <swiper indicator-dots="true" autoplay="true" interval="5000" duration="500" indicator-active-color="#ffc452" indicator-color="#efefef" class="swiper">
+    <swiper indicator-dots="true" autoplay="true" interval="5000" duration="500" indicator-active-color="#ffc452" indicator-color="#efefef" class="swiper" style="margin-top:{{scrMove}}rpx;">
       <block wx:for="{{detail.images}}" key="item" item="item" wx:key="key">
         <swiper-item>
           <image src="{{item.src}}" data-src="{{item.src}}" class="slide-image" @tap="previewImage" />
@@ -13,7 +13,7 @@
       </block>
     </swiper>
 <cartAdvise></cartAdvise>
-    <view class="details-msg">
+    <view class="details-msg" style="margin-top:{{scrMove}}rpx;">
       <view class="details_pinfo" >
         <view class="price_container">
           <view >
@@ -335,7 +335,8 @@ export default class goodsDetail extends wepy.page {
     qrcode:'',
     variantSelected: 0,
     cartQuantity: 0,
-    confirmData: 0
+    confirmData: 0,
+    scrMove :0
   }
 
   components = {
@@ -387,12 +388,13 @@ export default class goodsDetail extends wepy.page {
     // that.addUserBrowser();
     console.log("special===" + this.special);
     this.shareImage = '';
+    this.scrMove = 0;
 
   }
   onShow() {
     // this.goodsIsFavorite();
     //创建动画
-
+    this.scrMove = 0;
     var animation = wx.createAnimation({
       transformOrigin: "50% 50%",
       duration: 200,
@@ -809,14 +811,17 @@ export default class goodsDetail extends wepy.page {
         // 来自页面内转发按钮
         console.log(res.target)
       }
+      this.scrMove = -100;
       return {
         title: this.detail.name,
         path: '/pages/goods_detail?id=' + this.goodsId,
         success: function(res) {
           // 转发成功
+          this.scrMove = 0;
         },
         fail: function(res) {
           // 转发失败
+          this.scrMove = 0;
         }
       }
     },
