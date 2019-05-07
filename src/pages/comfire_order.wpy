@@ -1,6 +1,11 @@
 <!--确认订单-->
 <template>
   <view class="comfire_order">
+<van-steps
+  steps="{{ steps }}"
+  active="1"
+  custom-class="steps"
+/>
 <view class="goodsList">
     <!--列表显示2个，绑定数据记得去掉，这里做调试-->
 <repeat for="{{list}}" key="index" index="index" item="item">
@@ -225,6 +230,14 @@ export default class ComfireOrder extends wepy.page {
 
   data = {
     list: [],
+    steps: [
+        {
+            text: '晚上10点前下单',
+        },
+        {
+            text: '明早11点前送达',
+        }
+    ],
     goodsId: "",
     //卖家留言
     sellerMessage: "",
@@ -744,6 +757,9 @@ console.log("load");
 
 </script>
 <style lang="less">
+.steps {
+    margin-bottom:16rpx;
+}
 .estate_container {
     color: #000;
     align-items: center;

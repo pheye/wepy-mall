@@ -26,19 +26,6 @@
     </swiper>
 
     <cartAdvise></cartAdvise>
-<!--         <view class="product-tab">
-         <van-tabs active="{{activeTab}}">
-            <van-tab title="20:00促销">
-                <productCardListTab1 :list.sync="tabs1"></productCardListTab1>
-            </van-tab>
-            <van-tab title="21:00促销">
-                <productCardListTab2 :list.sync="tabs2"></productCardListTab2>
-            </van-tab>
-            <van-tab title="明10:00促销">
-                <productCardListTab3 :list.sync="tabs3"></productCardListTab3>
-            </van-tab>
-        </van-tabs>
-    </view> -->
     <view class='tabs-box' hidden='{{currentTabsIndex == -1}}'>
       <!-- <block wx:for="{{['10','13','16','21']}}" wx:key="id"> -->
         <view class="tabs-item {{currentTabsIndex == 0 ?'selected':''}} {{tabs0.length == 0?'hidden':''}}" @tap='onTabsItemTap' data-index='0' >
