@@ -109,7 +109,8 @@ export default class Address extends wepy.page {
   }
   events = {
       refreshAddList(msg){
-          this.getUserAddress();
+          // 残留的API请求需要删除
+          // this.getUserAddress();
       }
   }
 
