@@ -77,7 +77,7 @@
     <view wx:if="{{chosenShipping.method_id == 'local_pickup' }}">
 
       <navigator  url="/pages/estate">
-      <view class="block" style="height:150rpx;">
+      <view class="block" style="height:170rpx;">
         <view class="left">
           <view><text class='imp'>[提货地址]</text><text class='address_content'>{{estate.title.rendered}}{{estate.address}}</text></view>
           <view><text>营业时间:{{estate.timerange}}</text></view>

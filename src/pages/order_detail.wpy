@@ -48,6 +48,10 @@
             <text class="title"> 门牌号:</text>
             <text class="content">{{ obj.billing.room_no }}</text>
           </view>
+          <view class="address">
+            <text class="title"> 配送方式:</text>
+            <text class="content">{{ obj.shipping_lines[0].method_title }}</text>
+          </view>
         </view>
         <view>
           <view class="status" wx:if="{{obj.status=='pending'}}">待付款</view>
