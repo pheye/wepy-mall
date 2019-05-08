@@ -164,7 +164,7 @@ export default class CartAdvise extends wepy.component {
   color:#fff;
   opacity: 0.8;
   border-radius: 50rpx;
-  z-index:10;
+  z-index:200;
 
   .advise_message{
       font-size: 25rpx;
