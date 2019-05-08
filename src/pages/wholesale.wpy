@@ -67,7 +67,8 @@ export default class wholesale extends wepy.page {
         that.list = [];
         //that.list = bb.result.products;
         //console.log(bb.result.products)
-        that.getGoodList();
+        // 残留的API请求删除
+        // that.getGoodList();
     }
     computed = {
 
