@@ -126,6 +126,7 @@ import PubSub from 'pubsub-js'
 import {
   CURRENT_ESTATE,
   CART,
+  USER_SPECICAL_INFO,
 } from '@/utils/constant';
 import moment from 'moment'
 
@@ -376,9 +377,18 @@ export default class Home extends wepy.page {
         // 来自页面内转发按钮
         console.log(res.target)
       }
+      let affiliate_id = wepy.getStorageSync(USER_SPECICAL_INFO).affiliate_id;
+      console.log("affiliate_id",affiliate_id);
+      let url ='';
+      if (affiliate_id) {
+          url = '/pages/home?ref=' + affiliate_id;
+       }else{
+          url = '/pages/home';
+       }
+       console.log(url);
       return {
         title: '邻区乐',
-        path: '/pages/home',
+        path: url,
         success: function(res) {
           // 转发成功
         },
