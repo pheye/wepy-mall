@@ -3,7 +3,10 @@
     <view class="header">
       <view class="header_content">
         <image class="avatarUrl" src="{{avatarUrl}}"></image>
-        <view class="nickName">昵称:{{nickName}}</view>
+        <view>
+            <view class="nickName">昵称:{{nickName}}</view>
+            <view>积分:0, 佣金: {{affiliateUnpaid}}</view>
+        </view>
       </view>
     </view>
     <view class="info_block">
@@ -180,8 +183,8 @@ export default class Index extends wepy.page {
     avatarUrl: "",
     nickName: "",
     bShowBind:false,
-    orderStatics:""
-
+    orderStatics:"",
+    affiliateUnpaid: 0,
   }
   async getUserInfo(phone,code) {
     let that = this;
@@ -193,10 +196,12 @@ export default class Index extends wepy.page {
     }
     const json = await api.getMe()
 
+    console.log('json', json)
     if (json.statusCode == 200) {
         let data = json.data
-        let phoneItem = data.meta_data.find(item => item.key == 'phone')
-      if (phoneItem && phoneItem.value.length>0) {
+        let phoneItem = data.phone
+        this.affiliateUnpaid = data.affiliate_unpaid
+      if (phoneItem) {
         this.bShowBind=true;
       } else {
         this.bShowBind = false;
@@ -263,10 +268,10 @@ export default class Index extends wepy.page {
 }
 
 .header_content {
-   display: flex;
+  display: flex;
   flex-direction: row;
   margin: 0 auto;
-  text-align: center;
+// text-align: center;
   padding-top: 48rpx;
 }
 
@@ -274,6 +279,7 @@ export default class Index extends wepy.page {
   width: 80rpx;
   height: 80rpx;
   margin-left:30rpx;
+  margin-right:30rpx;
   border-radius: 1000px;
 }
 
@@ -281,7 +287,6 @@ export default class Index extends wepy.page {
   font-size: 30rpx;
   font-weight: 700;
   padding-top: 15rpx;
-  padding-left: 25rpx;
 }
 
 .info_block {
