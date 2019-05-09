@@ -28,7 +28,9 @@ import './utils/sdk/ald-stat'
 
 fundebug.init(
 {
-    apikey : '31e9e1d6f79fce7ccdd3d215613082394e157b89358fc9caaca3089eaf6797df'
+    apikey : '31e9e1d6f79fce7ccdd3d215613082394e157b89358fc9caaca3089eaf6797df',
+    appVersion: '5.0.0',
+    silentConsole: true,
 })
 
 export default class extends wepy.app {
@@ -136,7 +138,29 @@ export default class extends wepy.app {
     super()
     this.use('requestfix')
     this.use('promisify');
-
+    this.intercept('request', {
+      success(r) {
+        // console.log('s', r)
+        if (r.statusCode == 403) {
+          if (r.data.code === 'jwt_auth_invalid_token') {
+            wepy.removeStorageSync(TOKEN)
+            wepy.removeStorageSync(ME)
+            wx.navigateTo({
+              url: '/pages/authorize'
+            })
+          }
+        }
+        return r;
+      },
+      // fail (p) {
+      //   console.log('p', p);
+      //   return p;
+      // },
+      // complete (p) {
+      //   console.log('c', p)
+      //   return p;
+      // }
+    })
   }
 
   async onLaunch(option) {

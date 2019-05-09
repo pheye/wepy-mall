@@ -185,7 +185,12 @@ export default class Index extends wepy.page {
   }
   async getUserInfo(phone,code) {
     let that = this;
-    let me= wepy.getStorageSync(ME) || {};
+    let me= wepy.getStorageSync(ME);
+    if (!me) {
+        wx.navigateTo({
+            url: '/pages/authorize'
+        })
+    }
     const json = await api.getUserInfo(me.user_id)
 
     if (json.statusCode == 200) {
