@@ -191,7 +191,7 @@ export default class Index extends wepy.page {
             url: '/pages/authorize'
         })
     }
-    const json = await api.getUserInfo(me.user_id)
+    const json = await api.getMe()
 
     if (json.statusCode == 200) {
         let data = json.data

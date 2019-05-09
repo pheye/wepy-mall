@@ -20,7 +20,7 @@ const wxJsCode2Session = (params) => request(host + "/wp-json/w2w/v1/customers/l
 const user2session = (params) => wxRequest(params, apiMall + "/api/wechat/user2session?jsoncallback=?");
 
 const getToken = (params) => request(`${host}/wp-json/jwt-auth/v1/token`, {...params, method:'POST'});
-const getMe= (params) => request(`${host}/wp-json/wp/v2/users/me`, {...params});
+const getMe= (params) => request(`${host}/wp-json/w2w/v1/customers/me`, {...params});
 //商品接口---begin
 //首页发现商品接口
 const hostGoodsList = (params) => wxRequest(params, apiMall + '/api/home/hostGoodsList');
