@@ -20,14 +20,14 @@ const wxJsCode2Session = (params) => request(host + "/wp-json/w2w/v1/customers/l
 const user2session = (params) => wxRequest(params, apiMall + "/api/wechat/user2session?jsoncallback=?");
 
 const getToken = (params) => request(`${host}/wp-json/jwt-auth/v1/token`, {...params, method:'POST'});
-const getMe= (params) => request(`${host}/wp-json/wp/v2/users/me`, {...params});
+const getMe= (params) => request(`${host}/wp-json/w2w/v1/customers/me`, {...params});
 //商品接口---begin
 //首页发现商品接口
 const hostGoodsList = (params) => wxRequest(params, apiMall + '/api/home/hostGoodsList');
 const getHomeDisvocerList = (params) => wxRequest(params, apiMall + '/api/mall/discoverList');
 
 //查询商品列表
-const queryProducts = ({query}) => request(`${host}/wp-json/w2w/v1/products`, {query: {...query, status: 'publish'}});
+const queryProducts = ({query}) => request(`${host}/wp-json/w2w/v1/products`, {query: {...query, status: 'publish'}, noauth: true});
 
 //查询商品详情信息
 // const goodsDetail = (id, params) => request(`${host}/wp-json/wc/v3/products/${id}`, params);
@@ -177,13 +177,13 @@ const refundApply = (params) => wxRequest(params, apiMall + '/api/mall/refund/sa
 
 //商品分类--begin
 //一级分类
-const rootCtegoryList = (params) => request(`${host}/wp-json/w2w/v1/products/categories?parent=0&per_page=100`, params);
+const rootCtegoryList = (params) => request(`${host}/wp-json/w2w/v1/products/categories?parent=0&per_page=100`, {...params, noauth: true});
 //二级三级分类
 const childGoodsCatetoryList = (params) => wxRequest(params, apiMall + '/api/mall/childGoodsCatetoryList');
 //商品分类--end
 
 //查询广告列表
-const getBanners = (params) => request(`${host}/wp-json/w2w/v1/store/banner`, params);
+const getBanners = (params) => request(`${host}/wp-json/w2w/v1/store/banner`, {...params, noauth: true});
 
 //获取城市
 const queryCities = (params) => request(`${host}/wp-json/wp/v2/cities?per_page=100`, {...params, noauth: true});
