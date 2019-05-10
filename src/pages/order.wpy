@@ -36,7 +36,7 @@ export default class Order extends wepy.page {
   data = {
     winHeight: 0,
     totalCount: 0,
-    tabList: ["全部订单", "待付款", "待发货","已发货", "已完成", "已取消"],
+    tabList: ["全部订单", "待付款", "待发货","已发货", "已完成", "售后订单"],
     orderList: [],
     currentPage: 1,
     is_empty: false,
@@ -73,7 +73,7 @@ export default class Order extends wepy.page {
       } else if (currentTab == 4) {
         that.orderStatus = "completed";
       } else if (currentTab == 5) {
-        that.orderStatus = "cancelled";
+        that.orderStatus = "refunded";
     }
     // that.orderStatus = orderStatus;
     console.log("orderStatus值");

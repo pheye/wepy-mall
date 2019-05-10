@@ -52,9 +52,9 @@
 
         <navigator url="/pages/order?type=5">
           <view class="cart_menu">
-                <view class="badge" wx:if="{{orderStatics.cancelled > 0}}">{{orderStatics.cancelled}}</view>
+                <view class="badge" wx:if="{{orderStatics.refunded > 0}}">{{orderStatics.refunded}}</view>
               <image class="cart_img" src="../images/reject.png"></image>
-              <view class="cart_text">已取消</view>
+              <view class="cart_text">售后订单</view>
           </view>
         </navigator>
 
