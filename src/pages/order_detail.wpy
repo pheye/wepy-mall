@@ -57,7 +57,7 @@
           <view class="status" wx:if="{{obj.status=='pending'}}">待付款</view>
           <view class="status" wx:if="{{obj.status=='processing'}}">待发货</view>
           <view class="status" wx:if="{{obj.status=='completed'}}">已完成</view>
-          <view class="status" wx:if="{{obj.status=='cancelled'}}">已取消</view>
+          <view class="status" wx:if="{{obj.status=='refunded'}}">售后订单</view>
           <view class="status" wx:if="{{obj.status=='refunded'}}">已退款</view>
           <view class="status" wx:if="{{obj.status=='shipped'}}">已发货</view>
       </view>
