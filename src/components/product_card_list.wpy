@@ -71,7 +71,7 @@ import PubSub from 'pubsub-js'
 import {
   CART,
 } from '@/utils/constant';
-
+const app = getApp()
 export default class productCardList extends wepy.component {
   props = {
       list: {
@@ -135,7 +135,8 @@ export default class productCardList extends wepy.component {
           });
           if (json.statusCode == 200) {
               tip.success("成功加入购物车");
-              PubSub.publish(CART, json.data)
+              PubSub.publish(CART, json.data);
+              app.aldstat.sendEvent('加入购物车')
           } else {
               if (json.data.message) {
                   tip.error(json.data.message)

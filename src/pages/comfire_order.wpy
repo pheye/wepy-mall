@@ -232,6 +232,7 @@ import {
   ME,
 } from '@/utils/constant';
 import swipeDelete from '@/components/common/wepy-swipe-delete'
+const app = getApp()
 export default class ComfireOrder extends wepy.page {
   config = {
     navigationBarTitleText: '确认订单',
@@ -405,6 +406,7 @@ console.log("load");
   async goToPay(formId) {
     //测试调用接口用，可注释
     tip.loading("提交订单中");
+    app.aldstat.sendEvent('点击下单');
     let params = {}
     if (this.chosenShipping.method_id == 'local_pickup' || this.chosenShipping.method_id == 'free_shipping') {
 
@@ -478,6 +480,7 @@ console.log("load");
           paySign: pay.data.paySign,
           success: function (res) {
             console.log('pay', res)
+            app.aldstat.sendEvent('支付成功');
             setTimeout(() => {
               //支付成功 关闭loadding 跳转到支付成功页面
               tip.loaded();
