@@ -120,6 +120,7 @@ export default class extends wepy.app {
         "canvasdrawer": "components/canvasdrawer/canvasdrawer",
         "van-action-sheet": "components/van/action-sheet/index",
         "van-steps": "components/van/steps/index",
+        "van-tag": "components/van/tag/index",
     },
     permission: {
       "scope.userLocation": {
