@@ -289,7 +289,7 @@ export default class ComfireOrder extends wepy.page {
   // 设置订单运货方式
   async setCartShipping(){
     let that = this;
-    const json = await api.cartShipping({
+    const json = await api.updateCartShipping({
       query: {
         shipping_method: that.chosenShipping.id
       }
@@ -720,6 +720,7 @@ console.log("load");
       })
 
       console.log("shipping", e, this.chosenShipping)
+     this.setCartShipping();
       this.$apply()
     },
     // 添加优惠券
@@ -743,7 +744,7 @@ console.log("load");
           // 优惠券输入正确
           if (json.data.errors.length == 0) {
               tip.success("成功加入优惠券");
-              that.setCartShipping();
+              that.getOrderDetailInfo();
           }
           // 优惠券输入错误
            else {
@@ -769,7 +770,7 @@ console.log("load");
           });
           if (json.data.errors.length == 0) {
               tip.success("成功删除优惠券");
-              that.setCartShipping();
+              that.getOrderDetailInfo();
           }
       }
   }
