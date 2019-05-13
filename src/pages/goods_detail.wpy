@@ -219,7 +219,7 @@ import {
 } from '@/utils/constant';
 import PubSub from 'pubsub-js'
 import moment from 'moment'
-const app = getApp()
+var app = getApp()
 export default class goodsDetail extends wepy.page {
   config = {
     navigationBarTitleText: '商品详情'

@@ -115,7 +115,7 @@ import {
   SYSTEM_INFO,
   USER_SPECICAL_INFO
 } from '@/utils/constant';
-const app = getApp()
+var app = getApp()
 export default class OrderDetail extends wepy.page {
   config = {
     navigationBarTitleText: '订单详情',

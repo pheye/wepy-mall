@@ -232,7 +232,7 @@ import {
   ME,
 } from '@/utils/constant';
 import swipeDelete from '@/components/common/wepy-swipe-delete'
-const app = getApp()
+var app = getApp()
 export default class ComfireOrder extends wepy.page {
   config = {
     navigationBarTitleText: '确认订单',
@@ -286,9 +286,22 @@ export default class ComfireOrder extends wepy.page {
     cartSubtotal: 0
 
   }
-
+  // 设置订单运货方式
+  async setCartShipping(){
+    let that = this;
+    const json = await api.cartShipping({
+      query: {
+        shipping_method: that.chosenShipping.id
+      }
+    })
+    if (json.statusCode == 200) {
+        that.getOrderDetailInfo();
+    }else{
+      tip.error(json.data.msg)
+    }
+  }
   //获取订单详情
-  async getOrderDetailInfo(reload) {
+  async getOrderDetailInfo() {
     let that = this;
     const json = await api.getCart({
       query: {
@@ -343,12 +356,10 @@ export default class ComfireOrder extends wepy.page {
       this.reduce_fee = 0; // data.reduceFee;
       this.shipping = data.shipping;
       this.wpnonce = data._wpnonce;
-      if(!reload){
       this.chosenShipping = data.shipping.methods.find(item => {
         return item.id == data.shipping.chosen_method
       })
-      }
-    } else {
+          } else {
       tip.error(json.data.message)
     }
 
@@ -732,7 +743,7 @@ console.log("load");
           // 优惠券输入正确
           if (json.data.errors.length == 0) {
               tip.success("成功加入优惠券");
-              that.getOrderDetailInfo(true);
+              that.setCartShipping();
           }
           // 优惠券输入错误
            else {
@@ -758,7 +769,7 @@ console.log("load");
           });
           if (json.data.errors.length == 0) {
               tip.success("成功删除优惠券");
-              that.getOrderDetailInfo(true);
+              that.setCartShipping();
           }
       }
   }

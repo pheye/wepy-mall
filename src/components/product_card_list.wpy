@@ -71,7 +71,7 @@ import PubSub from 'pubsub-js'
 import {
   CART,
 } from '@/utils/constant';
-const app = getApp()
+var app = getApp()
 export default class productCardList extends wepy.component {
   props = {
       list: {
