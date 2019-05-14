@@ -34,19 +34,19 @@
       </view>
 
       <van-radio-group value="{{chosenShipping.method_id}}">
-        <view class="block" @tap.="changeShipping('flat_rate')">
+          <view class="block" @tap.="changeShipping('flat_rate')" wx:if="{{enabledShipping.flat_rate}}">
           <view class="left">邮寄</view>
           <view class="right">
             <van-radio name="flat_rate" value="flat_rate" checked-color="#5abb6a" ></van-radio>
           </view>
         </view>
-        <view class="block" @tap="changeShipping('local_pickup')">
+        <view class="block" @tap="changeShipping('local_pickup')" wx:if="{{enabledShipping.local_pickup}}">
           <view class="left">自提</view>
           <view class="right">
             <van-radio name="local_pickup" value="local_pickup" checked-color="#5abb6a"  ></van-radio>
           </view>
         </view>
-        <view class="block" @tap="changeShipping('free_shipping')">
+        <view class="block" @tap="changeShipping('free_shipping')" wx:if="{{enabledShipping.free_shipping}}">
           <view class="left">送货上门</view>
           <view class="right">
             <van-radio name="free_shipping" value="free_shipping" checked-color="#5abb6a"  ></van-radio>
@@ -403,7 +403,33 @@ console.log("load");
     this.couponId = '';
 
   }
-  computed = {}
+  computed = {
+      enabledShipping () {
+        let enabled = {
+            'flat_rate': true,
+            'local_pickup': true,
+            'free_shipping': true
+        }
+        if (!this.estate)
+            return enabled
+        if (!this.estate.disabled_shippings)
+            return enabled
+        this.estate.disabled_shippings.map(item => {
+            switch (item) {
+                case 'post':
+                enabled.flat_rate = false
+                break
+                case 'local_pickup':
+                enabled.local_pickup = false
+                break;
+                case 'shipping':
+                enabled.free_shipping = false
+                break
+            }
+        })
+        return enabled
+      }
+  }
 
   async goToPay(formId) {
     //测试调用接口用，可注释
@@ -458,7 +484,7 @@ console.log("load");
       let me = wepy.getStorageSync(ME) || {};
       //保存成功了后进行微信支付
       if (!json.data.order) {
-          wepy.navigateTo({
+          wepy.redirectTo({
                 url: "/pages/order?type=2"
           })
           return;
@@ -603,9 +629,13 @@ console.log("load");
     },
     async goPay(e) {
       var fId = e.detail.formId;
+      if (!this.enabledShipping[this.chosenShipping.method_id]) {
+          tip.alert('请选择配送方式')
+          return false
+      }
       if (this.chosenShipping.method_id == 'flat_rate' && !this.is_exit_address) {
 
-        await tip.confirm('你未设置收货地址，请设置地址');
+        await tip.confirm('请设置收货地址');
         wepy.navigateTo({
           url: "/pages/address?type=order"
         })
@@ -769,6 +799,7 @@ console.log("load");
   onShow () {
   // 更新自提点信息
     this.estate = wepy.getStorageSync(CURRENT_ESTATE);
+    this.$apply()
   }
 }
 
