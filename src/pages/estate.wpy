@@ -1,12 +1,25 @@
 <template>
     <view>
-        <van-tree-select
-          items="{{items}}"
-          active-id="{{currentEstate.id}}"
-          main-active-index="{{ mainActiveIndex }}"
-          bind:click-nav="onClickNav"
-          bind:click-item="onClickItem"
-          />
+        <navigator url="/pages/estate_form">
+            <image src="../images/estate_banner.jpg" mode="widthFix" style="width:100%;display:block;" />
+        </navigator>
+        <van-cell icon="location-o" title="{{items[mainActiveIndex].text}}" clickable="{{!item.disabled}}" value="切换城市" bind:click="onSelectCity" />
+        <repeat for="{{items[mainActiveIndex].children}}" key="index" index="index" item="item">
+            <van-cell value="进入" clickable="true" arrow-direction="right" custom-class="estate-cell" center="true" bind:click="onSelectEstateZone({{item.id}})">
+                <view slot="title" class="estate-cell__title">
+                    <view class="van-cell-text">{{item.text}}</view>
+                    <van-icon name="passed" color="#ff6a3c" wx:if="{{item.id == currentEstate.id}}" size="14px" custom-class="estate-cell__icon"></van-icon>
+                    <van-tag wx:if="{{item.disabled}}" type="danger">区长招募中</van-tag>
+                </view>
+            </van-cell>
+        </repeat>
+        <!-- <van-tree-select -->
+        <!--   items="{{items}}" -->
+        <!--   active-id="{{currentEstate.id}}" -->
+        <!--   main-active-index="{{ mainActiveIndex }}" -->
+        <!--   bind:click-nav="onClickNav" -->
+        <!--   bind:click-item="onClickItem" -->
+        <!--   /> -->
     </view>
 </template>
 <script>
@@ -33,7 +46,7 @@ export default class Estate extends wepy.page {
     let items = this.estates.map(item => {
       let children = item.items.map(item2 => {
         if(item2.contact =='')
-        return {text: item2.title.rendered +'（区长招募中）', id: item2.id,disabled: true}
+        return {text: item2.title.rendered, id: item2.id,disabled: true}
         else return {text: item2.title.rendered, id: item2.id, disabled: false}
         })
       return {text: item.name, disabled: false, children}
@@ -122,8 +135,34 @@ export default class Estate extends wepy.page {
     await this.init()
   }
   methods = {
+    async onSelectCity() {
+        const cities = this.items.map(item => item.text)
+        try {
+            let res = await wepy.showActionSheet({
+                itemList: cities
+            })
+            this.mainActiveIndex = res.tapIndex
+            this.$apply()
+        } catch (e) {
+            // cancelled or other error
+        }
+    },
+    onSelectEstateZone(id) {
+      // console.log("id", id, this.currentEstate)
+
+      const currentEstate = this.estates[this.mainActiveIndex].items.find(item => item.id == id)
+      if (!currentEstate.contact) {
+          tip.alert('该小区正在招募小区长');
+          return;
+      }
+      this.currentEstate = currentEstate
+      wepy.setStorageSync(CURRENT_ESTATE, this.currentEstate)
+      this.$apply()
+      wepy.navigateBack()
+    },
     onClickNav({ detail = {} }) {
       this.mainActiveIndex =  detail.index || 0
+
     },
     onClickItem({ detail = {} }) {
 
@@ -137,5 +176,19 @@ export default class Estate extends wepy.page {
 }
 </script>
 <style lang="less">
-
+.estate-cell {
+    .van-cell__title {
+        flex:2;
+        line-height: 40px;
+    }
+    .estate-cell__title {
+        display:flex;
+        height:100%;
+    }
+    .estate-cell__icon {
+        display: flex;
+        align-items: center;
+        height:100%;
+    }
+}
 </style>
