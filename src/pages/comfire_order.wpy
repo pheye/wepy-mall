@@ -232,6 +232,7 @@ import {
   ME,
 } from '@/utils/constant';
 import swipeDelete from '@/components/common/wepy-swipe-delete'
+var app = getApp()
 export default class ComfireOrder extends wepy.page {
   config = {
     navigationBarTitleText: '确认订单',
@@ -285,7 +286,20 @@ export default class ComfireOrder extends wepy.page {
     cartSubtotal: 0
 
   }
-
+  // 设置订单运货方式
+  async setCartShipping(){
+    let that = this;
+    const json = await api.updateCartShipping({
+      query: {
+        shipping_method: that.chosenShipping.id
+      }
+    })
+    if (json.statusCode == 200) {
+        that.getOrderDetailInfo();
+    }else{
+      tip.error(json.data.msg)
+    }
+  }
   //获取订单详情
   async getOrderDetailInfo() {
     let that = this;
@@ -345,7 +359,7 @@ export default class ComfireOrder extends wepy.page {
       this.chosenShipping = data.shipping.methods.find(item => {
         return item.id == data.shipping.chosen_method
       })
-    } else {
+          } else {
       tip.error(json.data.message)
     }
 
@@ -405,6 +419,7 @@ console.log("load");
   async goToPay(formId) {
     //测试调用接口用，可注释
     tip.loading("提交订单中");
+    app.aldstat.sendEvent('点击下单');
     let params = {}
     if (this.chosenShipping.method_id == 'local_pickup' || this.chosenShipping.method_id == 'free_shipping') {
 
@@ -478,6 +493,7 @@ console.log("load");
           paySign: pay.data.paySign,
           success: function (res) {
             console.log('pay', res)
+            app.aldstat.sendEvent('支付成功');
             setTimeout(() => {
               //支付成功 关闭loadding 跳转到支付成功页面
               tip.loaded();
@@ -704,6 +720,7 @@ console.log("load");
       })
 
       console.log("shipping", e, this.chosenShipping)
+     this.setCartShipping();
       this.$apply()
     },
     // 添加优惠券

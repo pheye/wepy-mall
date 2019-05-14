@@ -115,6 +115,7 @@ import {
   SYSTEM_INFO,
   USER_SPECICAL_INFO
 } from '@/utils/constant';
+var app = getApp()
 export default class OrderDetail extends wepy.page {
   config = {
     navigationBarTitleText: '订单详情',
@@ -248,7 +249,8 @@ export default class OrderDetail extends wepy.page {
           signType: 'MD5',
           paySign: pay.data.paySign,
           success: function (res) {
-            console.log('pay', res)
+            console.log('pay', res);
+            app.aldstat.sendEvent('支付成功');
             setTimeout(() => {
               //支付成功 关闭loadding 跳转到支付成功页面
               tip.loaded();

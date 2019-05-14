@@ -219,6 +219,7 @@ import {
 } from '@/utils/constant';
 import PubSub from 'pubsub-js'
 import moment from 'moment'
+var app = getApp()
 export default class goodsDetail extends wepy.page {
   config = {
     navigationBarTitleText: '商品详情'
@@ -552,6 +553,8 @@ export default class goodsDetail extends wepy.page {
         this.$apply();
       }, 100)
       tip.success("成功加入购物车");
+      app.aldstat.sendEvent('加入购物车');
+
     } else {
       if (json.data.message) {
         tip.error(json.data.message)
@@ -575,7 +578,8 @@ export default class goodsDetail extends wepy.page {
         query
     });
     if (json.statusCode == 200) {
-      PubSub.publish(CART, json.data)
+      PubSub.publish(CART, json.data);
+      app.aldstat.sendEvent('加入购物车');
       this.cartQuantity = json.data.cart_contents_count
       this.winHeight = "100%";
       this.animation.height(0).step();

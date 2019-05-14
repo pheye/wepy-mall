@@ -49,6 +49,8 @@ const cartDel = (params) => request(`${host}/wp-json/w2w/v1/cart/delete`, {...pa
 const addCoupons = (params) => request(`${host}/wp-json/w2w/v1/cart/coupon`, {...params, method: 'POST'});
 //订单中的优惠券删除
 const delCoupons = (params) => request(`${host}/wp-json/w2w/v1/cart/coupon`, {...params, method: 'DELETE'});
+//订单货运方式设置
+const updateCartShipping = (params) => request(`${host}/wp-json/w2w/v1/cart/shipping`, {...params, method: 'POST'});
 //购物车的商品数量更新
 const cartUpdateNum = (params) => request(`${host}/wp-json/w2w/v1/cart/update_quantity`, {...params, method: 'POST'});
 //直接购买商品
@@ -252,5 +254,6 @@ export default {
   queryPages,
   addCoupons,
   delCoupons,
-  getOrderStatics
+  getOrderStatics,
+  updateCartShipping
 }
