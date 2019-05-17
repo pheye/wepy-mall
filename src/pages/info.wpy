@@ -59,12 +59,12 @@
         </navigator>
 
       </view>
-      <!-- <view class="item"> -->
-      <!--   <view class="item_content"> -->
-      <!--     <view class="text">我的优惠券</view> -->
-      <!--   </view> -->
-      <!--   <view class="arrow">&gt;</view> -->
-      <!-- </view> -->
+      <view class="item">
+        <view class="item_content">
+          <view class="text">我的优惠券</view>
+        </view>
+        <view class="arrow">&gt;</view>
+      </view>
       <navigator class="item" url="/pages/estate_detail">
         <view class="item_content">
           <view class="text">联系小区长</view>
@@ -110,13 +110,7 @@
         <!-- </view> -->
         <!-- <view class="arrow">&gt;</view> -->
       <!-- </navigator> -->
-      <!-- <navigator class="item" url="/pages/order">
-        <view class="item_content">
-          <image class="item_img" src="../images/icon_my_02.png"></image>
-          <view class="text">全部订单</view>
-        </view>
-        <view class="arrow">&gt;</view>
-      </navigator>
+      <!-- 
       <view class="item" @tap="setAddress">
         <view class="item_content">
           <image class="item_img" src="../images/icon_my_02.png"></image>
@@ -168,7 +162,7 @@
 import wepy from 'wepy';
 import api from '@/api/api';
 import {
-  USER_INFO,USER_SPECICAL_INFO,
+  USER_INFO,
   ME
 } from '@/utils/constant';
 export default class Index extends wepy.page {
@@ -201,12 +195,13 @@ export default class Index extends wepy.page {
         let data = json.data
         let phoneItem = data.phone
         this.affiliateUnpaid = data.affiliate_unpaid
-      if (phoneItem) {
-        this.bShowBind=true;
-      } else {
-        this.bShowBind = false;
-      }
-      that.$apply();
+        if (phoneItem) {
+            this.bShowBind=true;
+        } else {
+            this.bShowBind = false;
+        }
+        wepy.setStorageSync(ME, {...me, ...json.data})
+        that.$apply();
     } else {
       tip.error(json.data.message)
     }
@@ -229,7 +224,6 @@ export default class Index extends wepy.page {
     let userInfo = wepy.getStorageSync(USER_INFO);
     that.avatarUrl = userInfo.avatarUrl;
     that.nickName = userInfo.nickName;
-    // this.getOrderStatics();
   }
   onShow(){
     let that = this;

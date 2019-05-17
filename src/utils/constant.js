@@ -31,7 +31,7 @@ export const ESTATES = "estates";
 
 export const CURRENT_ESTATE = 'currentEstate';
 
-export const CUSTOMER = 'customer';
+// export const CUSTOMER = 'customer';
 
 export const SEARCH_LIST = 'searchList';
 
