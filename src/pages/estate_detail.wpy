@@ -2,9 +2,11 @@
   <view>
     <van-cell title="自提点" value="{{estate.title.rendered}}"/>
     <van-cell title="小区长" value="{{estate.contact}}"/>
-    <van-cell title="联系电话" value="{{estate.phone}}"/>
+    <!-- <van-cell title="联系电话" value="{{estate.phone}}"/> -->
     <van-cell title="地址" value="{{estate.address}}"/>
     <van-cell title="营业时间" value="{{estate.timerange}}"/>
+    <!-- TODO:客服电话暂时写死 -->
+    <van-cell title="客服电话" value="15880819313"/>
     <image class="qrcode" src="{{estate.qrcode.guid}}" mode="widthFix" data-src="{{estate.qrcode.guid}}" @tap="previewImage"></image>
   </view>
 </template>
