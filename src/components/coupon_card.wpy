@@ -1,12 +1,13 @@
 <template>
-    <view class="coupon-card">
+    <view class="coupon-card" @tap="onSelect({{item}})">
         <view class="coupon-card__content">
-            <view span="8" class="coupon-card__head">
+        <view span="8" class="{{!disabled && item.usable ? 'coupon-card__head' : 'coupon-card__head disabled' }}">
                 {{item.formatted_amount}}
             </view>
             <view span="16" class="coupon-card__body">
-                <view class="coupon-card__body-title">{{item.title}}</view>
+                <view class="{{!disabled && item.usable ? 'coupon-card__body-title' : 'coupon-card__body-title disabled'}}">{{item.title}}</view>
                 <view class="coupon-card__body-date">有效期:{{item.start_date}}~{{item.end_date}}</view>
+                <view class="coupon-card__body-date" wx:if="{{item.minimum_amount}}">满{{item.minimum_amount}}元可用</view>
             </view>
         </view>
         <view class="coupon-card__description">{{item.description}}</view>
@@ -14,10 +15,28 @@
 </template>
 <script>
 import wepy from 'wepy'
+import tip from '@/utils/tip';
+import api from '@/api/api';
 
 export default class CouponCard extends wepy.component {
     props = {
         item: Object
+    }
+    methods = {
+        async onSelect (item) {
+            console.log("select", item)
+			const json = await api.addCoupons({
+				query: {
+					coupons: [item.code]
+				}
+			})
+            if (json.data.errors.length > 0) {
+                const error = json.data.errors[0].replace(/<[^>]*>|/g,'')
+                tip.confirm(error,{},"提示",false); 
+                return
+            }
+            wepy.navigateBack()
+        }
     }
 }
 </script>
@@ -61,6 +80,9 @@ export default class CouponCard extends wepy.component {
         color: #969799;
         background-color: #fafafa;
         border-top: 1px dashed #ebedf0;
+    }
+    .disabled {
+        color: #969799 !important;
     }
 }
 </style>

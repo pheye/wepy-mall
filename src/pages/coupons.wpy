@@ -2,13 +2,13 @@
     <view>
         <van-tabs active="{{active}}" @change="onChangeTab">
             <van-tab title="未使用">
-                <repeat for="{{unusedCoupons}}" kye="index" index="index" item="item">
-                    <couponCard :item="item"></couponCard>
+                <repeat for="{{unusedCoupons}}" key="index" index="index" item="item">
+                    <couponCard :item="item" :selectable="selectable"></couponCard>
                 </repeat>
             </van-tab>
             <van-tab title="已使用">
-                <repeat for="{{usedCoupons}}" kye="index" index="index" item="item">
-                    <couponCard :item="item"></couponCard>
+                <repeat for="{{usedCoupons}}" key="index" index="index" item="item">
+                    <couponCard :item="item" :disabled="true" ></couponCard>
                 </repeat>
             </van-tab>
         </van-tabs>
@@ -31,15 +31,17 @@ export default class Coupons extends wepy.page {
         active:0,
         unusedCoupons: [],
         usedCoupons: [],
+        selectable: false,
     }
     
-    async onLoad () {
-        const res = await api.getCoupons()
+    async onLoad (options) {
+        console.log('options', options)
+        this.selectable = options.selectable || false
+        const res = await api.getCoupons({cart: this.selectable})
         if (res.statusCode !== 200) {
             tip.error(json.data.message)
             return
         }
-        console.log('res', res.data)
         this.unusedCoupons = res.data.filter(item => !item.used)
         this.usedCoupons = res.data.filter(item => item.used)
         this.$apply()

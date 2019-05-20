@@ -176,7 +176,8 @@
       </view>
       <view class="spacing"></view>
        <view class="block">
-        <view class="left input_box"><input  value="{{couponId}}" @input="onCouponIdChange" placeholder="优惠券代码" /></view>
+        <!-- <view class="left input_box"><input  value="{{couponId}}" @input="onCouponIdChange" placeholder="优惠券代码" /></view> -->
+        <view class="left input_box">优惠券</view>
         <view class="right">
           <button @tap="addCoupons" class="coupons_button">使用优惠券</button>
         </view>
@@ -402,7 +403,7 @@ console.log("load");
     // this.purchaseType = option.purchasetype==undefined?"1":option.purchasetype;
     /*that.list = bb.result.products;
     console.log(bb.result.products)*/
-    that.getOrderDetailInfo();
+    // that.getOrderDetailInfo();
     let from = option.from==undefined?"":option.from;
     if (from=="selAdd") {
       this.getAddressInfo(wepy.getStorageSync(ADDRESS_ID))
@@ -758,35 +759,10 @@ console.log("load");
     // 添加优惠券
     async addCoupons() {
         let that = this;
-          // 检查输入
-        if(this.couponId){
-          // 输入已经使用的优惠券
-          for (var i = 0; i < that.coupons.length; i++) {
-            if(that.coupons[i].code == this.couponId){
-              tip.confirm('优惠券已添加',{},"提示",false);
-              return;
-            }
-          };
-          // 调用API
-          const json = await api.addCoupons({
-              query: {
-                  coupons: [this.couponId]
-              }
-          });
-          // 优惠券输入正确
-          if (json.data.errors.length == 0) {
-              tip.success("成功加入优惠券");
-              that.getOrderDetailInfo();
-          }
-          // 优惠券输入错误
-           else {
-              let error = json.data.errors[0].replace(/<[^>]*>|/g,'');
-              tip.confirm(error,{},"提示",false);
-            }
-         }else{
-            tip.confirm('请输入优惠券代码',{},"提示",false);
-         }
-      },
+        wepy.navigateTo({
+            url:'/pages/coupons?selectable=1'
+        })
+    },
     // 优惠券输入
     onCouponIdChange(e) {
       let couponId = e.detail.value ;
@@ -813,6 +789,7 @@ console.log("load");
   onShow () {
   // 更新自提点信息
     this.estate = wepy.getStorageSync(CURRENT_ESTATE);
+    this.getOrderDetailInfo();
     this.$apply()
   }
 }
