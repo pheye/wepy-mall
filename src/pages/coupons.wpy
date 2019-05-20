@@ -6,7 +6,11 @@
                     <couponCard :item="item"></couponCard>
                 </repeat>
             </van-tab>
-            <van-tab title="已使用">优惠券</van-tab>
+            <van-tab title="已使用">
+                <repeat for="{{usedCoupons}}" kye="index" index="index" item="item">
+                    <couponCard :item="item"></couponCard>
+                </repeat>
+            </van-tab>
         </van-tabs>
     </view>
 </template>
@@ -26,6 +30,7 @@ export default class Coupons extends wepy.page {
     data =  {
         active:0,
         unusedCoupons: [],
+        usedCoupons: [],
     }
     
     async onLoad () {
@@ -35,7 +40,8 @@ export default class Coupons extends wepy.page {
             return
         }
         console.log('res', res.data)
-        this.unusedCoupons = res.data
+        this.unusedCoupons = res.data.filter(item => !item.used)
+        this.usedCoupons = res.data.filter(item => item.used)
         this.$apply()
     }
     onShow () {
