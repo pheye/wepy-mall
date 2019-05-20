@@ -45,6 +45,8 @@ const cartCheck = (params) => request(`${host}/wp-json/w2w/v1/cart/check`, {...p
 //购物车的商品删除
 const cartDel = (params) => request(`${host}/wp-json/w2w/v1/cart/delete`, {...params, method: 'POST'});
 
+// 获取优惠券
+const getCoupons = (params) => request(`${host}/wp-json/w2w/v1/customers/coupons`, {...params});
 //订单中的优惠券添加
 const addCoupons = (params) => request(`${host}/wp-json/w2w/v1/cart/coupon`, {...params, method: 'POST'});
 //订单中的优惠券删除
@@ -252,6 +254,7 @@ export default {
   queryCities,
   queryEstates,
   queryPages,
+  getCoupons,
   addCoupons,
   delCoupons,
   getOrderStatics,

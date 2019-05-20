@@ -1,0 +1,51 @@
+<template>
+    <view>
+        <van-tabs active="{{active}}" @change="onChangeTab">
+            <van-tab title="未使用">
+                <repeat for="{{unusedCoupons}}" kye="index" index="index" item="item">
+                    <couponCard :item="item"></couponCard>
+                </repeat>
+            </van-tab>
+            <van-tab title="已使用">优惠券</van-tab>
+        </van-tabs>
+    </view>
+</template>
+<script>
+import wepy from 'wepy'
+import api from '@/api/api';
+import CouponCard from '@/components/coupon_card';
+
+export default class Coupons extends wepy.page {
+  config = {
+    navigationBarTitleText: '优惠券',
+  }
+  components = {
+    couponCard: CouponCard   
+  }
+
+    data =  {
+        active:0,
+        unusedCoupons: [],
+    }
+    
+    async onLoad () {
+        const res = await api.getCoupons()
+        if (res.statusCode !== 200) {
+            tip.error(json.data.message)
+            return
+        }
+        console.log('res', res.data)
+        this.unusedCoupons = res.data
+        this.$apply()
+    }
+    onShow () {
+    }
+    methods = {
+        onChangeTab(event) {
+            console.log('event', event.detail)
+        }
+    }
+}
+</script>
+<style lang="less">
+</style>

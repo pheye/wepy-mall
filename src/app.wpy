@@ -70,6 +70,7 @@ export default class extends wepy.app {
       'pages/provider',
       'pages/estate_form',
       'pages/estate_detail',
+      'pages/coupons',
     ],
     window: {
       backgroundTextStyle: 'dark',
@@ -121,6 +122,8 @@ export default class extends wepy.app {
         "van-action-sheet": "components/van/action-sheet/index",
         "van-steps": "components/van/steps/index",
         "van-tag": "components/van/tag/index",
+        "van-tabs": "components/van/tabs/index",
+        "van-tab": "components/van/tab/index",
     },
     permission: {
       "scope.userLocation": {

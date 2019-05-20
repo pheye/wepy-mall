@@ -59,12 +59,12 @@
         </navigator>
 
       </view>
-      <view class="item">
+      <navigator class="item" url="/pages/coupons">
         <view class="item_content">
           <view class="text">我的优惠券</view>
         </view>
         <view class="arrow">&gt;</view>
-      </view>
+      </navigator>
       <navigator class="item" url="/pages/estate_detail">
         <view class="item_content">
           <view class="text">联系小区长</view>

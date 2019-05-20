@@ -288,6 +288,7 @@ export default class Home extends wepy.page {
       query: {
         orderby:'meta_value_num',
         meta_key: '_sale_price_dates_from',
+        size: 30,
         order: 'desc'
       }
     });
