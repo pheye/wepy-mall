@@ -233,7 +233,7 @@ export default class Home extends wepy.page {
         return;
       } else if (that.currentPage == 1){
         // 有数据添加类目图
-        console.log("新分类" + that.rootcateList[that.currentRootCate].name);
+        // console.log("新分类" + that.rootcateList[that.currentRootCate].name);
         that.imageIdx = that.rootcateList[that.currentRootCate].id;
         console.log("imageIdx" ,that.imageIdx);
       }
@@ -255,7 +255,7 @@ export default class Home extends wepy.page {
         item.featured = json.data[i].featured;
         item.short_description_html = json.data[i].short_description_html;
         item.imageIdx = that.imageIdx;
-        console.log(item);
+        // console.log(item);
         that.discoverList.push(item);
         that.imageIdx =0;
       };
@@ -361,10 +361,10 @@ export default class Home extends wepy.page {
     this.onSale = true;
     this.redBtn =true;
     const settings = this.$parent.globalData.settings
-    // console.log('settings', settings)
+    console.log('settings', settings)
     if (settings.bomscreen) {
       this.isShowAlert = settings.bomscreen.image
-      this.tps = settings.bomscreen.type || 0;
+      this.tps = settings.bomscreen.type || 0
       this.bomImage = settings.bomscreen.image
     }
     this.$apply() 
@@ -407,12 +407,23 @@ export default class Home extends wepy.page {
         }
       }
     },
-    alertCallback() {
+    async alertCallback() {
       // tip.alert('跳转');
       const settings = this.$parent.globalData.settings
-      switch (this.tps) {
+      switch (parseInt(settings.bomscreen.type)) {
         case 1:
-          
+          const res = await api.takeCoupons({
+            query: {
+              code: settings.bomscreen.url
+            }
+          }) 
+          if (res.statusCode != 200) {
+            tip.alert(res.data.message)
+            return
+          }
+          tip.success('领取成功')
+          this.isShowAlert = false
+          this.$apply()
           break;
         default:
           wepy.navigateTo({url: settings.bomscreen.url})

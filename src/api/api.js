@@ -10,7 +10,8 @@ const host = "https://lingqule.papamk.com"
 // const apiMall = 'http://localhost:8080/'
 
 
-const querySettings = () => request(`${host}/wp-json/w2w/v1/store/home`)
+const querySettings = () => request(`${host}/wp-json/w2w/v1/store/home`, {noauth: true})
+
 /**
  * 获取发现好商品接口
  * @param  {[type]} params [description]
@@ -48,8 +49,10 @@ const cartCheck = (params) => request(`${host}/wp-json/w2w/v1/cart/check`, {...p
 //购物车的商品删除
 const cartDel = (params) => request(`${host}/wp-json/w2w/v1/cart/delete`, {...params, method: 'POST'});
 
-// 获取优惠券
+// 获取自己的优惠券
 const getCoupons = (params) => request(`${host}/wp-json/w2w/v1/customers/coupons?${stringify(params)}`);
+// 领取优惠券
+const takeCoupons = (params) => request(`${host}/wp-json/w2w/v1/customers/coupons`, {...params, method: 'PUT'});
 //订单中的优惠券添加
 const addCoupons = (params) => request(`${host}/wp-json/w2w/v1/cart/coupon`, {...params, method: 'POST'});
 //订单中的优惠券删除
@@ -237,6 +240,7 @@ export default {
   queryEstates,
   queryPages,
   getCoupons,
+  takeCoupons,
   addCoupons,
   delCoupons,
   getOrderStatics,
