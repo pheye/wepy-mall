@@ -422,12 +422,14 @@ export default class Home extends wepy.page {
             return
           }
           tip.success('领取成功')
-          this.isShowAlert = false
-          this.$apply()
           break;
         default:
-          wepy.navigateTo({url: settings.bomscreen.url})
+          if (settings.bomscreen.url) {
+            wepy.navigateTo({url: settings.bomscreen.url})
+          }
       }
+      this.isShowAlert = false
+      this.$apply()
     },
     closeAlert() {
      // tip.alert('关闭');
