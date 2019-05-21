@@ -15,7 +15,6 @@
 </template>
 <script>
 import wepy from 'wepy'
-import tip from '@/utils/tip';
 import api from '@/api/api';
 
 export default class CouponCard extends wepy.component {
@@ -23,19 +22,8 @@ export default class CouponCard extends wepy.component {
         item: Object
     }
     methods = {
-        async onSelect (item) {
-            console.log("select", item)
-			const json = await api.addCoupons({
-				query: {
-					coupons: [item.code]
-				}
-			})
-            if (json.data.errors.length > 0) {
-                const error = json.data.errors[0].replace(/<[^>]*>|/g,'')
-                tip.confirm(error,{},"提示",false); 
-                return
-            }
-            wepy.navigateBack()
+        onSelect (item) {
+            this.$emit('callback', item)
         }
     }
 }

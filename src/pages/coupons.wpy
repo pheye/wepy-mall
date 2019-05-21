@@ -3,7 +3,7 @@
         <van-tabs active="{{active}}" @change="onChangeTab">
             <van-tab title="未使用">
                 <repeat for="{{unusedCoupons}}" key="index" index="index" item="item">
-                    <couponCard :item="item" :selectable="selectable"></couponCard>
+                    <couponCard :item="item" :selectable="selectable" @callback.user="onSelect"></couponCard>
                 </repeat>
             </van-tab>
             <van-tab title="已使用">
@@ -17,6 +17,7 @@
 <script>
 import wepy from 'wepy'
 import api from '@/api/api';
+import tip from '@/utils/tip';
 import CouponCard from '@/components/coupon_card';
 
 export default class Coupons extends wepy.page {
@@ -51,6 +52,22 @@ export default class Coupons extends wepy.page {
     methods = {
         onChangeTab(event) {
             console.log('event', event.detail)
+        },
+        async onSelect(item) {
+            // console.log("callback", item, this.selectable)
+            if (!this.selectable || !item.usable)
+                return
+			const json = await api.addCoupons({
+				query: {
+					coupons: [item.code]
+				}
+			})
+            if (json.data.errors.length > 0) {
+                const error = json.data.errors[0].replace(/<[^>]*>|/g,'')
+                tip.confirm(error,{},"提示",false); 
+                return
+            }
+            wepy.navigateBack()
         }
     }
 }
