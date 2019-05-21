@@ -109,7 +109,7 @@
     <view wx:if="{{is_empty}}" style="text-align:center;"> 没有数据了 </view>
 <!--     <placeholder :show.sync="is_empty" message="暂无发现数据"></placeholder>
  -->    <!--弹屏  types:0 图片  1：领红包   show 是否显示  @close 关闭回调  @callback 点击图片回调 或确定回调-->
-    <bombscreen :types.sync="tps" :show.sync="is_show_alert" @close.user="closeAlert" @callback.user="alertCallback"></bombscreen>
+    <bombscreen :types.sync="tps" :image.sync="bomImage" :show.sync="isShowAlert" @close.user="closeAlert" @callback.user="alertCallback"></bombscreen>
   </view>
 </template>
 <script>
@@ -168,7 +168,8 @@ export default class Home extends wepy.page {
     //广告列表
     adList: [],
     tps: 0,
-    is_show_alert: false, //true,
+    isShowAlert: false,
+    bomImage: "",
     currentEstate: {},
     activeTab: 0,
     // wepy的缺陷导致无法使用多维数组传值
@@ -359,6 +360,14 @@ export default class Home extends wepy.page {
     this.now = moment().format('HH');
     this.onSale = true;
     this.redBtn =true;
+    const settings = this.$parent.globalData.settings
+    // console.log('settings', settings)
+    if (settings.bomscreen) {
+      this.isShowAlert = settings.bomscreen.image
+      this.tps = settings.bomscreen.type || 0;
+      this.bomImage = settings.bomscreen.image
+    }
+    this.$apply() 
   }
   computed = {
 
@@ -399,7 +408,15 @@ export default class Home extends wepy.page {
       }
     },
     alertCallback() {
-      tip.alert('跳转');
+      // tip.alert('跳转');
+      const settings = this.$parent.globalData.settings
+      switch (this.tps) {
+        case 1:
+          
+          break;
+        default:
+          wepy.navigateTo({url: settings.bomscreen.url})
+      }
     },
     closeAlert() {
      // tip.alert('关闭');

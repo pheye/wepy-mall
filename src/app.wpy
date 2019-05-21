@@ -135,7 +135,8 @@ export default class extends wepy.app {
   globalData = {
     estates:[],
     // bugOut: bugOut
-    cart: {}
+    cart: {},
+    settings: {}
   }
 
   constructor() {
@@ -169,6 +170,13 @@ export default class extends wepy.app {
 
   async onLaunch(option) {
     // this.loadEstates()
+
+    const res = await api.querySettings()
+    if (res.statusCode !== 200) {
+      return;
+    }
+    this.globalData.settings = res.data
+
     this.checkUsers()
     this.initCart()
     PubSub.subscribe(CART, async (msg, data) => {
@@ -197,6 +205,7 @@ export default class extends wepy.app {
     if (systemInfo.platform == "devtools") {
         // 在开发环境下
     }
+
   }
   // onError(res) {
      // console.log('on error', res)

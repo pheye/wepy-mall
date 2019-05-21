@@ -9,6 +9,8 @@ const apiMall = 'https://sujiefs.com/'
 const host = "https://lingqule.papamk.com"
 // const apiMall = 'http://localhost:8080/'
 
+
+const querySettings = () => request(`${host}/wp-json/w2w/v1/store/home`)
 /**
  * 获取发现好商品接口
  * @param  {[type]} params [description]
@@ -56,8 +58,6 @@ const delCoupons = (params) => request(`${host}/wp-json/w2w/v1/cart/coupon`, {..
 const updateCartShipping = (params) => request(`${host}/wp-json/w2w/v1/cart/shipping`, {...params, method: 'POST'});
 //购物车的商品数量更新
 const cartUpdateNum = (params) => request(`${host}/wp-json/w2w/v1/cart/update_quantity`, {...params, method: 'POST'});
-//直接购买商品
-const preOrder = (params) => wxRequest(params, apiMall + '/api/mall/goodsOrder/commitData');
 
 // 订单状态汇总
 const getOrderStatics = (params) => request(`${host}/wp-json/w2w/v1/customers/orderinfo`, params);
@@ -133,25 +133,6 @@ const clearSearchKeyword = (params) => wxRequest(params, apiMall + '/api/searchk
 // const getMyOrderList = (params) => wxRequest(params, apiMall + '/api/mall/goodsOrder/getMyOrderList');
 const queryOrders = async (params) => {
   let response = await request(`${host}/wp-json/w2w/v1/orders`, params);
-  // if (response.statusCode == 200) {
-  //   let idsArr = response.data.map((item) => item.line_items.map(item2 => item2.product_id).join(','))
-  //   let ids = idsArr.join(',')
-  //   let products = await queryProducts({query: {include: ids}});
-  //   let products2 = {}
-  //   products.data.map(item => {
-  //     products2[item.id] = item
-  //   })
-
-  //   console.log('products', ids, products, products2)
-  //   response.data = response.data.map((item) => {
-  //     item.line_items = item.line_items.map(item2 => {
-  //       let p = products2[item2.product_id];
-  //       item2.image = p ? p.images[0].src : null;
-  //       return item2
-  //     })
-  //     return item
-  //   })
-  // }
   return response;
 }
 
@@ -199,6 +180,7 @@ const queryEstates = ({query = {}}) => request(`${host}/wp-json/wp/v2/estates`, 
 const queryPages =  (params) => request(`${host}/wp-json/wp/v2/pages`, params)
 
 export default {
+  querySettings,
   hostGoodsList,
   getDiscoverList,
   getHomeDisvocerList,
@@ -216,7 +198,6 @@ export default {
   cartCheck,
   cartDel,
   cartUpdateNum,
-  preOrder,
   refundApply,
   pointInfo,
   browseInfo,
