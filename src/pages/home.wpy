@@ -224,6 +224,7 @@ export default class Home extends wepy.page {
       }
     });
     if (json.statusCode == 200) {
+      that.page_total = json.header['X-WP-TotalPages'];
       //没有数据
       if (json.data.length == 0) {
         console.log("没有数据" + that.rootcateList[that.currentRootCate].name);
@@ -260,7 +261,7 @@ export default class Home extends wepy.page {
         that.imageIdx =0;
       };
       //不足10条
-      if (json.data.length < 10 ) {
+      if (json.data.length < 10 || that.page_total == that.currentPage) {
           that.currentRootCate++;
           if (that.currentRootCate < that.rootcateList.length ) {
             that.currentPage = 1;
@@ -272,8 +273,7 @@ export default class Home extends wepy.page {
           }
       }
 
-      that.page_total = json.header['X-WP-TotalPages'];
-      console.log("page_total" + that.page_total);
+      console.log("page_total", that.page_total, that.currentPage);
       if (that.page_total == 0) {
         //暂无数据
         that.is_empty = true;
