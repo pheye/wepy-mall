@@ -1,5 +1,12 @@
 <template>
+
     <view>
+    <view class="block">
+        <view class="left input_box"><input  value="{{couponId}}" @input="onCouponIdChange" placeholder="请输入优惠码" /></view>
+        <view class="right">
+          <button @tap="addCoupons" class="coupons_button">兑换</button>
+        </view>
+    </view>
         <van-tabs active="{{active}}" @change="onChangeTab">
             <van-tab title="未使用">
                 <repeat for="{{unusedCoupons}}" key="index" index="index" item="item">
@@ -25,7 +32,7 @@ export default class Coupons extends wepy.page {
     navigationBarTitleText: '优惠券',
   }
   components = {
-    couponCard: CouponCard   
+    couponCard: CouponCard
   }
 
     data =  {
@@ -33,8 +40,9 @@ export default class Coupons extends wepy.page {
         unusedCoupons: [],
         usedCoupons: [],
         selectable: false,
+        couponId:'',
     }
-    
+
     async onLoad (options) {
         console.log('options', options)
         this.selectable = options.selectable || false
@@ -64,13 +72,70 @@ export default class Coupons extends wepy.page {
 			})
             if (json.data.errors.length > 0) {
                 const error = json.data.errors[0].replace(/<[^>]*>|/g,'')
-                tip.confirm(error,{},"提示",false); 
+                tip.confirm(error,{},"提示",false);
                 return
             }
             wepy.navigateBack()
+        },
+        // 添加优惠券
+        async addCoupons() {
+        let that = this;
+          // 检查输入
+        if(this.couponId){
+          // 调用API
+          const json = await api.addCoupons({
+              query: {
+                  coupons: [this.couponId]
+              }
+          });
+          // 优惠券输入正确
+          if (json.data.errors.length == 0) {
+              tip.success("成功加入优惠券");
+          }
+          // 优惠券输入错误
+           else {
+              let error = json.data.errors[0].replace(/<[^>]*>|/g,'');
+              tip.confirm(error,{},"提示",false);
+            }
+         }else{
+            tip.confirm('请输入优惠券代码',{},"提示",false);
+         }
+      },
+    // 优惠券输入
+    onCouponIdChange(e) {
+      let couponId = e.detail.value ;
+      this.couponId = couponId;
         }
     }
 }
 </script>
 <style lang="less">
+.block {
+    display: flex;
+    justify-content: space-between;
+    // height: 91rpx;
+    align-items: center;
+    padding: 20rpx 35rpx 20rpx;
+    border-bottom: 1px solid #efefef;
+    background: #fff;
+    .left {
+      color: #000;
+    }
+    .right {
+      color: #9a9a9a;
+      text-align: right;
+    }
+    .input_box {
+      flex: 1;
+      margin-left: 20rpx;
+    }
+        .coupons_button {
+      color: #fff;
+      background-color:#fa8c16;
+      width:200rpx;
+      height:70rpx;
+      font-size:28rpx;
+      font-weight:700;
+    }
+}
 </style>
