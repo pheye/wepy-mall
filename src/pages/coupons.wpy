@@ -91,6 +91,7 @@ export default class Coupons extends wepy.page {
           // 优惠券输入正确
           if (json.data.errors.length == 0) {
               tip.success("成功加入优惠券");
+              wepy.navigateBack();
           }
           // 优惠券输入错误
            else {

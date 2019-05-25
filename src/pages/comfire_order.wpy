@@ -902,8 +902,8 @@ console.log("load");
     font-size:80%;
   }
   .del-btn {
-      width: 32rpx;
-      height: 32rpx;
+      width: 40rpx;
+      height: 40rpx;
       position: absolute;
       right: 30rpx;
       top: 30rpx;
