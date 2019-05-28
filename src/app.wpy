@@ -157,14 +157,6 @@ export default class extends wepy.app {
         }
         return r;
       },
-      // fail (p) {
-      //   console.log('p', p);
-      //   return p;
-      // },
-      // complete (p) {
-      //   console.log('c', p)
-      //   return p;
-      // }
     })
   }
 

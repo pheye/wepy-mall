@@ -26,26 +26,6 @@
     </swiper>
 
     <cartAdvise></cartAdvise>
-    <view class='tabs-box' hidden='{{currentTabsIndex == -1}}'>
-      <!-- <block wx:for="{{['10','13','16','21']}}" wx:key="id"> -->
-        <view class="tabs-item {{currentTabsIndex == 0 ?'selected':''}} {{tabs0.length == 0?'hidden':''}}" @tap='onTabsItemTap' data-index='0' >
-            <view >10:00</view>
-            <view >{{ 10 >= now ? '抢购' : '正在抢购' }}</view>
-        </view>
-        <view class="tabs-item {{currentTabsIndex == 1 ?'selected':''}} {{tabs1.length == 0?'hidden':''}}" @tap='onTabsItemTap' data-index='1' >
-            <view >13:00</view>
-            <view >{{ 13 >= now ? '抢购' : '正在抢购' }}</view>
-        </view>
-        <view class="tabs-item {{currentTabsIndex == 2 ?'selected':''}} {{tabs2.length == 0?'hidden':''}}" @tap='onTabsItemTap' data-index='2' >
-            <view >16:00</view>
-            <view >{{ 16 >= now ? '抢购' : '正在抢购' }}</view>
-        </view>
-        <view class="tabs-item {{currentTabsIndex == 3 ?'selected':''}} {{tabs3.length == 0?'hidden':''}}" @tap='onTabsItemTap' data-index='3' >
-            <view >21:00</view>
-            <view >{{ 21 >= now ? '抢购' : '正在抢购' }}</view>
-        </view>
-      <!-- </block> -->
-    </view>
       <view class='product-detail-box'>
          <view class='prduct-list' hidden='{{currentTabsIndex !=0}}'>
          <productCardListTab1 :list.sync="tabs0" :onSale = "onSale" :redBtn = "redBtn"></productCardListTab1>
@@ -124,7 +104,6 @@ import ProductCardList from "@/components/product_card_list"
 import CartAdvise from "@/components/cart_advise"
 import PubSub from 'pubsub-js'
 import {
-  CURRENT_ESTATE,
   CART,
   USER_SPECICAL_INFO,
 } from '@/utils/constant';
@@ -170,7 +149,6 @@ export default class Home extends wepy.page {
     tps: 0,
     isShowAlert: false,
     bomImage: "",
-    currentEstate: {},
     activeTab: 0,
     // wepy的缺陷导致无法使用多维数组传值
     tabs0: [],
@@ -349,14 +327,7 @@ export default class Home extends wepy.page {
     that.getRootCateTopLevel();
     this.getAdList();
 
-    let currentEstate = wepy.getStorageSync(CURRENT_ESTATE);
-    if (!currentEstate) {
-      // currentEstate = json2.data[0];
-      // wepy.setStorageSync(CURRENT_ESTATE, currentEstate);
-      wepy.navigateTo({url: "/pages/estate"})
-    }
     this.getProductsForTabs()
-    // this.currentEstate = wepy.getStorageSync(CURRENT_ESTATE);
     this.now = moment().format('HH');
     this.onSale = true;
     this.redBtn =true;
@@ -442,7 +413,6 @@ export default class Home extends wepy.page {
   events = {
   }
   onShow () {
-    this.currentEstate = wepy.getStorageSync(CURRENT_ESTATE);
     PubSub.publish(CART)
   }
   //加载更多

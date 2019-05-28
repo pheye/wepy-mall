@@ -6,29 +6,17 @@ import { stringify } from 'qs';
 
 let env = "-test" //-dev 或者 -test
 const apiMall = 'https://sujiefs.com/'
-const host = "https://lingqule.papamk.com"
+const host = "http://pet.papamk.com"
 // const apiMall = 'http://localhost:8080/'
 
 
 const querySettings = () => request(`${host}/wp-json/w2w/v1/store/home`, {noauth: true})
 
-/**
- * 获取发现好商品接口
- * @param  {[type]} params [description]
- * @return {[type]}        [description]
- */
-const getDiscoverList = (params) => wxRequest(params, apiMall + '/goods/list?cateidOne=1&cateidTwo=0&price=0&sales=2');
-
 //微信的jscode换取sessionKey
 const wxJsCode2Session = (params) => request(host + "/wp-json/w2w/v1/customers/login", {...params, method: 'POST'});
-const user2session = (params) => wxRequest(params, apiMall + "/api/wechat/user2session?jsoncallback=?");
 
 const getToken = (params) => request(`${host}/wp-json/jwt-auth/v1/token`, {...params, method:'POST'});
 const getMe= (params) => request(`${host}/wp-json/w2w/v1/customers/me`, {...params});
-//商品接口---begin
-//首页发现商品接口
-const hostGoodsList = (params) => wxRequest(params, apiMall + '/api/home/hostGoodsList');
-const getHomeDisvocerList = (params) => wxRequest(params, apiMall + '/api/mall/discoverList');
 
 //查询商品列表
 const queryProducts = ({query}) => request(`${host}/wp-json/w2w/v1/products`, {query: {...query, status: 'publish'}, noauth: true});
