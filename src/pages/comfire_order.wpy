@@ -1,11 +1,7 @@
 <!--确认订单-->
 <template>
   <view class="comfire_order">
-<van-steps
-  steps="{{ steps }}"
-  active="1"
-  custom-class="steps"
-/>
+
 <view class="goodsList">
     <!--列表显示2个，绑定数据记得去掉，这里做调试-->
 <repeat for="{{list}}" key="index" index="index" item="item">
@@ -213,7 +209,11 @@
       </view>
 
     </view>
-
+    <van-steps
+      steps="{{ steps }}"
+      active="1"
+      custom-class="steps"
+    />
     <view class="pay_box">
       <form report-submit bindsubmit="goPay" >
         <button form-type="submit" class="button type_green">微信支付</button>
@@ -655,6 +655,13 @@ console.log("load");
         })
         return false;
       }
+      if (!this.estate) {
+        tip.confirm('请选择小区',{},"提示",false);
+        wepy.navigateTo({
+          url: "/pages/estate"
+        })
+        return false;
+      }
       if (this.chosenShipping.method_id !== 'flat_rate' && !this.customer.name) {
 
          tip.confirm('请填写联系人',{},"提示",false);
@@ -798,9 +805,16 @@ console.log("load");
 <style lang="less">
 .steps {
     margin-bottom:16rpx;
-
+     background-color:#fa8c16;
     .van-step__title {
         font-weight: bold;
+        color:#fa8c16!important;
+    }
+    .steps-index--van-step__active{
+        color:#fa8c16!important;
+    }
+    .van-step__circle{
+      background-color:#fa8c16!important;
     }
 }
 
