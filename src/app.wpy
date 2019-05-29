@@ -18,7 +18,7 @@ import {
   TOKEN_EXPIRED,
   CART,
 } from '@/utils/constant';
-import fundebug from '@/utils/fundebug.1.1.0.min.js'
+// import fundebug from '@/utils/fundebug.1.1.0.min.js'
 import PubSub from 'pubsub-js'
 import './utils/sdk/ald-stat'
 // import bugOut from 'bugout-miniprogram';
@@ -26,12 +26,12 @@ import './utils/sdk/ald-stat'
 // bugOut.usePlugins = true
 // bugOut.init(true, 'f87ae256619008e61cfe2945c0e5bea9', '0.3.0')
 
-fundebug.init(
-{
-    apikey : '31e9e1d6f79fce7ccdd3d215613082394e157b89358fc9caaca3089eaf6797df',
-    appVersion: '0.5.3',
-    silentConsole: true,
-})
+// fundebug.init(
+// {
+//     apikey : '31e9e1d6f79fce7ccdd3d215613082394e157b89358fc9caaca3089eaf6797df',
+//     appVersion: '0.0.1',
+//     silentConsole: true,
+// })
 
 export default class extends wepy.app {
   config = {
@@ -83,7 +83,7 @@ export default class extends wepy.app {
     },
     "tabBar": {
       "color": "#999999",
-      "selectedColor": "#ff6a3c",
+      "selectedColor": "#52c41a",
       "backgroundColor": "#ffffff",
       "borderStyle": "black",
       "list": [{
@@ -93,17 +93,17 @@ export default class extends wepy.app {
         "selectedIconPath": "images/icon_home_active.png"
       }, {
         "pagePath": "pages/classify",
-        "text": "分类",
+        "text": "挣钱",
         "iconPath": "images/icon_classify.png",
         "selectedIconPath": "images/icon_classify_active.png"
       }, {
         "pagePath": "pages/shop_cart",
-        "text": "购物车",
+        "text": "花钱",
         "iconPath": "images/icon_shop_cart.png",
         "selectedIconPath": "images/icon_shop_cart_active.png"
       }, {
         "pagePath": "pages/info",
-        "text": "我",
+        "text": "我的",
         "iconPath": "images/icon_info.png",
         "selectedIconPath": "images/icon_info_active.png"
       }]

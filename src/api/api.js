@@ -6,7 +6,7 @@ import { stringify } from 'qs';
 
 let env = "-test" //-dev 或者 -test
 const apiMall = 'https://sujiefs.com/'
-const host = "http://pet.papamk.com"
+const host = "https://pet.papamk.com"
 // const apiMall = 'http://localhost:8080/'
 
 
@@ -33,7 +33,7 @@ const addCart = (params) => request(`${host}/wp-json/w2w/v1/cart/add`, {...param
 const getCart = (params) => request(`${host}/wp-json/w2w/v1/cart`, params);
 
 //购物车的商品选中状态
-const cartCheck = (params) => request(`${host}/wp-json/w2w/v1/cart/check`, {...params, method: 'POST'}); // wxRequest(params, apiMall + '/api/mall/goodsCart/check');
+const cartCheck = (params) => request(`${host}/wp-json/w2w/v1/cart/check`, {...params, method: 'POST'});
 //购物车的商品删除
 const cartDel = (params) => request(`${host}/wp-json/w2w/v1/cart/delete`, {...params, method: 'POST'});
 
@@ -69,13 +69,6 @@ const goodsUnFavorite = (params) => wxRequest(params, apiMall + '/api/mall/goods
 const goodsIsFavorite = (params) => wxRequest(params, apiMall + '/api/mall/goodsFavorite/goodsIsFavorite');
 
 //商品接口---end
-
-//用户相关信息--begin
-//用户的当天签到信息
-const userSginInfo = (params) => wxRequest(params, apiMall + '/api/userSign/signInfo');
-const doSign = (params) => wxRequest(params, apiMall + '/api/userSign/doSign');
-//获取最近七天签到情况
-const getSignDate = (params) => wxRequest(params, apiMall + '/api/userSign/getSignDate');
 
 //用户积分信息
 const pointInfo = (params) => wxRequest(params, apiMall + '/api/userPoint/pointInfo');
@@ -178,8 +171,6 @@ export default {
   getToken,
   getMe,
   wxJsCode2Session,
-  userSginInfo,
-  doSign,
   addCart,
   getCart,
   cartCheck,
@@ -219,7 +210,6 @@ export default {
   getMyOrderSize,
   getOrders,
   getBanners,
-  getSignDate,
   queryCities,
   queryEstates,
   queryPages,

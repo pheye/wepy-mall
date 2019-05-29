@@ -13,7 +13,6 @@ import wepy from 'wepy';
 import api from '@/api/api';
 import {
   SYSTEM_INFO,
-  USER_INFO,
   TOKEN,
   TOKEN_EXPIRED,
   ME,
@@ -32,17 +31,8 @@ export default class Authorize extends wepy.page {
       let me = wepy.getStorageSync(ME);
       if (!token || !tokenExpired || moment().isAfter(tokenExpired) || !me) {
         wepy.clearStorageSync();
-          /*
-        let data  = await wepy.getUserInfo()
-        if (data) {
-          wepy.setStorageSync(USER_INFO, data.userInfo)
-        }*/
         let res = await wepy.login()
         let data = await wepy.getUserInfo()
-        // console.log('data', data)
-        if (data) {
-          wepy.setStorageSync(USER_INFO, data.userInfo)
-        }
         if (res.code) {
           let systemInfo = wepy.getSystemInfoSync();
           wepy.setStorageSync(SYSTEM_INFO, systemInfo);
