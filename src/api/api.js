@@ -172,16 +172,12 @@ const queryPages =  (params) => request(`${host}/wp-json/wp/v2/pages`, params)
 
 export default {
   querySettings,
-  hostGoodsList,
-  getDiscoverList,
-  getHomeDisvocerList,
   queryProducts,
   getProducts,
   getQrcode,
   getToken,
   getMe,
   wxJsCode2Session,
-  user2session,
   userSginInfo,
   doSign,
   addCart,

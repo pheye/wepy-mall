@@ -26,22 +26,6 @@
     </swiper>
 
     <cartAdvise></cartAdvise>
-      <view class='product-detail-box'>
-         <view class='prduct-list' hidden='{{currentTabsIndex !=0}}'>
-         <productCardListTab1 :list.sync="tabs0" :onSale = "onSale" :redBtn = "redBtn"></productCardListTab1>
-         </view>
-         <view class='prduct-list' hidden='{{currentTabsIndex !=1}}'>
-         <productCardListTab2 :list.sync="tabs1" :onSale = "onSale" :redBtn = "redBtn"></productCardListTab2>
-         </view>
-         <view class='prduct-list' hidden='{{currentTabsIndex !=2}}'>
-         <productCardListTab3 :list.sync="tabs2" :onSale = "onSale" :redBtn = "redBtn"></productCardListTab3>
-         </view>
-         <view class='prduct-list' hidden='{{currentTabsIndex !=3}}'>
-         <productCardListTab4 :list.sync="tabs3" :onSale = "onSale" :redBtn = "redBtn"></productCardListTab4>
-         </view>
-      </view>
-
-
 
     <!-- <view class="pos"> -->
     <!--   <view class="search_read_only"> -->
@@ -82,7 +66,6 @@
     </view>
 
     <productCardList2 :list.sync="featuredList" ></productCardList2>
-    <productCardList :list.sync="discoverList" :rootImages.sync="rootImages" ></productCardList>
     <!--加载更多时动画-->
     <bottomLoadMore :show.sync="showLoading" message="正在加载"></bottomLoadMore>
     <!--暂无数据显示-->
@@ -417,7 +400,7 @@ export default class Home extends wepy.page {
   }
   //加载更多
   onReachBottom() {
-
+    return
     let that = this;
     if (that.is_empty)
       return;
