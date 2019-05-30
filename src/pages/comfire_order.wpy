@@ -656,7 +656,7 @@ console.log("load");
         return false;
       }
       if (!this.estate) {
-        tip.confirm('请选择小区',{},"提示",false);
+        await tip.confirm('请选择小区',{},"提示",false);
         wepy.navigateTo({
           url: "/pages/estate"
         })
