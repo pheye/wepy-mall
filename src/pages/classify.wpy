@@ -77,7 +77,7 @@ export default class Classify extends wepy.page {
         category: categoryID
       }
     });
-    console.log('json', json);
+    // console.log('json', json);
     if (json.data.length > 0) {
       this.childList = json.data;
       this.pageTotal = json.header['X-WP-Total'];
