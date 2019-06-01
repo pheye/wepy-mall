@@ -25,3 +25,4 @@ node_modules
 *.wepycache
 *.swp
 *.swo
+.DS_Store

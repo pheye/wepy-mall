@@ -4,29 +4,70 @@
         <view class="spacing"></view>
         <!-- 基础信息 -->
         <view wx:if="{{stepsIndex == 0}}">
-            <van-cell-group title="基础信息">
-                <van-field label="名称" placeholder="请输入名称"/>
+            <view class="cell-group-title">基础信息</view>
+            <van-cell-group>
+                <van-field label="名称" placeholder="请输入名称" value="{{product.title}}"/>
                 <van-cell title="出生地省份" value="{{product.native_province || '请选择'}}" arrow-direction="down" clickable is-link @click="onSelectProvince"/>
                 <van-cell title="生日" clickable>
                     <view slot="">
                         <picker mode="date" value="{{product.birthday}}" @change="onBirthdayChange">{{product.birthday || '请选择'}}</picker>
                     </view>
                 </van-cell>
+                <van-cell title="性别" value="{{product.sex || '请选择'}}" arrow-direction="down" clickable is-link @click="onShowSexPicker"/>
+                <van-cell title="类别" value="{{product.cat || '请选择'}}" arrow-direction="right" clickable is-link disabled/>
             </van-cell-group>
             <view class="spacing"></view>
+            <van-cell-group>
+                <van-field label="价格" placeholder="请输入" type="number" value="{{product.regular_price}}"/>
+            </van-cell-group>
+            <view class="spacing"></view>
+            <van-cell-group>
+                <van-field placeholder="详细描述" type="textarea" autosize/>
+            </van-cell-group>
+            <view class="spacing"></view>
+            <button type="primary" @tap="goNext" class="block-button">下一步</button>
+        </view>
+        <view wx:if="{{stepsIndex == 1}}">
+            <van-row>
+                <van-col span="8">
+                    <card title="正面照"></card>
+                </van-col>
+                <van-col span="8">
+                    <card title="左侧面照"></card>
+                </van-col>
+                <van-col span="8">
+                    <card title="右侧面照"></card>
+                </van-col>
+            </van-row>
+            <button type="primary" @tap="goNext" class="block-button">下一步</button>
+            <view class="spacing"></view>
+
+            <button  @tap="goPrev" class="block-button">上一步</button>
+        </view>
+        <view wx:if="{{stepsIndex == 2}}">
+            <view>H</view>
         </view>
         <van-popup show="{{showSelectProvince}}" @close="onSelectProvinceClose" position="bottom">
             <van-picker columns="{{provinces}}" title="选择省份" @confirm="onProvinceSelected" @cancel="onSelectProvinceCancelled" show-toolbar>
+            </van-picker>
+        </van-popup>
+
+        <van-popup show="{{showSexPicker}}" position="bottom">
+            <van-picker columns="{{sexes}}" title="选择性别" @confirm="onSexSelected" @cancel="onSexCancelled" show-toolbar>
             </van-picker>
         </van-popup>
     </view>
 </template>
 <script>
 import wepy from 'wepy'
+import Card from "@/components/card"
 
 export default class PetSale extends wepy.page {
   config = {
     navigationBarTitleText: '宠物出售',
+  }
+  components = {
+    card: Card
   }
   data = {
       part: 0,
@@ -49,13 +90,16 @@ export default class PetSale extends wepy.page {
           native_province: ''
       },
       showSelectProvince: false,
+      showSexPicker: false,
       provinces: [
           '京', '津', '冀', '鲁', '闽'
+      ],
+      sexes: [
+          '公', '母'
       ],
   }
   methods = {
       onSelectProvince () {
-        console.log("on select")
         this.showSelectProvince = true
         this.$apply()
       },
@@ -70,12 +114,45 @@ export default class PetSale extends wepy.page {
           this.$apply()
       },
       onBirthdayChange(e) {
-          console.log('value', e.detail.value)
           this.product.birthday = e.detail.value
           this.$apply()
+      },
+      onShowSexPicker() {
+        this.showSexPicker = true
+        this.$apply()
+      },
+      onSexSelected(event) {
+        const { value } = event.detail
+        this.product.sex = value
+        this.showSexPicker= false
+        this.$apply()
+      },
+      onSexCancelled() {
+        this.showSexPicker= false
+        this.$apply()
+      },
+      goNext() {
+       this.stepsIndex++
+       if (this.stepsIndex >= this.steps.length)
+        this.stepsIndex = this.stepsIndex.length - 1
+       this.$apply()
+      },
+      goPrev() {
+       this.stepsIndex--
+       if (this.stepsIndex < 0)
+        this.stepsIndex = 0
+       this.$apply()
       }
   }
 }
 </script>
 <style lang="less">
+.cell-group-title {
+    padding: 20rpx 35rpx 20rpx;
+    font-size: 14px;
+    color: #bfbfbf;
+}
+.block-button {
+    margin:0 32rpx;
+}
 </style>

@@ -44,22 +44,6 @@
       <view class="share_container">
       <view class="share_message" wx:if="{{detail.stock_quantity != null && detail.stock_quantity != 0}}">他们都在买剩余{{detail.stock_quantity}}件</view>
       <view class="share_message" wx:else >他们都在买{{ detail.in_stock ? '有库存' : '已售罄' }}</view>
-          <van-row>
-              <van-col span="2">
-                <!-- 分享用户 -->
-                <image class="avatarUrl" src="{{randomUserInfo[0].avatarUrl}}"></image>
-               </van-col>
-               <van-col offset="1" span="2">
-                <image class="avatarUrl" src="{{randomUserInfo[1].avatarUrl}}"></image>
-                </van-col>
-                <van-col offset="1" span="2">
-                <image class="avatarUrl" src="{{randomUserInfo[2].avatarUrl}}"></image>
-              </van-col>
-               <!-- 分享按钮 -->
-                <van-col offset="6" span="10">
-                   <button class="share_btn " @tap="showSheet" >邀请朋友一起抢</button>
-           </van-col>
-          </van-row>
     </view>
     </view>
       <view class="container">
@@ -67,59 +51,6 @@
       <!-- 画布 -->
      <canvasdrawer painting="{{painting}}" class="canvasdrawer" bind:getImage="eventGetImage"/>
   </view>
-
-
-    <!-- <view class="order_num"> -->
-    <!--   <view class="doc" wx:if="{{special == 1}}">库存: -->
-    <!--     <text class="num">{{detail.stock_quantity}}件</text> -->
-    <!--   </view> -->
-    <!--   <view class="doc" wx:else>规定单数: -->
-    <!--     <text class="num">{{detail.minBuyNum}}件成团</text> -->
-    <!--   </view> -->
-    <!--   <view class="doc">订单中: -->
-    <!--     <text class="num">已拼{{detail.saleCount}}件</text> -->
-    <!--   </view> -->
-    <!-- </view> -->
-    <!-- <view class="block"> -->
-    <!--   <view class="block_title">拼货流程</view> -->
-    <!--   <view class="block_content"> -->
-    <!--     <view class="process"> -->
-    <!--       新款展示 -->
-    <!--       <i class="iconfont icon-next"></i> 拼单结束 -->
-    <!--       <i class="iconfont icon-next"></i> 生产商品 -->
-    <!--       <i class="iconfont icon-next"></i> 商品检验 -->
-    <!--       <i class="iconfont icon-next"></i> 商品发货 -->
-    <!--     </view> -->
-    <!--     <view class="doc"> -->
-    <!--       如若出现特殊情况外，发货时间则会延迟5-10天左右。 -->
-    <!--     </view> -->
-    <!--   </view> -->
-    <!--   <view class="block_title">商品评价(20)</view> -->
-    <!--   <view class="block_content"> -->
-    <!--     <commentList :list.sync="commentList"></commentList> -->
-    <!--     <view class="button-more-cmment" wx:if="{{commentList.length!==0}}" @tap="moreComment">查看更多评论</view> -->
-    <!--   </view> -->
-    <!-- </view> -->
-    <!-- <view class="spacing"></view> -->
-    <!-- <view class="block"> -->
-    <!--   <view class="block_title">拼单说明</view> -->
-    <!--   <view class="block_content"> -->
-    <!--     <view class="doc"> -->
-    <!--       此商品在拼单期间可接收订单，如若超过拼单时间则不能下单；拼单结束后未付款订单系统将会自动取消，所以，亲下单以后请尽快付款。我们会以实际订单为准为您发货，如超过订单时间而又没有拼购到规定数量的，我们将会第一时间为您退款，请您放心购买! -->
-    <!--     </view> -->
-    <!--   </view> -->
-    <!-- </view> -->
-    <!-- <view class="spacing"></view> -->
-    <!-- <view class="block"> -->
-    <!--   <view class="block_title">商品信息</view> -->
-    <!--   <view class="block_content"> -->
-    <!--     <view class="table"> -->
-    <!--       <view class="th" wx:for="{{detail.attributes}}" key="item" item="item" wx:key="key"> -->
-    <!--         <view class="tr1" >{{item.name}}:{{item.options[0]}}</view> -->
-    <!--       </view> -->
-    <!--     </view> -->
-    <!--   </view> -->
-    <!-- </view> -->
     <view>
       <image src="../images/goods_detail_banner.jpg"  mode="widthFix"  style="width:100%;"/>
     </view>

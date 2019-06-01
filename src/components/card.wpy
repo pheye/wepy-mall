@@ -1,0 +1,21 @@
+<template>
+    <view class="card">
+        <image src="../images/dog-front.png" mode="widthFix" style="width:100%;"/>
+        <view class="center">{{title}}</view>
+    </view>
+</template>
+<script>
+import wepy from 'wepy'
+
+export default class Card extends wepy.component {
+    props =  {
+        title: String
+    }
+}
+</script>
+<style lang="less">
+.card {
+    background-color: white;
+    border-radius: 8rpx;
+}
+</style>
