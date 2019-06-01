@@ -1,0 +1,14 @@
+<template>
+    <view>Nothing</view>
+</template>
+<script>
+import wepy from 'wepy'
+
+export default class PetSale extends wepy.page {
+  config = {
+    navigationBarTitleText: '宠物出售',
+  }
+}
+</script>
+<style lang="less">
+</style>

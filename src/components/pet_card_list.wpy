@@ -30,22 +30,24 @@
          <!-- 描述 -->
          <view class="item_desc">{{ descs[index] }}</view>
          <!-- 库存 -->
-         <view>
-            <text class="item_rule" wx:if="{{item.stock_quantity != null && item.stock_quantity != 0}}">库存:{{ item.stock_quantity }}</text>
-            <text class="item_rule" wx:else >{{ item.in_stock ? '有库存' : '售罄' }}</text>
-
+         <view style="display:flex;flex-direction:row;">
+            <!-- <text class="item_rule" wx:if="{{item.stock_quantity != null && item.stock_quantity != 0}}">库存:{{ item.stock_quantity }}</text> -->
+            <!-- <text class="item_rule" wx:else >{{ item.in_stock ? '有库存' : '售罄' }}</text> -->
+            <view class="icon iconfont text-warning {{item.sex == 'female' ? 'iconfemale' : 'iconmale'}}"></view>
+            <view class="icon iconfont text-primary iconmedicine" wx:if="{{item.vaccin.length > 0 || item.insect.length > 0 }}"></view>
+            <view class="text-default">{{days[index]}}天</view>
             <text wx:for="{{tags2[index]}}" wx:for-item="item2" wx:key="idx2" class="item_rule2" >{{item2}}</text>
          </view>
          <van-row>
            <view class="item_price_container">
                <van-col span="4" >
                   <view style='height:40rpx;'>
-                  <text class="group" wx:if="{{onSale}}">秒杀价</text>
-                  <text class="group" wx:else >{{ item.on_sale ? '团购价' : ''}}</text>
+                  <text class="group" wx:if="{{onSale}}">促销价</text>
+                  <text class="group" wx:else >{{ item.on_sale ? '' : ''}}</text>
                   </view>
                   <view >
                   <!-- 商品价格 -->
-                  <text class="item_price" wx:if="{{item.min_price == item.max_price}}">{{ '￥' +item.price }}</text>
+                   <text class="item_price" wx:if="{{item.min_price == item.max_price}}">{{ '￥' +item.price }}</text>
                    <text class="item_price" wx:else >{{ '￥' + item.min_price}}</text>
                    <!-- 原始价格 -->
                    <text class="item_origin_price" wx:if="{{item.on_sale && item.regular_price}}">{{  '￥' +  item.regular_price }}</text>
@@ -53,8 +55,8 @@
                </van-col>
                <!-- 购买按钮 -->
                 <van-col offset="12" span="6">
-                  <view class="cannot-buy-btn" wx:if="{{!item.in_stock || item.stock_quantity == 0}}" >售罄</view>
-                  <view class="to-buy-btn {{ redBtn ?'redBtn':''}}" wx:else @tap="getGoodsDetail({{item.id}})">{{ onSale ? '立即秒杀' : '立即抢购'}}</view>
+                  <view class="cannot-buy-btn" wx:if="{{!item.in_stock || item.stock_quantity == 0}}" >已售</view>
+                  <view class="to-buy-btn {{ redBtn ?'redBtn':''}}" wx:else @tap="getGoodsDetail({{item.id}})">购买</view>
                 </van-col>
             </view>
           </van-row>
@@ -69,11 +71,13 @@ import wepy from 'wepy';
 import api from '@/api/api';
 import tip from '@/utils/tip';
 import PubSub from 'pubsub-js'
+import moment from 'moment'
 import {
   CART,
 } from '@/utils/constant';
+
 var app = getApp()
-export default class productCardList extends wepy.component {
+export default class petCardList extends wepy.component {
   props = {
       list: {
           default: []
@@ -125,6 +129,10 @@ export default class productCardList extends wepy.component {
       descs() {
           let descs = this.list.map(item => item.short_description_html ? item.short_description_html.replace(/<[^>]*>|/g,'') : '')
           return descs
+      },
+      days () {
+          const data = this.list.map(item => moment().diff(new moment(item.birthday), 'days') + 1)
+          return data
       }
   }
   methods = {
@@ -181,6 +189,7 @@ export default class productCardList extends wepy.component {
     height: 230rpx;
     margin:20rpx 30rpx 20rpx 30rpx;
     padding:15rpx 0rpx 0rpx 10rpx;
+    background-color: white;
     // border-bottom: 1px solid #ededed;
     .item_image_container {
     .item-img {

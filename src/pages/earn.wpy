@@ -1,0 +1,27 @@
+<template>
+   <view class="earn">
+        <navigator url="/pages/pet_register" style="width:100%;">
+            <button type="primary" block>萌宠登记</button>
+        </navigator>
+        <view class="spacing"></view>
+        <button block style="width:100%;">宝贝发布</button>
+   </view>
+</template>
+<script>
+import wepy from 'wepy'
+export default class Earn extends wepy.page {
+  config = {
+    navigationBarTitleText: '挣钱',
+  }
+}
+</script>
+<style lang="less">
+.earn {
+    margin: 0 32rpx;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+}
+</style>

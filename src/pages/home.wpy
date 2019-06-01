@@ -1,21 +1,21 @@
 <template>
-  <view class="container">
-    <van-row>
-      <van-col span="12">
-        <navigator class="loc" url="/pages/estate">
-          <van-icon name="location-o"></van-icon>
-          <text style="font-size:36rpx;">{{currentEstate.title && currentEstate.title.rendered}} &gt; </text>
-        </navigator>
-      </van-col>
-      <van-col span="12" class="top_search">
-          <view class="search_read_only">
-            <navigator class="search_content" url="/pages/search">
-              <i class="iconfont icon-search"></i>
-              <view class="search_input">搜索商品</view>
-            </navigator>
-          </view>
-      </van-col>
-    </van-row>
+  <view>
+    <!-- <van-row> -->
+    <!--   <van-col span="12"> -->
+    <!--     <navigator class="loc" url="/pages/estate"> -->
+    <!--       <van-icon name="location-o"></van-icon> -->
+    <!--       <text style="font-size:36rpx;">{{currentEstate.title && currentEstate.title.rendered}} &gt; </text> -->
+    <!--     </navigator> -->
+    <!--   </van-col> -->
+    <!--   <van-col span="12" class="top_search"> -->
+    <!--       <view class="search_read_only"> -->
+    <!--         <navigator class="search_content" url="/pages/search"> -->
+    <!--           <i class="iconfont icon-search"></i> -->
+    <!--           <view class="search_input">搜索商品</view> -->
+    <!--         </navigator> -->
+    <!--       </view> -->
+    <!--   </van-col> -->
+    <!-- </van-row> -->
 
     <swiper class="swiper" indicator-active-color="{{indicatorActiveColor}}" indicator-dots="{{indicatorDots}}" autoplay="{{autoplay}}" interval="{{interval}}" duration="{{duration}}" circular="true">
       <block wx:for="{{adList}}" wx:key="key">
@@ -25,7 +25,7 @@
       </block>
     </swiper>
 
-    <cartAdvise></cartAdvise>
+    <!-- <cartAdvise></cartAdvise> -->
 
     <!-- <view class="pos"> -->
     <!--   <view class="search_read_only"> -->
@@ -39,33 +39,37 @@
     <!--     </navigator> -->
     <!--   </view> -->
     <!-- </view> -->
-    <!-- <view class="nav_list"> -->
-      <!-- <navigator open-type="navigate" url="/pages/sign_in"> -->
-      <!--   <image src="../images/icon_nav_01_new.png" class="nav_icon"></image> -->
-      <!--   <view class="nav_text">签到有礼</view> -->
-      <!-- </navigator> -->
-      <!-- <navigator open-type="navigate" url="/pages/exchange_goods"> -->
-      <!--   <image src="../images/icon_nav_02_new.png" class="nav_icon"></image> -->
-      <!--   <view class="nav_text">换货专区</view> -->
-      <!-- </navigator> -->
-      <!-- <navigator open-type="navigate" url="/pages/wholesale"> -->
-      <!--   <image src="../images/icon_nav_03_new.png" class="nav_icon"></image> -->
-      <!--   <view class="nav_text">特价专区</view> -->
-      <!-- </navigator> -->
-      <!-- <navigator open-type="navigate" url="/pages/replenishment_goods"> -->
-      <!--   <image src="../images/icon_nav_04_new.png" class="nav_icon"></image> -->
-      <!--   <view class="nav_text">我要补货</view> -->
-      <!-- </navigator> -->
-    <!-- </view> -->
+    <view class="nav_list">
+      <navigator open-type="navigate" url="/pages/sign_in">
+        <image src="../images/icon_nav_01_new.png" class="nav_icon"></image>
+        <view class="nav_text">萌宠馆</view>
+      </navigator>
+      <navigator open-type="navigate" url="/pages/exchange_goods">
+        <image src="../images/icon_nav_02_new.png" class="nav_icon"></image>
+        <view class="nav_text">淘宝贝</view>
+      </navigator>
+      <navigator open-type="navigate" url="/pages/wholesale">
+        <image src="../images/icon_nav_03_new.png" class="nav_icon"></image>
+        <view class="nav_text">商家名录</view>
+      </navigator>
+    </view>
+
+    <view class="pet_panel">
+       <view>宠物信息登记</view>
+       <van-row>
+           <van-col>出生省</van-col>
+       </van-row>
+       <view>
+          <button type="primary" style="width:100%;" size="mini">查询</button>
+          <view class="spacing"></view>
+          <button style="width:100%;" size="mini">登记</button>
+       </view>
+    </view>
     <!--发现好商品模块-->
     <!-- <discover :list.sync="discoverList"></discover> -->
     <!-- <view style="font-size:40rpx;padding:20rpx;text-align:center;color:black;weight:600;">最新商品</view> -->
 
-    <view style="padding-top:20rpx;padding-left:60rpx;">
-      <image src="../images/detail_banner.png"  mode="widthFix" style="width:100%;"/>
-    </view>
-
-    <productCardList2 :list.sync="featuredList" ></productCardList2>
+    <petCardList :list.sync="featuredList" ></petCardList>
     <!--加载更多时动画-->
     <bottomLoadMore :show.sync="showLoading" message="正在加载"></bottomLoadMore>
     <!--暂无数据显示-->
@@ -83,12 +87,12 @@ import Discover from '@/components/discover'
 import Bombscreen from '@/components/bomb_screen'
 import BottomLoadMore from "../components/common/bottomLoadMore"
 import Placeholder from "../components/common/placeholder"
-import ProductCardList from "@/components/product_card_list"
+import PetCardList from "@/components/pet_card_list"
 import CartAdvise from "@/components/cart_advise"
 import PubSub from 'pubsub-js'
 import {
   CART,
-  USER_SPECICAL_INFO,
+  ME,
 } from '@/utils/constant';
 import moment from 'moment'
 
@@ -102,12 +106,7 @@ export default class Home extends wepy.page {
     placeholder: Placeholder,
     bombscreen: Bombscreen,
     // wepy的设计缺陷，同名组件会引用相同数据，必须更名才能使用
-    productCardList: ProductCardList,
-    productCardListTab1: ProductCardList,
-    productCardListTab2: ProductCardList,
-    productCardListTab3: ProductCardList,
-    productCardListTab4: ProductCardList,
-    productCardList2: ProductCardList,
+    petCardList: PetCardList,
     cartAdvise: CartAdvise,
   }
   data = {
@@ -124,7 +123,7 @@ export default class Home extends wepy.page {
     //总页数
     page_total: 0,
     //是否显示 底部loading
-    showLoading: true,
+    showLoading: false,
     //防止重复加载
     preventRepeatReuqest: false,
     //广告列表
@@ -291,7 +290,7 @@ export default class Home extends wepy.page {
       query: {
         page: currentPage || 1,
         size: size || 10,
-        featured: true
+        category: 'pets'
       }
     });
     if (json.statusCode !== 200) {
@@ -307,13 +306,9 @@ export default class Home extends wepy.page {
     this.rootImages = [];
     this.currentRootCate = 0;
     that.getFeaturedProducts();
-    that.getRootCateTopLevel();
+    // that.getRootCateTopLevel();
     this.getAdList();
 
-    this.getProductsForTabs()
-    this.now = moment().format('HH');
-    this.onSale = true;
-    this.redBtn =true;
     const settings = this.$parent.globalData.settings
     console.log('settings', settings)
     if (settings.bomscreen) {
@@ -341,8 +336,7 @@ export default class Home extends wepy.page {
         // 来自页面内转发按钮
         console.log(res.target)
       }
-      let affiliate_id = wepy.getStorageSync(USER_SPECICAL_INFO).affiliate_id;
-      console.log("affiliate_id",affiliate_id);
+      let affiliate_id = wepy.getStorageSync(ME).affiliate_id;
       let url ='';
       if (affiliate_id) {
           url = '/pages/home?ref=' + affiliate_id;
@@ -425,6 +419,8 @@ export default class Home extends wepy.page {
 
 </script>
 <style lang="less">
+.container {
+}
 .search_read_only {
   margin:16rpx;
   width: auto !important;
@@ -500,26 +496,6 @@ export default class Home extends wepy.page {
   text-align: center;
   color: #333;
 }
-// .van-tab__title{
-//   color:#000;
-// }
-
-// .van-tab {
-//   background-color:#f5f5f5;
-// }
-// .van-tab--active {
-//   background-color:#fa8c16;
-// }
-// .van-tabs__line {
-//   display: none!important;
-// }
-// .van-tab__pane--active {
-//   background-color:#fa8c16;
-//      .item_container{
-//         background-color:#fff;
-
-//      }
-// }
 
 .tabs-box{
       margin:10rpx 20rpx 0 20rpx;
@@ -555,5 +531,11 @@ export default class Home extends wepy.page {
         // }
       }
 }
-
+.pet_panel {
+    margin: 32rpx 0;
+    padding: 32rpx;
+    border-top: 1px solid #ececec;
+    border-bottom: 1px solid #ececec;
+    background-color: white;
+}
 </style>

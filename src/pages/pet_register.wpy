@@ -1,0 +1,14 @@
+<template>
+    <view>Nothing</view>
+</template>
+<script>
+import wepy from 'wepy'
+
+export default class PetRegister extends wepy.page {
+  config = {
+    navigationBarTitleText: '宠物登记',
+  }
+}
+</script>
+<style lang="less">
+</style>

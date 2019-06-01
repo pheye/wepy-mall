@@ -2,6 +2,7 @@
 @import "./styles/base";
 @import "./styles/icon";
 @import "./styles/style";
+@import "./styles/font/iconfont";
 
 </style>
 <script>
@@ -43,7 +44,7 @@ export default class extends wepy.app {
       'pages/shop_cart',
       'pages/info',
       'pages/search',
-      'pages/test',
+      'pages/pet_register',
       'pages/sign_in',
       'pages/exchange_goods',
       'pages/wholesale',
@@ -66,9 +67,8 @@ export default class extends wepy.app {
       'pages/logistics',
       'pages/comment',
       'pages/comment_add',
-      'pages/estate',
+      'pages/earn',
       'pages/provider',
-      'pages/estate_form',
       'pages/estate_detail',
       'pages/coupons',
     ],
@@ -92,7 +92,7 @@ export default class extends wepy.app {
         "iconPath": "images/icon_home.png",
         "selectedIconPath": "images/icon_home_active.png"
       }, {
-        "pagePath": "pages/classify",
+        "pagePath": "pages/earn",
         "text": "挣钱",
         "iconPath": "images/icon_classify.png",
         "selectedIconPath": "images/icon_classify_active.png"
