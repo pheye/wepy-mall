@@ -1,5 +1,25 @@
 <template>
-    <view>Nothing</view>
+    <view>
+        <van-steps steps="{{steps}}" active="{{stepsIndex}}"></van-steps>
+        <view class="spacing"></view>
+        <!-- 基础信息 -->
+        <view wx:if="{{stepsIndex == 0}}">
+            <van-cell-group title="基础信息">
+                <van-field label="名称" placeholder="请输入名称"/>
+                <van-cell title="出生地省份" value="{{product.native_province || '请选择'}}" arrow-direction="down" clickable is-link @click="onSelectProvince"/>
+                <van-cell title="生日" clickable>
+                    <view slot="">
+                        <picker mode="date" value="{{product.birthday}}" @change="onBirthdayChange">{{product.birthday || '请选择'}}</picker>
+                    </view>
+                </van-cell>
+            </van-cell-group>
+            <view class="spacing"></view>
+        </view>
+        <van-popup show="{{showSelectProvince}}" @close="onSelectProvinceClose" position="bottom">
+            <van-picker columns="{{provinces}}" title="选择省份" @confirm="onProvinceSelected" @cancel="onSelectProvinceCancelled" show-toolbar>
+            </van-picker>
+        </van-popup>
+    </view>
 </template>
 <script>
 import wepy from 'wepy'
@@ -7,6 +27,53 @@ import wepy from 'wepy'
 export default class PetSale extends wepy.page {
   config = {
     navigationBarTitleText: '宠物出售',
+  }
+  data = {
+      part: 0,
+      stepsIndex: 0,
+      steps: [
+          {
+              'text': '基础信息'
+          },
+          {
+              'text': '宠物照片'
+          },
+          {
+              'text': '宠主信息'
+          },
+          {
+              'text': '免疫信息'
+          },
+      ],
+      product: {
+          native_province: ''
+      },
+      showSelectProvince: false,
+      provinces: [
+          '京', '津', '冀', '鲁', '闽'
+      ],
+  }
+  methods = {
+      onSelectProvince () {
+        console.log("on select")
+        this.showSelectProvince = true
+        this.$apply()
+      },
+      onProvinceSelected (event) {
+        const { value } = event.detail
+        this.product.native_province = value
+        this.showSelectProvince = false
+        this.$apply()
+      },
+      onSelectProvinceCancelled () {
+          this.showSelectProvince = false
+          this.$apply()
+      },
+      onBirthdayChange(e) {
+          console.log('value', e.detail.value)
+          this.product.birthday = e.detail.value
+          this.$apply()
+      }
   }
 }
 </script>

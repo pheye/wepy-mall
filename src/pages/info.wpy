@@ -221,9 +221,9 @@ export default class Index extends wepy.page {
   }
   onLoad() {
     let that = this;
-    let userInfo = wepy.getStorageSync(USER_INFO);
-    that.avatarUrl = userInfo.avatarUrl;
-    that.nickName = userInfo.nickName;
+    let userInfo = wepy.getStorageSync(ME);
+    that.avatarUrl = userInfo.avatar;
+    that.nickName = userInfo.display_name;
   }
   onShow(){
     let that = this;

@@ -4,7 +4,9 @@
             <button type="primary" block>萌宠登记</button>
         </navigator>
         <view class="spacing"></view>
-        <button block style="width:100%;">宝贝发布</button>
+        <navigator url="/pages/pet_sale" style="width:100%;">
+            <button block >宝贝发布</button>
+        </navigator>
    </view>
 </template>
 <script>

@@ -45,6 +45,7 @@ export default class extends wepy.app {
       'pages/info',
       'pages/search',
       'pages/pet_register',
+      'pages/pet_sale',
       'pages/sign_in',
       'pages/exchange_goods',
       'pages/wholesale',
@@ -69,7 +70,6 @@ export default class extends wepy.app {
       'pages/comment_add',
       'pages/earn',
       'pages/provider',
-      'pages/estate_detail',
       'pages/coupons',
     ],
     window: {
@@ -118,12 +118,16 @@ export default class extends wepy.app {
         "van-col": "components/van/col/index",
         "van-tree-select": "components/van/tree-select/index",
         "van-cell": "components/van/cell/index",
+        "van-cell-group": "components/van/cell-group/index",
         "canvasdrawer": "components/canvasdrawer/canvasdrawer",
         "van-action-sheet": "components/van/action-sheet/index",
         "van-steps": "components/van/steps/index",
         "van-tag": "components/van/tag/index",
         "van-tabs": "components/van/tabs/index",
         "van-tab": "components/van/tab/index",
+        "van-field": "components/van/field/index",
+        "van-popup": "components/van/popup/index",
+        "van-picker": "components/van/picker/index",
     },
     permission: {
       "scope.userLocation": {

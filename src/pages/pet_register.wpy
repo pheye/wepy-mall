@@ -1,5 +1,7 @@
 <template>
-    <view>Nothing</view>
+    <view>
+        
+    </view>
 </template>
 <script>
 import wepy from 'wepy'
@@ -7,6 +9,23 @@ import wepy from 'wepy'
 export default class PetRegister extends wepy.page {
   config = {
     navigationBarTitleText: '宠物登记',
+  }
+  data = {
+      activeStep: 0,
+      steps: [
+          {
+              'text': '基础信息'
+          },
+          {
+              'text': '宠物照片'
+          },
+          {
+              'text': '宠主信息'
+          },
+          {
+              'text': '免疫信息'
+          },
+      ]
   }
 }
 </script>

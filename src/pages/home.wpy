@@ -55,14 +55,20 @@
     </view>
 
     <view class="pet_panel">
-       <view>宠物信息登记</view>
+       <view class="center">宠物信息登记</view>
        <van-row>
-           <van-col>出生省</van-col>
+           <van-col span="4" class="cell center">出生省</van-col>
+           <van-col span="4" class="cell center">类别</van-col>
+           <van-col span="8" class="cell center">生日</van-col>
+           <van-col span="4" class="cell center">性别</van-col>
+           <van-col span="4" class="cell center">顺序号</van-col>
        </van-row>
        <view>
           <button type="primary" style="width:100%;" size="mini">查询</button>
-          <view class="spacing"></view>
-          <button style="width:100%;" size="mini">登记</button>
+          <view class="spacing bg-white"></view>
+          <navigator url="/pages/pet_register">
+              <button size="mini" style="width:100%;">登记</button>
+          </navigator>
        </view>
     </view>
     <!--发现好商品模块-->
@@ -473,6 +479,7 @@ export default class Home extends wepy.page {
 
 .nav_list {
   color: #404040;
+  background-color: white;
   display: flex;
   font-size: 26rpx;
   justify-content: space-between;
