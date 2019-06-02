@@ -75,7 +75,10 @@
     <!-- <discover :list.sync="discoverList"></discover> -->
     <!-- <view style="font-size:40rpx;padding:20rpx;text-align:center;color:black;weight:600;">最新商品</view> -->
 
-    <petCardList :list.sync="featuredList" ></petCardList>
+    <view style="background-color:white">
+      <view class="font-second-title center">萌宠馆</view>
+      <petCardList :list.sync="featuredList" ></petCardList>
+    </view>
     <!--加载更多时动画-->
     <bottomLoadMore :show.sync="showLoading" message="正在加载"></bottomLoadMore>
     <!--暂无数据显示-->
@@ -111,7 +114,6 @@ export default class Home extends wepy.page {
     bottomLoadMore: BottomLoadMore,
     placeholder: Placeholder,
     bombscreen: Bombscreen,
-    // wepy的设计缺陷，同名组件会引用相同数据，必须更名才能使用
     petCardList: PetCardList,
     cartAdvise: CartAdvise,
   }

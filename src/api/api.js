@@ -20,7 +20,13 @@ const getToken = (params) => request(`${host}/wp-json/jwt-auth/v1/token`, {...pa
 const getMe= (params) => request(`${host}/wp-json/w2w/v1/customers/me`, {...params});
 
 //查询商品列表
-const queryProducts = ({query}) => request(`${host}/wp-json/w2w/v1/products`, {query: {...query, status: 'publish'}, noauth: true});
+const queryProducts = ({query}, noauth = true) => {
+  let {status} = query
+  if (!status) {
+    status = 'publish'
+  }
+  return request(`${host}/wp-json/w2w/v1/products`, {query: {...query, status}, noauth});
+}
 const getProducts = (id, params) => request(`${host}/wp-json/w2w/v1/products/${id}`, params);
 const createProducts = (params) => request(`${host}/wp-json/w2w/v1/products`, {...params, method: 'POST'});
 const updateProducts = (id, params) => request(`${host}/wp-json/w2w/v1/products/${id}`, {...params, method: 'PUT'});

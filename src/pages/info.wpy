@@ -59,15 +59,27 @@
         </navigator>
 
       </view>
-      <navigator class="item" url="/pages/coupons">
+      <navigator class="item" url="/pages/my_pets">
         <view class="item_content">
-          <view class="text">我的优惠券</view>
+          <view class="text">我的宠物</view>
         </view>
         <view class="arrow">&gt;</view>
       </navigator>
-      <navigator class="item" url="/pages/estate_detail">
+      <navigator class="item" url="/pages/my_sale_pets">
         <view class="item_content">
-          <view class="text">联系小区长</view>
+          <view class="text">我的出售</view>
+        </view>
+        <view class="arrow">&gt;</view>
+      </navigator>
+      <navigator class="item" url="/pages/provider">
+        <view class="item_content">
+          <view class="text">养宠顾问</view>
+        </view>
+        <view class="arrow">&gt;</view>
+      </navigator>
+      <navigator class="item" url="/pages/coupons">
+        <view class="item_content">
+          <view class="text">我的优惠券</view>
         </view>
         <view class="arrow">&gt;</view>
       </navigator>
@@ -77,18 +89,6 @@
         </view>
         <view class="arrow">&gt;</view>
       </view>
-      <navigator class="item" url="/pages/estate_form">
-        <view class="item_content">
-          <view class="text">小区长招募</view>
-        </view>
-        <view class="arrow">&gt;</view>
-      </navigator>
-      <navigator class="item" url="/pages/provider">
-        <view class="item_content">
-          <view class="text">供应商招募</view>
-        </view>
-        <view class="arrow">&gt;</view>
-      </navigator>
       <view class="item">
         <view class="item_content contact_container">
           <view class="text">联系客服</view>

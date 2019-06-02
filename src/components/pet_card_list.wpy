@@ -56,7 +56,7 @@
                <!-- 购买按钮 -->
                 <van-col offset="12" span="6">
                   <view class="cannot-buy-btn" wx:if="{{!item.in_stock || item.stock_quantity == 0}}" >已售</view>
-                  <view class="to-buy-btn {{ redBtn ?'redBtn':''}}" wx:else @tap="getGoodsDetail({{item.id}})">购买</view>
+                  <view class="to-buy-btn {{ redBtn ?'redBtn':''}}" wx:else @tap="go({{item.id}})">查看</view>
                 </van-col>
             </view>
           </van-row>
@@ -90,6 +90,9 @@ export default class petCardList extends wepy.component {
       stock: {
           default: true
       },
+      mode: {
+          default: 'view'
+      }
   }
   addExtra() {
   }
@@ -176,6 +179,11 @@ export default class petCardList extends wepy.component {
             tip.error('查看商品失败')
           }
         }
+    },
+    async go(id) {
+        wepy.navigateTo({
+            url: `/pages/pet_detail?id=${id}`
+        })
     }
   }
 

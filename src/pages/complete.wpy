@@ -25,7 +25,7 @@ export default class CompletePage extends wepy.page {
           case 'pet_sale':
               this.mainButtonUrl =  `/pages/pet_detail?id=${options.id}`
               this.mainButtonText =  '查看详情'
-              this.defaultButtonUrl  =  '/pages/my_pet_sale'
+              this.defaultButtonUrl  =  '/pages/my_sale_pets'
               this.defaultButtonText =  '我的出售'
               this.description = '完成出售登记'
               break

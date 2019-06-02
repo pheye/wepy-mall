@@ -375,7 +375,7 @@ export default class PetSale extends wepy.page {
                   // 状态改为发布
                   const res = await api.updateProducts(id, {
                       query: {
-                          status: 'publish'
+                          status: 'publish',
                           vaccin,
                           insect,
                       }
