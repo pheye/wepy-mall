@@ -16,8 +16,8 @@
            <!-- 商品标签 -->
             <text class="item_tag" style ="position:absolute;" wx:if="{{tags[index] != ''}}" >{{tags[index]}}</text>
             <view class="img-textbox" wx:if="{{!item.in_stock || item.stock_quantity == 0}}" >
-                <p class='img-text' style='padding-top: 25%;font-size: 12px;'>抢光啦!</p>
-                <p class='img-text' style='padding-bottom: 25%;font-size: 8px;'>补货ing...</p>
+                <p class='img-text' style='padding-top: 25%;font-size: 12px;'>已售出!</p>
+                <p class='img-text' style='padding-bottom: 25%;font-size: 8px;'>...</p>
             </view>
            </image>
         </navigator>
@@ -63,7 +63,20 @@
         </view>
        </van-col>
       </view>
+        <view wx:if="{{mode=='edit'}}" style="display:flex;flex-direction:row;background-color:white;margin:0 30rpx;padding:16rpx;border-top:1px solid #eee;">
+            <view style="display:flex;flex-direction:row;flex:8;">
+                <view>状态:{{item.status == 'draft' ? '草稿' : '已发布'}}</view>
+            </view>
+            <view style="display:flex;flex-direction:row;flex:16;justify-content:flex-end;">
+                <navigator url="/pages/pet_sale?id={{item.id}}" wx:if="{{item.in_stock}}">
+                    <van-button type="primary" size="mini">编辑</van-button>
+                </navigator>
+                <view class="hor-spacing"></view>
+                <van-button type="danger" size="mini">删除</van-button>
+            </view>
+        </view>
     </van-row>
+    <view class="spacing"></view>
   </view>
 </template>
 <script>
@@ -190,12 +203,9 @@ export default class petCardList extends wepy.component {
 }
 </script>
 <style lang="less">
-
-
-
 .item_container {
     height: 230rpx;
-    margin:20rpx 30rpx 20rpx 30rpx;
+    margin:20rpx 30rpx 0rpx 30rpx;
     padding:15rpx 0rpx 0rpx 10rpx;
     background-color: white;
     // border-bottom: 1px solid #ededed;
