@@ -28,24 +28,96 @@
             <button type="primary" @tap="goNext" class="block-button">下一步</button>
         </view>
         <view wx:if="{{stepsIndex == 1}}">
-            <van-row>
+            <van-row gutter="4">
                 <van-col span="8">
-                    <card title="正面照"></card>
+                    <card title="正面照" defsrc="../images/dog-front.png" :src.sync="photo_front"></card>
                 </van-col>
                 <van-col span="8">
-                    <card title="左侧面照"></card>
+                    <card2 title="左侧面照" defsrc="../images/dog-left.png" :src.sync="photo_left"></card2>
                 </van-col>
                 <van-col span="8">
-                    <card title="右侧面照"></card>
+                    <card3 title="右侧面照" defsrc="../images/dog-right.png" :src.sync="photo_right"></card3>
                 </van-col>
             </van-row>
+            <view class="spacing"></view>
             <button type="primary" @tap="goNext" class="block-button">下一步</button>
             <view class="spacing"></view>
-
             <button  @tap="goPrev" class="block-button">上一步</button>
         </view>
         <view wx:if="{{stepsIndex == 2}}">
-            <view>H</view>
+            <view class="cell-group-title">宠主信息</view>
+            <van-cell-group>
+                <van-field label="宠物主人" placeholder="请输入姓名" value="{{product.owner.name}}"/>
+                <van-field label="联系电话" placeholder="请输入电话" type="digit" value="{{product.owner.phone}}"/>
+                <van-field label="Email" placeholder="请输入Email"  value="{{product.owner.email}}"/>
+                <van-field label="快递地址" placeholder="请输入快递地址"  value="{{product.owner.shipping_address}}"/>
+            </van-cell-group>
+            <view class="spacing"></view>
+            <button type="primary" @tap="goNext" class="block-button">下一步</button>
+            <view class="spacing"></view>
+            <button  @tap="goPrev" class="block-button">上一步</button>
+        </view>
+        <view wx:if="{{stepsIndex == 3}}">
+            <repeat for="{{product.vaccin}}" key="index" index="index" item="item">
+                <view>
+                    <view @tap="delVaccin" class="cell-group-action">
+                        <view class="icon iconfont iconminus text-danger"></view>
+                        <view>疫苗接种{{index+1}}</view>
+                    </view>
+                    <van-cell-group>
+                        <van-cell title="日期" clickable>
+                            <view slot="">
+                                <picker mode="date" value="{{product.vaccin[index].date}}" @change="onVaccinDateChange">{{product.vaccin[index].date || '请选择'}}</picker>
+                            </view>
+                        </van-cell>
+                        <van-field label="厂商" placeholder="请输入厂商" value="{{product.vaccin[index].vendor}}"/>
+                        <van-field label="名称" placeholder="请输入名称" value="{{product.vaccin[index].name}}"/>
+                            <van-cell title="照片" label="点击上传" size="large" clickable @click="selectVaccinImage({{index}})" >
+                            <view slot="">
+                                <image style="width:64rpx;height:64rpx;" src="{{product.vaccin[index].photo || '../images/image.png'}}"/>
+                            </view>
+                        </van-cell>
+                    </van-cell-group>
+                </view>
+            </repeat>
+
+            <view @tap="addVaccin" class="cell-group-action">
+                <view class="icon iconfont iconplus text-primary"></view>
+                <view>新增疫苗接种</view>
+            </view>
+
+            <view class="spacing"></view>
+
+            <repeat for="{{product.insect}}" key="index" index="index" item="item">
+                <view>
+                    <view @tap="delInsect" class="cell-group-action">
+                        <view class="icon iconfont iconminus text-danger"></view>
+                        <view>驱虫处理{{index+1}}</view>
+                    </view>
+                    <van-cell-group>
+                        <van-cell title="日期" clickable>
+                            <view slot="">
+                                <picker mode="date" value="{{product.insect[index].date}}" @change="onVaccinDateChange">{{product.insect[index].date || '请选择'}}</picker>
+                            </view>
+                        </van-cell>
+                        <van-field label="厂商" placeholder="请输入厂商" value="{{product.insect[index].vendor}}"/>
+                        <van-field label="名称" placeholder="请输入名称" value="{{product.insect[index].name}}"/>
+                            <van-cell title="照片" label="点击上传" size="large" clickable @click="selectInsectImage({{index}})" >
+                            <view slot="">
+                                <image style="width:64rpx;height:64rpx;" src="{{product.insect[index].photo || '../images/image.png'}}"/>
+                            </view>
+                        </van-cell>
+                    </van-cell-group>
+                </view>
+            </repeat>
+            <view @tap="addInsect" class="cell-group-action">
+                <view class="icon iconfont iconplus text-primary"></view>
+                <view>新增驱虫处理</view>
+            </view>
+            <view class="spacing"></view>
+            <button type="primary" @tap="complete" class="block-button">完成</button>
+            <view class="spacing"></view>
+            <button  @tap="goPrev" class="block-button">上一步</button>
         </view>
         <van-popup show="{{showSelectProvince}}" @close="onSelectProvinceClose" position="bottom">
             <van-picker columns="{{provinces}}" title="选择省份" @confirm="onProvinceSelected" @cancel="onSelectProvinceCancelled" show-toolbar>
@@ -61,13 +133,16 @@
 <script>
 import wepy from 'wepy'
 import Card from "@/components/card"
+import moment from 'moment'
 
 export default class PetSale extends wepy.page {
   config = {
     navigationBarTitleText: '宠物出售',
   }
   components = {
-    card: Card
+    card: Card,
+    card2: Card,
+    card3: Card
   }
   data = {
       part: 0,
@@ -87,8 +162,14 @@ export default class PetSale extends wepy.page {
           },
       ],
       product: {
-          native_province: ''
+          photo: {},
+          insect: [],
+          vaccin: [],
+          owner: {}
       },
+      photo_front:null,
+      photo_left:null,
+      photo_right:null,
       showSelectProvince: false,
       showSexPicker: false,
       provinces: [
@@ -142,6 +223,51 @@ export default class PetSale extends wepy.page {
        if (this.stepsIndex < 0)
         this.stepsIndex = 0
        this.$apply()
+      },
+      addVaccin() {
+          this.product.vaccin.push({
+              date:  moment().format('l')
+          })
+          this.$apply()
+      },
+      delVaccin(index) {
+          this.product.vaccin.splice(index, 1)
+          this.$apply()
+      },
+      async selectVaccinImage(index) {
+          try {
+              const res = await wepy.chooseImage({count:1})
+              let paths = res.tempFilePaths
+              this.product.vaccin[index].photo= paths[0]
+              this.$apply()
+          } catch (e) {
+              console.log('e', e)
+          }
+      },
+      addInsect() {
+          this.product.insect.push({
+              date:  moment().format('l')
+          })
+          this.$apply()
+      },
+      delInsect(index) {
+          this.product.insect.splice(index, 1)
+          this.$apply()
+      },
+      async selectInsectImage(index) {
+          try {
+              const res = await wepy.chooseImage({count:1})
+              let paths = res.tempFilePaths
+              this.product.insect[index].photo= paths[0]
+              this.$apply()
+          } catch (e) {
+              console.log('e', e)
+          }
+      },
+      complete() {
+          wepy.redirectTo({
+              url: "/pages/complete?from=pet_sale"
+          })
       }
   }
 }
@@ -151,6 +277,14 @@ export default class PetSale extends wepy.page {
     padding: 20rpx 35rpx 20rpx;
     font-size: 14px;
     color: #bfbfbf;
+}
+.cell-group-action  {
+    padding: 20rpx 35rpx 20rpx;
+    font-size: 14px;
+    color: #262626;
+    display:flex;
+    flex-direction: row;
+    align-items: center;
 }
 .block-button {
     margin:0 32rpx;

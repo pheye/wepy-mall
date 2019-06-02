@@ -46,6 +46,7 @@ export default class extends wepy.app {
       'pages/search',
       'pages/pet_register',
       'pages/pet_sale',
+      'pages/pet_detail',
       'pages/sign_in',
       'pages/exchange_goods',
       'pages/wholesale',
@@ -71,6 +72,7 @@ export default class extends wepy.app {
       'pages/earn',
       'pages/provider',
       'pages/coupons',
+      'pages/complete',
     ],
     window: {
       backgroundTextStyle: 'dark',

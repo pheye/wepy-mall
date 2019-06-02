@@ -1,0 +1,38 @@
+<template>
+    <complete :description="description" :defaultButtonText="defaultButtonText" :mainButtonText="mainButtonText" :mainButtonUrl="mainButtonUrl" :defaultButtonUrl="defaultButtonUrl" ></complete>
+</template>
+<script>
+import wepy from 'wepy'
+import Complete from '@/components/complete'
+
+export default class CompletePage extends wepy.page {
+  config = {
+    navigationBarTitleText: '操作完成',
+  }
+  components = {
+      complete: Complete
+  }
+  data = {
+    mainButtonUrl: '/pages/pet_detail?id=1',
+    mainButtonText: '查看详情',
+    defaultButtonUrl: '/pages/my_pet_sale',
+    defaultButtonText: '我的出售',
+    description: '完成出售登记'
+  }
+  onLoad (options) {
+      console.log('options', options)
+      switch (options.from) {
+          case 'pet_sale':
+              this.mainButtonUrl =  '/pages/pet_detail?id=1'
+              this.mainButtonText =  '查看详情'
+              this.defaultButtonUrl  =  '/pages/my_pet_sale'
+              this.defaultButtonText =  '我的出售'
+              this.description = '完成出售登记'
+              break
+      }
+      this.$apply()
+  }
+}
+</script>
+<style lang="less">
+</style>

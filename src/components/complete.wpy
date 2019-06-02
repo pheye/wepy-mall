@@ -1,0 +1,43 @@
+<template>
+    <view class="complete">
+        <view class="icon iconfont iconcomplete text-success complete__icon"></view>
+        <view>{{description}}</view>
+        <view class="spacing"></view>
+        <navigator url="{{mainButtonUrl}}" class="complete__btn">
+            <button type="primary" class="complete__btn">{{mainButtonText}}</button>
+        </navigator>
+        <view class="spacing"></view>
+        <navigator url="{{defaultButtonUrl}}" class="complete__btn">
+            <button class="complete__btn">{{defaultButtonText}}</button>
+        </navigator>
+    </view>
+</template>
+<script>
+import wepy from 'wepy'
+
+export default class Complete extends wepy.component {
+    props = {
+        mainButtonText: String,
+        mainButtonUrl: String,
+        defaultButtonText: String,
+        defaultButtonUrl: String,
+        description: String
+    }
+}
+</script>
+<style lang="less">
+.complete {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 32rpx;
+
+    .complete__icon {
+        font-size: 176rpx;
+        margin:32rpx;
+    }
+    .complete__btn {
+        width: 100%;
+    }
+}
+</style>

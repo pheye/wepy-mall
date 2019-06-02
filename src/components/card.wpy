@@ -1,6 +1,6 @@
 <template>
-    <view class="card">
-        <image src="../images/dog-front.png" mode="widthFix" style="width:100%;"/>
+    <view class="card" @tap="upload">
+        <image src="{{src || defsrc}}"  style="width:100%;height:250rpx;"/>
         <view class="center">{{title}}</view>
     </view>
 </template>
@@ -9,7 +9,27 @@ import wepy from 'wepy'
 
 export default class Card extends wepy.component {
     props =  {
-        title: String
+        title: String,
+        defsrc: String,
+        src: {
+            type: String,
+            twoWay: true
+        }
+    }
+    methods = {
+        async upload () {
+            console.log("upload")
+            try {
+                const res = await wepy.chooseImage({count:1})
+                let paths = res.tempFilePaths
+                this.src = paths[0]
+                this.$apply()
+                this.$parent.$apply()
+                console.log('res', res)
+            } catch (e) {
+                console.log("e", e)
+            }
+        }
     }
 }
 </script>
