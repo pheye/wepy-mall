@@ -51,11 +51,44 @@ const request = async(url, params = {}) => {
         header,
     });
     tip.loaded();
+    if (res.statusCode != 200)
+      throw new Error(res)
     return res;
 };
 
+const upload = async(url, file, params) => {
+    tip.loading();
+    let data = params.query || {};
+    // data.sign = SIGN;
+    // data.time = TIMESTAMP;
+    let token = wepy.getStorageSync(TOKEN);
+    let header = params.header || { 
+          'Content-Type': 'multipart/form-data',
+          'Accept': 'application/json',
+        }
+    // if (!token) {
+    //   token = GUEST_TOKEN;
+    // }
+    if (!params.noauth && token) {
+      header['Authorization'] = `Bearer ${token}`
+    }
+    let res = await wepy.uploadFile({
+        url: url,
+        filePath: file,
+        name: 'files',
+        formData: params,
+        header,
+    });
+    tip.loaded();
+    if (typeof(res.data) === 'string')
+      res.data = JSON.parse(res.data)
+    if (res.statusCode != 200)
+      throw new Error(res)
+    return res
+}
 
 module.exports = {
     wxRequest,
-    request
+    request,
+    upload,
 }

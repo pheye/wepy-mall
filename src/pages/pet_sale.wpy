@@ -6,7 +6,7 @@
         <view wx:if="{{stepsIndex == 0}}">
             <view class="cell-group-title">基础信息</view>
             <van-cell-group>
-                <van-field label="名称" placeholder="请输入名称" value="{{product.title}}"/>
+                <van-field label="名称" placeholder="请输入名称" value="{{product.title}}" @change="onChange('title')"/>
                 <van-cell title="出生地省份" value="{{product.native_province || '请选择'}}" arrow-direction="down" clickable is-link @click="onSelectProvince"/>
                 <van-cell title="生日" clickable>
                     <view slot="">
@@ -14,15 +14,15 @@
                     </view>
                 </van-cell>
                 <van-cell title="性别" value="{{product.sex || '请选择'}}" arrow-direction="down" clickable is-link @click="onShowSexPicker"/>
-                <van-cell title="类别" value="{{product.cat || '请选择'}}" arrow-direction="right" clickable is-link disabled/>
+                <van-cell title="类别" value="{{product.category || '请选择'}}" arrow-direction="right" clickable is-link disabled/>
             </van-cell-group>
             <view class="spacing"></view>
             <van-cell-group>
-                <van-field label="价格" placeholder="请输入" type="number" value="{{product.regular_price}}"/>
+                <van-field label="价格" placeholder="请输入" type="number" value="{{product.regular_price}}" @change="onChange('regular_price')"/>
             </van-cell-group>
             <view class="spacing"></view>
             <van-cell-group>
-                <van-field placeholder="详细描述" type="textarea" autosize/>
+                <van-field placeholder="详细描述" type="textarea" value="{{product.description}}" autosize @change="onChange('description')"/>
             </van-cell-group>
             <view class="spacing"></view>
             <button type="primary" @tap="goNext" class="block-button">下一步</button>
@@ -47,10 +47,10 @@
         <view wx:if="{{stepsIndex == 2}}">
             <view class="cell-group-title">宠主信息</view>
             <van-cell-group>
-                <van-field label="宠物主人" placeholder="请输入姓名" value="{{product.owner.name}}"/>
-                <van-field label="联系电话" placeholder="请输入电话" type="digit" value="{{product.owner.phone}}"/>
-                <van-field label="Email" placeholder="请输入Email"  value="{{product.owner.email}}"/>
-                <van-field label="快递地址" placeholder="请输入快递地址"  value="{{product.owner.shipping_address}}"/>
+                <van-field label="宠物主人" placeholder="请输入姓名" value="{{product.owner.name}}" @change="onChange('owner.name')"/>
+                <van-field label="联系电话" placeholder="请输入电话" type="digit" value="{{product.owner.phone}}" @change="onChange('owner.phone')" />
+                <van-field label="Email" placeholder="请输入Email"  value="{{product.owner.email}}" @change="onChange('owner.email')"/>
+                <van-field label="快递地址" placeholder="请输入快递地址"  value="{{product.owner.shipping_address}}" @change="onChange('owner.shipping_address')"/>
             </van-cell-group>
             <view class="spacing"></view>
             <button type="primary" @tap="goNext" class="block-button">下一步</button>
@@ -128,12 +128,18 @@
             <van-picker columns="{{sexes}}" title="选择性别" @confirm="onSexSelected" @cancel="onSexCancelled" show-toolbar>
             </van-picker>
         </van-popup>
+
+        <van-popup show="{{showCategoryPicker}}" position="bottom">
+            <van-picker columns="{{sexes}}" title="选择性别" @confirm="onSexSelected" @cancel="onSexCancelled" show-toolbar>
+            </van-picker>
+        </van-popup>
     </view>
 </template>
 <script>
 import wepy from 'wepy'
 import Card from "@/components/card"
 import moment from 'moment'
+import api from '@/api/api'
 
 export default class PetSale extends wepy.page {
   config = {
@@ -162,22 +168,37 @@ export default class PetSale extends wepy.page {
           },
       ],
       product: {
+          status: 'draft',
+          owner: {},
           photo: {},
           insect: [],
           vaccin: [],
-          owner: {}
       },
       photo_front:null,
       photo_left:null,
       photo_right:null,
       showSelectProvince: false,
       showSexPicker: false,
+      showCategoryPicker: false,
       provinces: [
           '京', '津', '冀', '鲁', '闽'
       ],
       sexes: [
-          '公', '母'
+          '雄性', '雌性'
       ],
+  }
+  init(product) {
+      this.product = {...this.product, ...product}
+      this.photo_front = this.product.photo.front
+      this.photo_left = this.product.photo.left
+      this.photo_right = this.product.photo.right
+      this.$apply()
+  }
+  async onLoad (options) {
+      if (options.id) {
+          const res = await api.getProducts(options.id)
+          this.init(res.data)
+      }
   }
   methods = {
       onSelectProvince () {
@@ -202,6 +223,10 @@ export default class PetSale extends wepy.page {
         this.showSexPicker = true
         this.$apply()
       },
+      showPicker(type) {
+        this[type] = true
+        this.$apply()
+      },
       onSexSelected(event) {
         const { value } = event.detail
         this.product.sex = value
@@ -211,18 +236,6 @@ export default class PetSale extends wepy.page {
       onSexCancelled() {
         this.showSexPicker= false
         this.$apply()
-      },
-      goNext() {
-       this.stepsIndex++
-       if (this.stepsIndex >= this.steps.length)
-        this.stepsIndex = this.stepsIndex.length - 1
-       this.$apply()
-      },
-      goPrev() {
-       this.stepsIndex--
-       if (this.stepsIndex < 0)
-        this.stepsIndex = 0
-       this.$apply()
       },
       addVaccin() {
           this.product.vaccin.push({
@@ -263,6 +276,81 @@ export default class PetSale extends wepy.page {
           } catch (e) {
               console.log('e', e)
           }
+      },
+      onChange(field, e) {
+          const fields = field.split('.')
+          if (fields.length == 2) {
+              this.product[fields[0]][fields[1]] = e.detail
+          } else {
+              this.product[field] = e.detail
+          }
+          this.$apply()
+      },
+      async goNext() {
+          const id = this.product.id
+          switch (this.stepsIndex) {
+              case 0:
+                  if (id) {
+                      const res = await api.updateProducts(id, {query: this.product})
+                      this.init(res.data)
+                  } else {
+                      const res = await api.createProducts({query: this.product})
+                      this.init(res.data)
+                  }
+                  break;
+              case 1:
+                  const product = this.product
+                  let dirty = false
+                  if (this.photo_front && this.photo_front != this.product.photo.front) {
+                      const res = await api.createMedia(this.photo_front, id)
+                      const mediaID = res.data['id']
+                      product.photo.front = mediaID
+                      product.image_id = mediaID
+                      dirty = true
+                  }
+
+                  if (this.photo_left && this.photo_left != this.product.photo.left) {
+                      const res = await api.createMedia(this.photo_left, id)
+                      const mediaID = res.data['id']
+                      product.photo.left = mediaID
+                      dirty = true
+                  }
+
+                  if (this.photo_right && this.photo_right != this.product.photo.right) {
+                      const res = await api.createMedia(this.photo_right, id)
+                      const mediaID = res.data['id']
+                      product.photo.right = mediaID
+                      dirty = true
+                  }
+                  if (dirty) {
+                      const res = await api.updateProducts(id, {query: product})
+                      this.init(res.data)
+                  }
+                  break
+              case 2:
+                  {
+                  const res = await api.updateProducts(id, {query: this.product})
+                  this.init(res.data)
+                  }
+                  break
+              case 3:
+                  {
+                  const res = await api.updateProducts(id, {query: this.product})
+                  this.init(res.data)
+                  }
+                  break
+          }
+          this.stepsIndex++
+          if (this.stepsIndex >= this.steps.length) {
+              this.stepsIndex = this.stepsIndex.length - 1
+          }
+          this.$apply()
+      },
+      goPrev() {
+       this.stepsIndex--
+       if (this.stepsIndex < 0)
+        this.stepsIndex = 0
+       this.$apply()
       },
       complete() {
           wepy.redirectTo({

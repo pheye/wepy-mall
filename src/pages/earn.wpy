@@ -4,7 +4,7 @@
             <button type="primary" block>萌宠登记</button>
         </navigator>
         <view class="spacing"></view>
-        <navigator url="/pages/pet_sale" style="width:100%;">
+        <navigator url="/pages/pet_sale?id=243" style="width:100%;">
             <button block >宝贝发布</button>
         </navigator>
    </view>

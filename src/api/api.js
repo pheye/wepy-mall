@@ -1,6 +1,7 @@
 import {
   wxRequest,
-  request
+  request,
+  upload,
 } from '@/utils/wxRequest';
 import { stringify } from 'qs';
 
@@ -20,10 +21,14 @@ const getMe= (params) => request(`${host}/wp-json/w2w/v1/customers/me`, {...para
 
 //查询商品列表
 const queryProducts = ({query}) => request(`${host}/wp-json/w2w/v1/products`, {query: {...query, status: 'publish'}, noauth: true});
+const getProducts = (id, params) => request(`${host}/wp-json/w2w/v1/products/${id}`, params);
+const createProducts = (params) => request(`${host}/wp-json/w2w/v1/products`, {...params, method: 'POST'});
+const updateProducts = (id, params) => request(`${host}/wp-json/w2w/v1/products/${id}`, {...params, method: 'PUT'});
 
+// 上传文件
+const createMedia = (file, postId) => upload(`${host}/wp-json/w2w/v1/medias`, file, {'post_id': postId})
 //查询商品详情信息
 // const goodsDetail = (id, params) => request(`${host}/wp-json/wc/v3/products/${id}`, params);
-const getProducts = (id, params) => request(`${host}/wp-json/w2w/v1/products/${id}`, params);
 //查看商品的Qrcode
 const getQrcode = (id, params) => request(`${host}/wp-json/w2w/v1/products/qrcode?id=${id}&transparent=1`, params);
 //商品加入购物车
@@ -167,6 +172,8 @@ export default {
   querySettings,
   queryProducts,
   getProducts,
+  createProducts,
+  updateProducts,
   getQrcode,
   getToken,
   getMe,
@@ -218,5 +225,6 @@ export default {
   addCoupons,
   delCoupons,
   getOrderStatics,
-  updateCartShipping
+  updateCartShipping,
+  createMedia,
 }
