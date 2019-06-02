@@ -140,6 +140,7 @@ import wepy from 'wepy'
 import Card from "@/components/card"
 import moment from 'moment'
 import api from '@/api/api'
+import tip from '@/utils/tip'
 
 export default class PetSale extends wepy.page {
   config = {
@@ -173,7 +174,8 @@ export default class PetSale extends wepy.page {
           photo: {},
           insect: [],
           vaccin: [],
-          categories: [21]
+          categories: [21],
+          stock_quantity: 1,
       },
       photo_front:null,
       photo_left:null,
@@ -314,6 +316,10 @@ export default class PetSale extends wepy.page {
                   break;
               case 1:
                   let dirty = false
+                  if (!this.photo_front  || !this.photo_left || !this.photo_right) {
+                      tip.error('请上传3张图片');
+                      return
+                  }
                   if (this.photo_front && this.photo_front != this.product.photo.front) {
                       const res = await api.createMedia(this.photo_front, id)
                       const mediaID = res.data['id']
@@ -367,9 +373,9 @@ export default class PetSale extends wepy.page {
                   // console.log('va3', vaccin)
                   // 这一步成功就是完成了
                   // 状态改为发布
-                  product.status = 'publish'
                   const res = await api.updateProducts(id, {
                       query: {
+                          status: 'publish'
                           vaccin,
                           insect,
                       }

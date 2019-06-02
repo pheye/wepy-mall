@@ -10,7 +10,7 @@
   <van-row gutter="15">
     <view class="item_container">
       <van-col span="8" class="item_image_container">
-        <navigator url="/pages/goods_detail?id={{item.id}}">
+        <navigator url="/pages/pet_detail?id={{item.id}}">
           <!-- 商品图片 -->
            <image class="item-img" src="{{item.images[0].shop_single}}">
            <!-- 商品标签 -->
@@ -26,7 +26,7 @@
         <!-- 商品详情 -->
         <view class="item_detail_container">
           <!-- 名称 -->
-         <navigator class="item_title" url="/pages/goods_detail?id={{item.id}}">{{item.name}}</navigator>
+         <navigator class="item_title" url="/pages/pet_detail?id={{item.id}}">{{item.name}}</navigator>
          <!-- 描述 -->
          <view class="item_desc">{{ descs[index] }}</view>
          <!-- 库存 -->
@@ -164,7 +164,7 @@ export default class petCardList extends wepy.component {
           let data = json.data;
           if (data.type == 'variable'){
             wepy.navigateTo({
-              url: "/pages/goods_detail?id="+data.id + "&confirmData=" + 1
+              url: "/pages/pet_detail?id="+data.id + "&confirmData=" + 1
             })
           }else{
             that.methods.buy(productId);
@@ -233,7 +233,7 @@ export default class petCardList extends wepy.component {
       flex-direction:column;
       .item_title{
       height: 50rpx;
-      font-size: 30rpx;
+      font-size: 32rpx;
       font-weight: 700;
       color:#333;
       overflow: hidden;

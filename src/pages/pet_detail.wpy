@@ -6,55 +6,93 @@
     <van-action-sheet class='sheet_container' show="{{ show }}" actions="{{ actions }}" bind:close="onClose" bind:select="onSelect"/>
     <!--index.wxml-->
     <swiper indicator-dots="true" autoplay="true" interval="5000" duration="500" indicator-active-color="#ffc452" indicator-color="#efefef" class="swiper" style="margin-top:{{scrMove}}rpx;position:relative;z-index:110;">
-      <block wx:for="{{detail.images}}" key="item" item="item" wx:key="key">
+      <block wx:for="{{banners}}" key="item" item="item" wx:key="key">
         <swiper-item>
-          <image src="{{item.src}}" data-src="{{item.src}}" class="slide-image" @tap="previewImage" />
+          <image src="{{item}}" data-src="{{item}}" class="slide-image" @tap="previewImage" />
         </swiper-item>
       </block>
     </swiper>
-<cartAdvise></cartAdvise>
-    <view class="details-msg" style="margin-top:{{scrMove}}rpx;">
+    <cartAdvise></cartAdvise>
+    <view class="details-msg" style="margin-top:{{scrMove}}rpx;padding-left:30rpx;padding-right:30rpx;">
       <view class="details_pinfo" >
-        <view class="price_container">
+        <view>
           <view >
              <text class="origin-price" wx:if="{{detail.on_sale && detail.regular_price}}">￥{{detail.regular_price}}</text>
           </view>
           <view >
-              <text class="price" wx:if="{{detail.min_price == detail.max_price}}">{{ '￥' + (detail.price || ' ') }}</text>
+          <text class="price" wx:if="{{detail.min_price == detail.max_price}}"><text class="currency">￥</text>{{ (detail.price || ' ') }}</text>
               <text class="price" wx:else>{{ '￥' + (detail.min_price || ' ') }}</text>
-              <text class="group">团购价</text>
           </view>
         </view>
-        <view class="order_time {{detail.date_on_sale_to || detail.auto_shelf_days != 0 ? '' : 'hidden'}}">
-          <timer :startTime.sync="startTime" :endTime.sync="endTime"></timer>
-        </view>
-<!--         <view class="share-box">
-          <i class="iconfont icon-share" @tap="onShareAppMessage"></i>
-          <text>分享</text>
-        </view> -->
       </view>
-<!--       <view class="detail_not_sale" wx:else>
-        <text class="price">￥{{detail.price}} </text> <text class="origin-price">￥{{detail.regular_price}}</text>
-      </view> -->
       <view class="details-title">{{detail.name}}</view>
-      <view class="details-introduction">{{detail.short_description}}</view>
-
+      <view class="details-extra">发布: {{detail.formatted_date_created}} 卖家: {{detail.owner.name}}</view>
+      <view >生日: {{detail.birthday}}</view>
+      <view >性别: {{detail.sex}}</view>
       <!-- <view class="baoyou">满{{detail.freeShipNum}}件包邮</view> -->
       <!-- 分享内容 -->
-      <view class="share_container">
-      <view class="share_message" wx:if="{{detail.stock_quantity != null && detail.stock_quantity != 0}}">他们都在买剩余{{detail.stock_quantity}}件</view>
-      <view class="share_message" wx:else >他们都在买{{ detail.in_stock ? '有库存' : '已售罄' }}</view>
+      <!-- <view class="share_message" wx:if="{{detail.stock_quantity != null && detail.stock_quantity != 0}}">剩余{{detail.stock_quantity}}件</view> -->
+      <view class="share_message text-warning">{{ detail.in_stock ? '未售出' : '已售罄' }}</view>
     </view>
+    <view class="spacing"></view>
+    <view class="details-panel">
+      <view class="font-second-title">宠物信息描述</view>
+      <view class="text-default">{{detail.description}}</view>
     </view>
-      <view class="container">
+    <view class="spacing"></view>
+    <view class="details-panel">
+      <view class="font-second-title">疫苗接种</view>
+      <van-row>
+        <van-col span="6">日期</van-col>
+        <van-col span="7">厂商</van-col>
+        <van-col span="7">名称</van-col>
+        <van-col span="4">相片</van-col>
+      </van-row>
+      <repeat for="{{detail.vaccin}}" key="index" index="index" item="item">
+        <van-row>
+          <van-col span="6">{{item.date}}</van-col>
+          <van-col span="7">{{item.vendor}}</van-col>
+          <van-col span="7">{{item.name}}</van-col>
+          <van-col span="4">
+            <view @tap="previewImage2({{item.photo}})">
+              <image src="{{item.photo}}" style="width:32px;height:32px" wx:if="{{item.photo}}"/>
+            </view>
+          </van-col>
+        </van-row>
+      </repeat>
+    </view>
+    <view class="spacing"></view>
+    <view class="details-panel">
+      <view class="font-second-title">驱虫处理</view>
+      <van-row>
+        <van-col span="6">日期</van-col>
+        <van-col span="7">厂商</van-col>
+        <van-col span="7">名称</van-col>
+        <van-col span="4">相片</van-col>
+      </van-row>
+      <repeat for="{{detail.insect}}" key="index" index="index" item="item">
+        <van-row>
+          <van-col span="6">{{item.date}}</van-col>
+          <van-col span="7">{{item.vendor}}</van-col>
+          <van-col span="7">{{item.name}}</van-col>
+          <van-col span="4">
+            <view @tap="previewImage2({{item.photo}})">
+              <image src="{{item.photo}}" style="width:32px;height:32px" wx:if="{{item.photo}}"/>
+            </view>
+          </van-col>
+        </van-row>
+      </repeat>
+    </view>
+  </view>
+
+  <view style="margin-bottom:64px;"></view>
+    <view class="container">
 <!--     <image src="{{shareImage}}" class="share-image" wx:if="{{shareImage}}"></image>-->
       <!-- 画布 -->
      <canvasdrawer painting="{{painting}}" class="canvasdrawer" bind:getImage="eventGetImage"/>
-  </view>
-    <view>
-      <image src="../images/goods_detail_banner.jpg"  mode="widthFix"  style="width:100%;"/>
     </view>
-    <!-- <view class="spacing"></view> -->
+    <view class="spacing"></view>
+    <view class="spacing"></view>
 <!--     <view class="block">
       <view class="block_title">商品详情</view>
     </view> -->
@@ -81,16 +119,17 @@
         </view>
         <contact-button class="contact">
         </contact-button>
-        <view class="item" @tap="cartPage">
-        <view class="badge" wx:if="{{cartQuantity > 0}}">{{cartQuantity}}</view>
-          <van-icon name="cart-o" size="16px"></van-icon>
-          <view class="doc">购物车</view>
+        <view class="item">
+        <van-icon name="cart-o" size="16px"></van-icon>
+        <view class="doc">分享</view>
         </view>
+        <button type="share" class="contact">
+        </button>
         <!-- <view class="item {{isFavorite?'selec_active':''}}" @tap="takeFavorite"> -->
         <!--   <i class="iconfont icon-collection"></i> -->
         <!--   <view class="doc">收藏</view> -->
         <!-- </view> -->
-        <view class="sy-bottom {{canOrder?'btn_cart':'cart_color'}}" @tap="takeCart">加入购物车</view>
+        <view class="sy-bottom {{canOrder?'btn_cart':'cart_color'}}" @tap="takeCart">预订</view>
         <view class="sy-bottom {{canOrder?'btn_order':'order_color'}}" @tap="takeOrder">{{purchaseText}}</view>
       </view>
     </view>
@@ -145,7 +184,7 @@ import CommentList from "../components/comment_list"
 import timer from '@/components/common/timer'
 import CartAdvise from "@/components/cart_advise"
 import {
-  USER_INFO,
+  ME,
   CART
 } from '@/utils/constant';
 import PubSub from 'pubsub-js'
@@ -179,72 +218,8 @@ export default class goodsDetail extends wepy.page {
     isValidDate: true,
     canOrder: true, //是否能下单
     purchasetype: 1, //1-正常购买;2-补货
-    purchaseText: "立即购买",
+    purchaseText: "购买",
     special: 0, ////0-正常入库;1-特价专区和换货专区,
-    commentList: [
-
-      {
-        url: "../images/icon_nav_01_new.png",
-        name: "浪子天涯",
-        time: "2017-10-01 10:10",
-        content: "东西收到,很满意!!真的是超级好的卖家,解答疑问不厌其烦,细致认真,关键是东西好,而且货物发得超快,包装仔细,值得信赖!",
-        start: 4.5,
-        children: [{
-          content: "跟你交易次次都这么成功和开心的．．希望我们以后有更多的交易吧．．．哈哈"
-        }]
-      },
-      {
-        url: "../images/icon_nav_02_new.png",
-        name: "勇闯天下",
-        time: "2017-10-01 10:10",
-        content: "太感谢了，衣服很漂亮，朋友很喜欢，最主要的是买家太好了~~~大大的赞一个。。。 衣服，很合身",
-        start: 4,
-        children: []
-      }
-
-
-    ],
-    commentList1: [],
-    // 模拟用户分享数据（需要根据不同商品ID读取对应的数据）
-    shareUserInfo:[
-      {
-        name:"no1",
-        avatarUrl:"../images/no1.png"
-      },
-      {
-        name:"no2",
-        avatarUrl:"../images/no2.png"
-      },
-      {
-        name:"no3",
-        avatarUrl:"../images/no3.png"
-      },
-      {
-        name:"no4",
-        avatarUrl:"../images/no4.png"
-      },
-      {
-        name:"no5",
-        avatarUrl:"../images/no5.png"
-      },
-      {
-        name:"no6",
-        avatarUrl:"../images/no6.png"
-      },
-      {
-        name:"no7",
-        avatarUrl:"../images/no7.png"
-      },
-            {
-        name:"no8",
-        avatarUrl:"../images/no8.png"
-      },
-            {
-        name:"no9",
-        avatarUrl:"../images/no9.png"
-      },
-
-    ],
     // 随机抽取用户数据
     randomUserInfo:[],
     // 画布
@@ -268,7 +243,8 @@ export default class goodsDetail extends wepy.page {
     variantSelected: 0,
     cartQuantity: 0,
     confirmData: 0,
-    scrMove :0
+    scrMove :0,
+    banners: []
   }
 
   components = {
@@ -304,21 +280,9 @@ export default class goodsDetail extends wepy.page {
     //接收上一个页面传过来的参数
     that.goodsId = option.id;
     that.confirmData =option.confirmData;
-    if (option.purchasetype != undefined) {
-      this.purchasetype = option.purchasetype;
-    }
-    if (this.purchasetype == 2) {
-      this.purchaseText = "申请补货";
-    } else {
-      this.purchaseText = "立即购买";
-    }
-    if (option.special != undefined) {
-      this.special = option.special;
-    }
     that.getGoodsDetail();
     that.getGoodQrcode();
     // that.addUserBrowser();
-    console.log("special===" + this.special);
     this.shareImage = '';
     this.scrMove = 0;
 
@@ -335,7 +299,6 @@ export default class goodsDetail extends wepy.page {
     })
     this.animation = animation;
 
-    this.randomUserInfo = util.getRandomArrayElements(this.shareUserInfo, 3);
     // 页面读取后判断参数打开规格选择菜单
     if (this.confirmData == 1) {
       this.showConfirmData();
@@ -351,7 +314,7 @@ export default class goodsDetail extends wepy.page {
       wx.previewImage({
         current: nowImgUrl, // 当前显示图片的http链接
         // urls: that.data[tagFrom].imageUrls // 需要预览的图片http链接列表
-        urls: that.bindData[tagFrom].imageUrls // 注释掉上面的 换着一行 (http://blog.csdn.net/zhuming3834/article/details/74380079)
+        urls: that.bindData[tagFrom].imageUrls 
       })
     }
   }
@@ -412,17 +375,6 @@ export default class goodsDetail extends wepy.page {
       let description_html =  that.detail.description_html.replace(/\[video(.*)mp4=(.*)\]\[\/video\]/g, "<video $1 src=$2 class='video'></video>")
       // console.log("description_html", description_html);
       WxParse.wxParse('detailInfo', 'html', description_html, this);
-      if(that.detail.auto_shelf_days == 0){
-        time.endTime = that.detail.date_on_sale_to;
-        time.startTime = that.detail.date_on_sale_from;
-      } else {
-          // 有自动上下架情况
-          let date = new Date();
-          let seconds =(((date.getTime() -new Date(that.detail.date_created).getTime())/1000)) %  (that.detail.auto_shelf_days*24*60*60);
-          time.startTime = moment(date).add(-seconds, 'seconds')._d;
-          time.endTime = moment(time.startTime).add(that.detail.auto_shelf_days, 'day')._d ;
-      }
-
       if (json.data.validDate == "0") {
         that.isValidDate = false;
         if (this.purchasetype == 1 && this.special != 1) {
@@ -430,6 +382,18 @@ export default class goodsDetail extends wepy.page {
         }
       }
       this.setDefaultVariant()
+      this.banners = []
+      const photo = data.photo
+      if (photo.front) {
+        this.banners.push(photo.front)
+      }
+      if (photo.left) {
+        this.banners.push(photo.left)
+      }
+      if (photo.right) {
+        this.banners.push(photo.right)
+      }
+      this.detail.formatted_date_created = moment(data.date_created).format('l')
     } else {
       if (json.data.message) {
         tip.error(json.data.message)
@@ -620,11 +584,6 @@ export default class goodsDetail extends wepy.page {
       wepy.switchTab({
         url: '/pages/home'
       })
-      // wx.switchTab({
-      //   url: '/pages/home'
-      // })
-      // console.log(wepy)
-      // console.log(wx)
     },
     cartPage() {
       wepy.switchTab({
@@ -638,14 +597,15 @@ export default class goodsDetail extends wepy.page {
     },
     previewImage(e) {
       let current = e.target.dataset.src;
-      let imageArry = [];
-      let obj = this.detail.photoList;
-      Object.keys(obj).forEach((item) => {
-        imageArry.push(obj[item].photo)
-      });
       wx.previewImage({
         current: current, // 当前显示图片的http链接
-        urls: imageArry, // 需要预览的图片http链接列表
+        urls: this.banners
+      })
+    },
+    previewImage2(current) {
+      wx.previewImage({
+        current: current, // 当前显示图片的http链接
+        urls: [current]
       })
     },
     bindOrderNumInput(e) {
@@ -715,31 +675,6 @@ export default class goodsDetail extends wepy.page {
 
       this.variantSelected = id
       this.$apply()
-      // for (var i = 0; i < this.detail.goodsSkuNameList.length; i++) {
-      //   var skuValList = this.detail.goodsSkuNameList[i].skuValList;
-      //   for (var j = 0; j < skuValList.length; j++) {
-      //     var skuVal = skuValList[j];
-      //     if (skuVal.skuNameId == nameid) {
-      //       skuVal.current = false;
-      //       if (skuVal.skuValId == id) {
-      //         skuVal.current = true;
-      //         this.detail.goodsSkuValIds[index] = id;
-      //         for (var k = 0; k < this.detail.goodsSkuList.length; k++) {
-      //           var skuValIds = JSON.parse(this.detail.goodsSkuList[k].skuValIds).toArray;
-      //           console.log("goodskuids..." + this.detail.goodsSkuList[k].skuValIds);
-      //           console.log("this goodskuids..." + this.detail.goodsSkuValIds);
-      //           if ("[" + this.detail.goodsSkuValIds.toString() + "]" === this.detail.goodsSkuList[k].skuValIds) {
-      //             console.log("goodskuids equals...");
-      //             this.detail.stockNum = this.detail.goodsSkuList[k].stockNum;
-      //             this.detail.price = this.detail.goodsSkuList[k].price;
-      //             this.$apply();
-      //             break;
-      //           }
-      //         }
-      //       }
-      //     }
-      //   }
-      // }
     },
     onShareAppMessage: function(res) {
       if (res.from === 'button') {
@@ -787,7 +722,7 @@ export default class goodsDetail extends wepy.page {
             mask: true
           })
         // 用户头像信息
-        let userInfo = wepy.getStorageSync(USER_INFO);
+        let userInfo = wepy.getStorageSync(ME);
         that.avatarUrl = userInfo.avatarUrl;
         that.painting= {
             width: 375,
@@ -973,7 +908,6 @@ export default class goodsDetail extends wepy.page {
   // display:inline-block;
   text-decoration:line-through;
   font-size:20rpx;
-  padding-left:16rpx;
 }
 
 .details-msg {
@@ -982,34 +916,39 @@ export default class goodsDetail extends wepy.page {
   padding-bottom: 30rpx;
   background: #fff;
   .details-title {
-    margin-top:30rpx;
     overflow: hidden;
     width: 100%;
     box-sizing: border-box;
     position: relative;
-    font-size: 36rpx;
-    color: #333;
-    text-align:center;
+    font-size: 40rpx;
+    color: #262626;
+    weight: 600;
+  }
+  .details-extra {
+    font-size: 12px;
+    color: #d9d9d9;
   }
   .details-introduction {
     color: #999;
-    font-size: 28rpx;
-    line-height: 40rpx;
+    font-size: 36rpx;
     margin-top: 20rpx;
     margin-bottom:20rpx;
     text-align: center;
   }
   .details_pinfo {
-    padding: 10rpx 30rpx 10rpx 30rpx;
     position: relative;
     z-index: 999999999;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: #ffd591;
+    // background-color: #ffd591;
+    .currency {
+      font-size: 36rpx;
+    }
     .price {
       color: #FF3300;
-      font-size: 45rpx;
+      font-size: 48rpx;
+      weight: 500;
     }
     .group {
       background-color: #FF3300;
@@ -1377,32 +1316,24 @@ export default class goodsDetail extends wepy.page {
   border: 1px solid #ff4856;
 }
 
-.share_container{
-  padding: 20rpx 20rpx 20rpx 20rpx;
-  margin-left:30rpx;
-  margin-right:30rpx;
-  background-color:#FFFFEE;
-  border-radius: 10rpx;
-  .share_message{
-      font-size: 22rpx;
-      margin-bottom:30rpx;
-      }
-  .share_btn {
-        position:relative;
-        text-align: center;
-        line-height: 50rpx;
-        font-weight: 500;
-        background-color: #ffd591;
-        font-size: 22rpx;
-        color: #000;
-        border-radius: 30rpx;
+.share_message{
+    font-size: 32rpx;
     }
-  .avatarUrl {
-        width: 50rpx;
-        height: 50rpx;
-        border-radius: 1000px;
-        margin-right:30rpx;
+.share_btn {
+      position:relative;
+      text-align: center;
+      line-height: 50rpx;
+      font-weight: 500;
+      background-color: #ffd591;
+      font-size: 22rpx;
+      color: #000;
+      border-radius: 30rpx;
   }
+.avatarUrl {
+      width: 50rpx;
+      height: 50rpx;
+      border-radius: 1000px;
+      margin-right:30rpx;
 }
 .share-image {
   width: 600rpx;
@@ -1417,4 +1348,10 @@ button::after {
   z-index:20;
 }
 
+.details-panel {
+  background: white;
+  padding: 16rpx 32rpx;
+  border-top: 1px solid #dfdfdf;
+  border-bottom: 1px solid #dfdfdf;
+}
 </style>

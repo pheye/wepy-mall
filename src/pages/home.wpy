@@ -55,7 +55,7 @@
     </view>
 
     <view class="pet_panel">
-       <view class="center">宠物信息登记</view>
+       <view class="center font-second-title">宠物信息登记</view>
        <van-row>
            <van-col span="4" class="cell center">出生省</van-col>
            <van-col span="4" class="cell center">类别</van-col>
