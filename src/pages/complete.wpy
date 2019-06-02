@@ -1,5 +1,5 @@
 <template>
-    <complete :description="description" :defaultButtonText="defaultButtonText" :mainButtonText="mainButtonText" :mainButtonUrl="mainButtonUrl" :defaultButtonUrl="defaultButtonUrl" ></complete>
+    <complete :description="description" :defaultButtonText="defaultButtonText" :mainButtonText="mainButtonText" :mainButtonUrl.sync="mainButtonUrl" :defaultButtonUrl.sync="defaultButtonUrl" ></complete>
 </template>
 <script>
 import wepy from 'wepy'
@@ -13,9 +13,9 @@ export default class CompletePage extends wepy.page {
       complete: Complete
   }
   data = {
-    mainButtonUrl: '/pages/pet_detail?id=1',
+    mainButtonUrl: '',
     mainButtonText: '查看详情',
-    defaultButtonUrl: '/pages/my_pet_sale',
+    defaultButtonUrl: '',
     defaultButtonText: '我的出售',
     description: '完成出售登记'
   }
@@ -23,7 +23,7 @@ export default class CompletePage extends wepy.page {
       console.log('options', options)
       switch (options.from) {
           case 'pet_sale':
-              this.mainButtonUrl =  '/pages/pet_detail?id=1'
+              this.mainButtonUrl =  `/pages/pet_detail?id=${options.id}`
               this.mainButtonText =  '查看详情'
               this.defaultButtonUrl  =  '/pages/my_pet_sale'
               this.defaultButtonText =  '我的出售'
