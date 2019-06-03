@@ -147,7 +147,7 @@ export default class Estate extends wepy.page {
             // cancelled or other error
         }
     },
-    onSelectEstateZone(id) {
+    async onSelectEstateZone(id) {
       // console.log("id", id, this.currentEstate)
 
       const currentEstate = this.estates[this.mainActiveIndex].items.find(item => item.id == id)
@@ -156,6 +156,11 @@ export default class Estate extends wepy.page {
           return;
       }
       this.currentEstate = currentEstate
+      await api.updateMe({
+          query: {
+              estate: currentEstate.id
+          }
+      })
       wepy.setStorageSync(CURRENT_ESTATE, this.currentEstate)
       this.$apply()
       wepy.navigateBack()
@@ -164,7 +169,7 @@ export default class Estate extends wepy.page {
       this.mainActiveIndex =  detail.index || 0
 
     },
-    onClickItem({ detail = {} }) {
+    async onClickItem({ detail = {} }) {
 
       console.log('estate', detail.id, this.mainActiveIndex, this.estates)
       this.currentEstate = this.estates[this.mainActiveIndex].items.find(item => item.id == detail.id)

@@ -162,7 +162,6 @@
 import wepy from 'wepy';
 import api from '@/api/api';
 import {
-  USER_INFO,
   ME
 } from '@/utils/constant';
 export default class Index extends wepy.page {
@@ -221,9 +220,10 @@ export default class Index extends wepy.page {
   }
   onLoad() {
     let that = this;
-    let userInfo = wepy.getStorageSync(USER_INFO);
-    that.avatarUrl = userInfo.avatarUrl;
-    that.nickName = userInfo.nickName;
+    let userInfo = wepy.getStorageSync(ME);
+    that.avatarUrl = userInfo.avatar;
+    that.nickName = userInfo.display_name;
+    this.$apply()
   }
   onShow(){
     let that = this;

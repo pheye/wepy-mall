@@ -17,6 +17,7 @@ import {
   TOKEN,
   TOKEN_EXPIRED,
   ME,
+  CURRENT_ESTATE,
 } from '@/utils/constant';
 import moment from 'moment';
 
@@ -69,6 +70,7 @@ export default class Authorize extends wepy.page {
                 wepy.setStorageSync(TOKEN_EXPIRED, moment().add(1, 'day'));
                 /* let me = await api.getMe(); */
                 wepy.setStorageSync(ME, data2);
+                wepy.setStorageSync(CURRENT_ESTATE, data2.estate)
               }
           }
         }

@@ -25,6 +25,8 @@ const user2session = (params) => wxRequest(params, apiMall + "/api/wechat/user2s
 
 const getToken = (params) => request(`${host}/wp-json/jwt-auth/v1/token`, {...params, method:'POST'});
 const getMe= (params) => request(`${host}/wp-json/w2w/v1/customers/me`, {...params});
+const updateMe= (params) => request(`${host}/wp-json/w2w/v1/customers/me`, {...params, method: 'PUT'});
+
 //商品接口---begin
 //首页发现商品接口
 const hostGoodsList = (params) => wxRequest(params, apiMall + '/api/home/hostGoodsList');
@@ -192,6 +194,7 @@ export default {
   getQrcode,
   getToken,
   getMe,
+  updateMe,
   wxJsCode2Session,
   user2session,
   userSginInfo,

@@ -179,6 +179,7 @@ export default class extends wepy.app {
 
     this.checkUsers()
     this.initCart()
+    // 更新购物车信息
     PubSub.subscribe(CART, async (msg, data) => {
       // console.log('msg', msg, data)
       if (data) {
@@ -201,6 +202,7 @@ export default class extends wepy.app {
           // 不用处理
       }
     })
+
     let systemInfo = wepy.getSystemInfoSync()
     if (systemInfo.platform == "devtools") {
         // 在开发环境下
