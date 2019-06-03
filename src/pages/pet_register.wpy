@@ -1,17 +1,160 @@
 <template>
-    <view>
-        
+   <view>
+        <van-steps steps="{{steps}}" active="{{stepsIndex}}"></van-steps>
+        <view class="spacing"></view>
+        <!-- 基础信息 -->
+        <view wx:if="{{stepsIndex == 0}}">
+            <view class="cell-group-title">基础信息</view>
+            <van-cell-group>
+                <van-field label="名称" placeholder="请输入名称" value="{{product.title}}" @change="onChange('title')"/>
+                <van-cell title="出生地省份" value="{{product.native_province || '请选择'}}" arrow-direction="down" clickable is-link @click="onSelectProvince"/>
+                <van-cell title="生日" clickable>
+                    <view slot="">
+                        <picker mode="date" value="{{product.birthday}}" @change="onBirthdayChange">{{product.birthday || '请选择'}}</picker>
+                    </view>
+                </van-cell>
+                <van-cell title="性别" value="{{product.sex || '请选择'}}" arrow-direction="down" clickable is-link @click="onShowSexPicker"/>
+                <van-cell title="类别" value="{{product.category || '请选择'}}" arrow-direction="right" clickable is-link disabled/>
+            </van-cell-group>
+            <view class="spacing"></view>
+            <van-cell-group>
+                <van-field label="价格" placeholder="请输入" type="number" value="{{product.regular_price}}" @change="onChange('regular_price')"/>
+            </van-cell-group>
+            <view class="spacing"></view>
+            <van-cell-group>
+                <van-field placeholder="详细描述" type="textarea" value="{{product.description}}" autosize @change="onChange('description')"/>
+            </van-cell-group>
+            <view class="spacing"></view>
+            <button type="primary" @tap="goNext" class="block-button">下一步</button>
+        </view>
+        <view wx:if="{{stepsIndex == 1}}">
+            <van-row gutter="4">
+                <van-col span="8">
+                    <card title="正面照" defsrc="../images/dog-front.png" :src.sync="photo_front"></card>
+                </van-col>
+                <van-col span="8">
+                    <card2 title="左侧面照" defsrc="../images/dog-left.png" :src.sync="photo_left"></card2>
+                </van-col>
+                <van-col span="8">
+                    <card3 title="右侧面照" defsrc="../images/dog-right.png" :src.sync="photo_right"></card3>
+                </van-col>
+            </van-row>
+            <view class="spacing"></view>
+            <button type="primary" @tap="goNext" class="block-button">下一步</button>
+            <view class="spacing"></view>
+            <button  @tap="goPrev" class="block-button">上一步</button>
+        </view>
+        <view wx:if="{{stepsIndex == 2}}">
+            <view class="cell-group-title">宠主信息</view>
+            <van-cell-group>
+                <van-field label="宠物主人" placeholder="请输入姓名" value="{{product.owner.name}}" @change="onChange('owner.name')"/>
+                <van-field label="联系电话" placeholder="请输入电话" type="digit" value="{{product.owner.phone}}" @change="onChange('owner.phone')" />
+                <van-field label="Email" placeholder="请输入Email"  value="{{product.owner.email}}" @change="onChange('owner.email')"/>
+                <van-field label="快递地址" placeholder="请输入快递地址"  value="{{product.owner.shipping_address}}" @change="onChange('owner.shipping_address')"/>
+            </van-cell-group>
+            <view class="spacing"></view>
+            <button type="primary" @tap="goNext" class="block-button">下一步</button>
+            <view class="spacing"></view>
+            <button  @tap="goPrev" class="block-button">上一步</button>
+        </view>
+        <view wx:if="{{stepsIndex == 3}}">
+            <repeat for="{{product.vaccin}}" key="index" index="index" item="item">
+                <view>
+                    <view @tap="delVaccin" class="cell-group-action">
+                        <view class="icon iconfont iconminus text-danger"></view>
+                        <view>疫苗接种{{index+1}}</view>
+                    </view>
+                    <van-cell-group>
+                        <van-cell title="日期" clickable>
+                            <view slot="">
+                            <picker mode="date" value="{{product.vaccin[index].date}}" @change="onDateChange('vaccin', {{index}}, 'date')">{{product.vaccin[index].date || '请选择'}}</picker>
+                            </view>
+                        </van-cell>
+                        <van-field label="厂商" placeholder="请输入厂商" value="{{product.vaccin[index].vendor}}" @change="onChange2('vaccin', {{index}}, 'vendor')" />
+                        <van-field label="名称" placeholder="请输入名称" value="{{product.vaccin[index].name}}" @change="onChange2('vaccin', {{index}}, 'name')"/>
+                            <van-cell title="照片" label="点击上传" size="large" clickable @click="selectVaccinImage({{index}})" >
+                            <view slot="">
+                                <image style="width:64rpx;height:64rpx;" src="{{product.vaccin[index].photo || '../images/image.png'}}"/>
+                            </view>
+                        </van-cell>
+                    </van-cell-group>
+                </view>
+            </repeat>
+
+            <view @tap="addVaccin" class="cell-group-action">
+                <view class="icon iconfont iconplus text-primary"></view>
+                <view>新增疫苗接种</view>
+            </view>
+
+            <view class="spacing"></view>
+
+            <repeat for="{{product.insect}}" key="index" index="index" item="item">
+                <view>
+                    <view @tap="delInsect" class="cell-group-action">
+                        <view class="icon iconfont iconminus text-danger"></view>
+                        <view>驱虫处理{{index+1}}</view>
+                    </view>
+                    <van-cell-group>
+                        <van-cell title="日期" clickable>
+                            <view slot="">
+                            <picker mode="date" value="{{product.insect[index].date}}" @change="onDateChange('insect', {{index}}, 'date')">{{product.insect[index].date || '请选择'}}</picker>
+                            </view>
+                        </van-cell>
+                        <van-field label="厂商" placeholder="请输入厂商" value="{{product.insect[index].vendor}}" @change="onChange2('insect', {{index}}, 'vendor')"/>
+                        <van-field label="名称" placeholder="请输入名称" value="{{product.insect[index].name}}" @change="onChange2('insect', {{index}}, 'name')"/>
+                            <van-cell title="照片" label="点击上传" size="large" clickable @click="selectInsectImage({{index}})" >
+                            <view slot="">
+                                <image style="width:64rpx;height:64rpx;" src="{{product.insect[index].photo || '../images/image.png'}}"/>
+                            </view>
+                        </van-cell>
+                    </van-cell-group>
+                </view>
+            </repeat>
+            <view @tap="addInsect" class="cell-group-action">
+                <view class="icon iconfont iconplus text-primary"></view>
+                <view>新增驱虫处理</view>
+            </view>
+            <view class="spacing"></view>
+            <button type="primary" @tap="goNext" class="block-button">完成</button>
+            <view class="spacing"></view>
+            <button  @tap="goPrev" class="block-button">上一步</button>
+        </view>
+        <van-popup show="{{showSelectProvince}}" @close="onSelectProvinceClose" position="bottom">
+            <van-picker columns="{{provinces}}" title="选择省份" @confirm="onProvinceSelected" @cancel="onSelectProvinceCancelled" show-toolbar>
+            </van-picker>
+        </van-popup>
+
+        <van-popup show="{{showSexPicker}}" position="bottom">
+            <van-picker columns="{{sexes}}" title="选择性别" @confirm="onSexSelected" @cancel="onSexCancelled" show-toolbar>
+            </van-picker>
+        </van-popup>
+
+        <van-popup show="{{showCategoryPicker}}" position="bottom">
+            <van-picker columns="{{sexes}}" title="选择性别" @confirm="onSexSelected" @cancel="onSexCancelled" show-toolbar>
+            </van-picker>
+        </van-popup>
     </view>
+
 </template>
 <script>
 import wepy from 'wepy'
+import Card from "@/components/card"
+import moment from 'moment'
+import api from '@/api/api'
+import tip from '@/utils/tip'
 
 export default class PetRegister extends wepy.page {
   config = {
     navigationBarTitleText: '宠物登记',
   }
+  components = {
+    card: Card,
+    card2: Card,
+    card3: Card
+  }
   data = {
-      activeStep: 0,
+      part: 0,
+      stepsIndex: 0,
       steps: [
           {
               'text': '基础信息'
@@ -25,9 +168,255 @@ export default class PetRegister extends wepy.page {
           {
               'text': '免疫信息'
           },
-      ]
+      ],
+      product: {
+          status: 'draft',
+          owner: {},
+          photo: {},
+          insect: [],
+          vaccin: [],
+          categories: [21],
+          stock_quantity: 1,
+      },
+      photo_front:null,
+      photo_left:null,
+      photo_right:null,
+      vaccinImages:[],
+      insectImages:[],
+      showSelectProvince: false,
+      showSexPicker: false,
+      showCategoryPicker: false,
+      provinces: [
+          '京', '津', '冀', '鲁', '闽'
+      ],
+      sexes: [
+          '雄性', '雌性'
+      ],
+  }
+  init(product) {
+      this.product = {...this.product, ...product}
+      this.photo_front = this.product.photo.front
+      this.photo_left = this.product.photo.left
+      this.photo_right = this.product.photo.right
+      this.$apply()
+  }
+  async onLoad (options) {
+      if (options.id) {
+          const res = await api.getProducts(options.id)
+          this.init(res.data)
+      }
+  }
+  methods = {
+      onSelectProvince () {
+        this.showSelectProvince = true
+        this.$apply()
+      },
+      onProvinceSelected (event) {
+        const { value } = event.detail
+        this.product.native_province = value
+        this.showSelectProvince = false
+        this.$apply()
+      },
+      onSelectProvinceCancelled () {
+          this.showSelectProvince = false
+          this.$apply()
+      },
+      onBirthdayChange(e) {
+          this.product.birthday = e.detail.value
+          this.$apply()
+      },
+      onDateChange(field, index, subfield, e) {
+          this.product[field][index][subfield] = e.detail.value
+          this.$apply()
+      },
+      onShowSexPicker() {
+        this.showSexPicker = true
+        this.$apply()
+      },
+      showPicker(type) {
+        this[type] = true
+        this.$apply()
+      },
+      onSexSelected(event) {
+        const { value } = event.detail
+        this.product.sex = value
+        this.showSexPicker= false
+        this.$apply()
+      },
+      onSexCancelled() {
+        this.showSexPicker= false
+        this.$apply()
+      },
+      addVaccin() {
+          this.product.vaccin.push({
+              date:  moment().format('l')
+          })
+          this.$apply()
+      },
+      delVaccin(index) {
+          this.product.vaccin.splice(index, 1)
+          this.$apply()
+      },
+      async selectVaccinImage(index) {
+          try {
+              const res = await wepy.chooseImage({count:1})
+              let paths = res.tempFilePaths
+              this.product.vaccin[index].photo = paths[0]
+              this.vaccinImages[index] = paths[0]
+              this.$apply()
+          } catch (e) {
+              console.log('e', e)
+          }
+      },
+      addInsect() {
+          this.product.insect.push({
+              date:  moment().format('l')
+          })
+          this.$apply()
+      },
+      delInsect(index) {
+          this.product.insect.splice(index, 1)
+          this.$apply()
+      },
+      async selectInsectImage(index) {
+          try {
+              const res = await wepy.chooseImage({count:1})
+              let paths = res.tempFilePaths
+              this.product.insect[index].photo= paths[0]
+              this.insectImages[index] = paths[0]
+              this.$apply()
+          } catch (e) {
+              console.log('e', e)
+          }
+      },
+      onChange(field, e) {
+          const fields = field.split('.')
+          if (fields.length == 2) {
+              this.product[fields[0]][fields[1]] = e.detail
+          } else {
+              this.product[field] = e.detail
+          }
+          this.$apply()
+      },
+      onChange2(field, index, subField, e) {
+          this.product[field][index][subField] = e.detail
+          this.$apply()
+      },
+      async goNext() {
+          const id = this.product.id
+          const product = this.product
+          switch (this.stepsIndex) {
+              case 0:
+                  if (id) {
+                      const res = await api.updateProducts(id, {query: this.product})
+                      this.init(res.data)
+                  } else {
+                      const res = await api.createProducts({query: this.product})
+                      this.init(res.data)
+                  }
+                  break;
+              case 1:
+                  let dirty = false
+                  if (!this.photo_front  || !this.photo_left || !this.photo_right) {
+                      tip.error('请上传3张图片');
+                      return
+                  }
+                  if (this.photo_front && this.photo_front != this.product.photo.front) {
+                      const res = await api.createMedia(this.photo_front, id)
+                      const mediaID = res.data['id']
+                      product.photo.front = mediaID
+                      product.image_id = mediaID
+                      dirty = true
+                  }
+
+                  if (this.photo_left && this.photo_left != this.product.photo.left) {
+                      const res = await api.createMedia(this.photo_left, id)
+                      const mediaID = res.data['id']
+                      product.photo.left = mediaID
+                      dirty = true
+                  }
+
+                  if (this.photo_right && this.photo_right != this.product.photo.right) {
+                      const res = await api.createMedia(this.photo_right, id)
+                      const mediaID = res.data['id']
+                      product.photo.right = mediaID
+                      dirty = true
+                  }
+                  if (dirty) {
+                      const res = await api.updateProducts(id, {query: product})
+                      this.init(res.data)
+                  }
+                  break
+              case 2:
+                  {
+                  const res = await api.updateProducts(id, {query: this.product})
+                  this.init(res.data)
+                  }
+                  break
+              case 3:
+                  var vaccin = [...this.product.vaccin]
+                  if (this.vaccinImages.length > 0) {
+                      await Promise.all(this.vaccinImages.map(async (item, index) => {
+                          const res = await api.createMedia(item, id)
+                          const mediaID = res.data['id']
+                          vaccin[index].photo = mediaID
+                      }))
+                  } 
+                  var insect = [...this.product.insect]
+                  if (this.insectImages.length > 0) {
+                      await Promise.all(this.insectImages.map(async (item, index) => {
+                          const res = await api.createMedia(item, id)
+                          const mediaID = res.data['id']
+                          insect[index].photo = mediaID
+                      }))
+                  }
+
+                  // console.log('va3', vaccin)
+                  // 这一步成功就是完成了
+                  // 状态改为发布
+                  const res = await api.updateProducts(id, {
+                      query: {
+                          status: 'publish',
+                          vaccin,
+                          insect,
+                      }
+                  })
+                  // 直接跳转完成页
+                  wepy.redirectTo({
+                      url: `/pages/complete?from=pet_sale&id=${id}`
+                  })
+                  break
+          }
+          this.stepsIndex++
+          if (this.stepsIndex >= this.steps.length) {
+              this.stepsIndex = this.stepsIndex.length - 1
+          }
+          this.$apply()
+      },
+      goPrev() {
+       this.stepsIndex--
+       if (this.stepsIndex < 0)
+        this.stepsIndex = 0
+       this.$apply()
+      }
   }
 }
 </script>
 <style lang="less">
+.cell-group-title {
+    padding: 20rpx 35rpx 20rpx;
+    font-size: 14px;
+    color: #bfbfbf;
+}
+.cell-group-action  {
+    padding: 20rpx 35rpx 20rpx;
+    font-size: 14px;
+    color: #262626;
+    display:flex;
+    flex-direction: row;
+    align-items: center;
+}
+.block-button {
+    margin:0 32rpx;
+}
 </style>
