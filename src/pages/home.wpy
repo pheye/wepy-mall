@@ -4,7 +4,7 @@
       <van-col span="12">
         <navigator class="loc" url="/pages/estate">
           <van-icon name="location-o"></van-icon>
-          <text style="font-size:36rpx;">{{currentEstate.title && currentEstate.title.rendered}} &gt; </text>
+          <text style="font-size:36rpx;">{{(currentEstate.title && currentEstate.title.rendered) || '选择小区'}} &gt; </text>
         </navigator>
       </van-col>
       <van-col span="12" class="top_search">
@@ -350,11 +350,11 @@ export default class Home extends wepy.page {
     this.getAdList();
 
     let currentEstate = wepy.getStorageSync(CURRENT_ESTATE);
-    if (!currentEstate) {
+    // if (!currentEstate) {
       // currentEstate = json2.data[0];
       // wepy.setStorageSync(CURRENT_ESTATE, currentEstate);
-      wepy.navigateTo({url: "/pages/estate"})
-    }
+      // wepy.navigateTo({url: "/pages/estate"})
+    // }
     this.getProductsForTabs()
     // this.currentEstate = wepy.getStorageSync(CURRENT_ESTATE);
     this.now = moment().format('HH');

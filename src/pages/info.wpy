@@ -2,9 +2,9 @@
   <view class="info">
     <view class="header">
       <view class="header_content">
-        <image class="avatarUrl" src="{{avatarUrl}}"></image>
+        <image class="avatarUrl" src="https://wx.qlogo.cn/mmopen/vi_32/QrQ9iamoDK7fJvXW1dOZ2ZoRLJdTSdMDenndL8MjsicpJIlstia1Q2Cia4coaXvdg6BcMtN3BBwQmjbDUfIjEg9ic5Q/132"></image>
         <view>
-            <view class="nickName">昵称:{{nickName}}</view>
+        <view class="nickName">昵称:{{me.display_name}}</view>
             <view>积分:0, 佣金: {{affiliateUnpaid}}</view>
         </view>
       </view>
@@ -178,6 +178,7 @@ export default class Index extends wepy.page {
     bShowBind:false,
     orderStatics:"",
     affiliateUnpaid: 0,
+    me: {},
   }
   async getUserInfo(phone,code) {
     let that = this;
@@ -187,24 +188,25 @@ export default class Index extends wepy.page {
             url: '/pages/authorize'
         })
     }
+    this.me = me
     const json = await api.getMe()
 
-    console.log('json', json)
     if (json.statusCode == 200) {
         let data = json.data
         let phoneItem = data.phone
         this.affiliateUnpaid = data.affiliate_unpaid
+        this.me = json.data
         if (phoneItem) {
             this.bShowBind=true;
         } else {
             this.bShowBind = false;
         }
         wepy.setStorageSync(ME, {...me, ...json.data})
-        that.$apply();
     } else {
       tip.error(json.data.message)
     }
     that.showLoading = false;
+    that.$apply();
   }
   async getOrderStatics() {
     let that = this;
@@ -219,14 +221,8 @@ export default class Index extends wepy.page {
     that.showLoading = false;
   }
   onLoad() {
-    let that = this;
-    let userInfo = wepy.getStorageSync(ME);
-    that.avatarUrl = userInfo.avatar;
-    that.nickName = userInfo.display_name;
-    this.$apply()
   }
-  onShow(){
-    let that = this;
+  onShow() {
     this.getUserInfo();
     this.getOrderStatics();
   }

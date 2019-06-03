@@ -708,9 +708,9 @@ export default class goodsDetail extends wepy.page {
     previewImage(e) {
       let current = e.target.dataset.src;
       let imageArry = [];
-      let obj = this.detail.photoList;
+      let obj = this.detail.images;
       Object.keys(obj).forEach((item) => {
-        imageArry.push(obj[item].photo)
+        imageArry.push(obj[item].src)
       });
       wx.previewImage({
         current: current, // 当前显示图片的http链接
