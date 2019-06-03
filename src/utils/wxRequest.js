@@ -51,7 +51,7 @@ const request = async(url, params = {}) => {
         header,
     });
     tip.loaded();
-    if (res.statusCode != 200)
+    if (res.statusCode > 300)
       throw new Error(res)
     return res;
 };
@@ -82,7 +82,7 @@ const upload = async(url, file, params) => {
     tip.loaded();
     if (typeof(res.data) === 'string')
       res.data = JSON.parse(res.data)
-    if (res.statusCode != 200)
+    if (res.statusCode > 300)
       throw new Error(res)
     return res
 }

@@ -89,13 +89,13 @@ export default class Tips {
       title: title,
       image: "../images/error.png",
       mask: true,
-      duration: 500
+      duration: 1000
     });
     // 隐藏结束回调
     if (onHide) {
       setTimeout(() => {
         onHide();
-      }, 500);
+      }, 1000);
     }
   }
 
