@@ -1,5 +1,6 @@
 <template>
-    <petCard :item.sync="item"/>
+    <petCard :item.sync="item" wx:if="{{item}}"/>
+    <view class="center font-second-title" wx:else>未查询相关结果...</view>
 </template>
 <script>
 import wepy from 'wepy'
@@ -22,9 +23,13 @@ export default class PetCardPage extends wepy.page {
     item: null
   }
   async onLoad (options) {
-    const res = await api.getPets(options.id)
-    console.log('data', res.data)
-    this.item= res.data
+    try {
+      const res = await api.getPets(options.id)
+      console.log('data', res.data)
+      this.item= res.data
+    } catch (e) {
+      console.log(e.message)
+    }
     this.$apply()
   }
 }

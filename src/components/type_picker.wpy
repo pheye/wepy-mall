@@ -1,0 +1,47 @@
+<template>
+    <van-popup show="{{visible}}" position="bottom">
+        <van-picker columns="{{types}}" title="类别" @confirm="onSelected" @cancel="onCancelled" value="{{value}}" show-toolbar>
+        </van-picker>
+    </van-popup>
+</template>
+<script>
+import wepy from 'wepy'
+
+export default class ProvincePicker extends wepy.component {
+  props = {
+    visible: {
+      type: Boolean,
+      default: false,
+      twoWay: true
+    },
+    value: {
+      type: String,
+      twoWay: true
+    },
+    mode: {
+      default: 'code' // code label
+    }
+  }
+  data = {
+      types: [
+        'D', 'G', 'O'
+        // '狗狗', '猫猫', '异宠'
+      ]
+  }
+  methods = {
+    onSelected (event) {
+      const { value } = event.detail
+      this.visible = false
+      this.value = value
+      console.log('value', value)
+      this.$apply()
+    },
+    onCancelled() {
+      this.visible = false
+      this.$apply()
+    }
+  }
+}
+</script>
+<style>
+</style>

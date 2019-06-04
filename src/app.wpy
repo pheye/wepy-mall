@@ -133,6 +133,7 @@ export default class extends wepy.app {
         "van-field": "components/van/field/index",
         "van-popup": "components/van/popup/index",
         "van-picker": "components/van/picker/index",
+        "van-datetime-picker": "components/van/datetime-picker/index",
     },
     permission: {
       "scope.userLocation": {

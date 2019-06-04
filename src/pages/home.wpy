@@ -55,16 +55,16 @@
     </view>
 
     <view class="pet_panel">
-       <view class="center font-second-title">宠物信息登记</view>
+       <view class="center font-second-title">宠证查询与登记</view>
        <view class="pet-cell-group">
-           <view span="4" class="pet-cell center">出生省</view>
-           <view span="4" class="pet-cell center">类别</view>
-           <view span="8" class="pet-cell center">生日</view>
-           <view span="4" class="pet-cell center">性别</view>
-           <view span="4" class="pet-cell center">顺序号</view>
+           <view class="pet-cell center flex-4" @tap="select('province')">{{ petProvince || '出生省' }}</view>
+           <view span="4" class="pet-cell center flex-4" @tap="select('type')">{{petType || '类别'}}</view>
+           <view span="8" class="pet-cell center flex-8" @tap="select('birthday')">{{formattedPetBirthday}}</view>
+           <view span="4" class="pet-cell center flex-4" @tap="select('sex')">{{petSex || '性别'}}</view>
+           <view span="4" class="pet-cell center flex-4" @tap="select('seq')">{{formattedPetSeq}}</view>
        </view>
        <view>
-          <button type="primary" style="width:100%;" size="mini">查询</button>
+          <button type="primary" style="width:100%;" size="mini" @tap="query">查询</button>
           <view class="spacing bg-white"></view>
           <navigator url="/pages/pet_register">
               <button size="mini" style="width:100%;">登记</button>
@@ -86,6 +86,11 @@
 <!--     <placeholder :show.sync="is_empty" message="暂无发现数据"></placeholder>
  -->    <!--弹屏  types:0 图片  1：领红包   show 是否显示  @close 关闭回调  @callback 点击图片回调 或确定回调-->
     <bombscreen :types.sync="tps" :image.sync="bomImage" :show.sync="isShowAlert" @close.user="closeAlert" @callback.user="alertCallback"></bombscreen>
+    <provincePicker :visible.sync="showProvincePicker" :value.sync="petProvince"></provincePicker>
+    <sexPicker :visible.sync="showSexPicker" :value.sync="petSex"></sexPicker>
+    <typePicker :visible.sync="showTypePicker" :value.sync="petType"></typePicker>
+    <datePicker :visible.sync="showBirthdayPicker" :value.sync="petBirthday"></datePicker>
+    <seqPicker :visible.sync="showSeqPicker" :value.sync="petSeq"></seqPicker>
   </view>
 </template>
 <script>
@@ -98,6 +103,11 @@ import BottomLoadMore from "../components/common/bottomLoadMore"
 import Placeholder from "../components/common/placeholder"
 import PetCardList from "@/components/pet_card_list"
 import CartAdvise from "@/components/cart_advise"
+import ProvincePicker from '@/components/province_picker'
+import SexPicker from '@/components/sex_picker'
+import TypePicker from '@/components/type_picker'
+import DatePicker from '@/components/date_picker'
+import SeqPicker from '@/components/seq_picker'
 import PubSub from 'pubsub-js'
 import {
   CART,
@@ -116,6 +126,11 @@ export default class Home extends wepy.page {
     bombscreen: Bombscreen,
     petCardList: PetCardList,
     cartAdvise: CartAdvise,
+    provincePicker: ProvincePicker,
+    sexPicker: SexPicker,
+    typePicker: TypePicker,
+    datePicker: DatePicker,
+    seqPicker: SeqPicker,
   }
   data = {
     indicatorDots: true,
@@ -140,11 +155,6 @@ export default class Home extends wepy.page {
     isShowAlert: false,
     bomImage: "",
     activeTab: 0,
-    // wepy的缺陷导致无法使用多维数组传值
-    tabs0: [],
-    tabs1: [],
-    tabs2: [],
-    tabs3: [],
     currentTabsIndex:0,
     now: 0,
     onSale: true,
@@ -158,7 +168,17 @@ export default class Home extends wepy.page {
     // 类目图目录
     imageIdx: 0,
     // 精选商品
-    featuredList:[]
+    featuredList:[],
+    showProvincePicker: false,
+    showTypePicker: false,
+    showBirthdayPicker: false,
+    showSexPicker: false,
+    showSeqPicker: false,
+    petProvince: '',
+    petType: '',
+    petBirthday: null,
+    petSex: '',
+    petSeq: '',
   }
   //读取一级分类数据
    async getRootCateTopLevel() {
@@ -327,7 +347,16 @@ export default class Home extends wepy.page {
     this.$apply() 
   }
   computed = {
-
+    formattedPetBirthday () {
+      if (!this.petBirthday)
+        return '生日'
+      return moment(this.petBirthday).format('YYYYMMDD')
+    },
+    formattedPetSeq() {
+      if (!this.petSeq)
+        return '顺序号'
+      return this.petSeq.join('')
+    }
   }
   methods = {
     goToAdvert(url) {
@@ -393,6 +422,52 @@ export default class Home extends wepy.page {
     // 点击tab
     onTabsItemTap(event) {
       this.currentTabsIndex =event.currentTarget.dataset.index;
+    },
+    select(field) {
+      switch (field) {
+        case 'province':
+          this.showProvincePicker = true
+          break
+        case 'type':
+          this.showTypePicker = true
+          break
+        case 'birthday':
+          this.showBirthdayPicker = true
+          break
+        case 'sex':
+          this.showSexPicker = true
+          break
+        case 'seq':
+          this.showSeqPicker = true
+          break
+      }
+      this.$apply()
+    },
+    query() {
+      if (!this.petProvince) {
+        tip.error('请选择出生省')
+        return
+      }
+      if (!this.petType) {
+        tip.error('请选择类别')
+        return
+      }
+      if (!this.petBirthday) {
+        tip.error('请选择出生日期')
+        return
+      }
+      if (!this.petSex) {
+        tip.error('请选择性别')
+        return
+      }
+      if (!this.petSeq) {
+        tip.error('请选择顺序号')
+        return
+      }
+      let seq = parseInt(this.formattedPetSeq, 10)
+      wepy.navigateTo({
+        "url": `/pages/pet_card?id=${seq}`
+      })
     }
   }
   events = {
@@ -549,9 +624,17 @@ export default class Home extends wepy.page {
    .pet-cell-group {
      display:flex;
      flex-direction: row;
-     flex: 1;
+     width:100%;
+     margin: 8rpx 0;
+     border-left:1px solid #ccc;
      .pet-cell {
-       border:1px solid #ccc;
+       display:flex;
+       justify-content:center;
+       align-items: center;
+       border-color:#ccc;
+       border-top:1px solid #ccc;
+       border-right:1px solid #ccc;
+       border-bottom:1px solid #ccc;
        padding: 8rpx;
        box-sizing: border-box;
      }

@@ -1,0 +1,61 @@
+<template>
+    <van-popup show="{{visible}}" position="bottom">
+        <van-picker columns="{{seqs}}" title="顺序号" @confirm="onSelected" @cancel="onCancelled" value="{{value}}" show-toolbar>
+        </van-picker>
+    </van-popup>
+</template>
+<script>
+import wepy from 'wepy'
+
+export default class SeqPicker extends wepy.component {
+  props = {
+    visible: {
+      type: Boolean,
+      default: false,
+      twoWay: true
+    },
+    value: {
+      type: String,
+      twoWay: true
+    },
+    mode: {
+      default: 'code' // code label
+    }
+  }
+  data = {
+      seqs: [
+        {
+          values: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+          defaultIndex: 0
+        },
+        {
+          values: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+          defaultIndex: 0
+        },
+        {
+          values: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+          defaultIndex: 0
+        },
+        {
+          values: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+          defaultIndex: 0
+        }
+      ]
+  }
+  methods = {
+    onSelected (event) {
+      const { value } = event.detail
+      this.visible = false
+      this.value = value
+      console.log('value', value)
+      this.$apply()
+    },
+    onCancelled() {
+      this.visible = false
+      this.$apply()
+    }
+  }
+}
+</script>
+<style>
+</style>
