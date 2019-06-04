@@ -1,5 +1,5 @@
 <template>
-    <complete :description="description" :defaultButtonText="defaultButtonText" :mainButtonText="mainButtonText" :mainButtonUrl.sync="mainButtonUrl" :defaultButtonUrl.sync="defaultButtonUrl" ></complete>
+    <complete :description.sync="description" :defaultButtonText.sync="defaultButtonText" :mainButtonText.sync="mainButtonText" :mainButtonUrl.sync="mainButtonUrl" :defaultButtonUrl.sync="defaultButtonUrl" ></complete>
 </template>
 <script>
 import wepy from 'wepy'
@@ -16,7 +16,7 @@ export default class CompletePage extends wepy.page {
     mainButtonUrl: '',
     mainButtonText: '查看详情',
     defaultButtonUrl: '',
-    defaultButtonText: '我的出售',
+    defaultButtonText: '',
     description: '完成出售登记'
   }
   onLoad (options) {

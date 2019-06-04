@@ -32,10 +32,12 @@ const getProducts = (id, params) => request(`${host}/wp-json/w2w/v1/products/${i
 const createProducts = (params) => request(`${host}/wp-json/w2w/v1/products`, {...params, method: 'POST'});
 const updateProducts = (id, params) => request(`${host}/wp-json/w2w/v1/products/${id}`, {...params, method: 'PUT'});
 
-const getPets = (id) => request(`${host}/wp-json/w2w/v1/products/${id}`);
+
+const queryPets = ({query}) => request(`${host}/wp-json/wp/v2/pets?${stringify(query)}`);
+const getPets = (id) => request(`${host}/wp-json/wp/v2/pets/${id}`, {noauth: true});
 const createPets = (params) => request(`${host}/wp-json/wp/v2/pets`, {...params, method: 'POST'});
 const updatePets = (id, params) => request(`${host}/wp-json/wp/v2/pets/${id}`, {...params, method: 'PUT'});
-const deletePets = (id) => request(`${host}/wp-json/wp/v2/pets/${id}`, {...params, method: 'DELETE'});
+const deletePets = (id) => request(`${host}/wp-json/wp/v2/pets/${id}`, {method: 'DELETE'});
 
 // 上传文件
 const createMedia = (file, postId) => upload(`${host}/wp-json/w2w/v1/medias`, file, {'post_id': postId})
@@ -186,6 +188,7 @@ export default {
   getProducts,
   createProducts,
   updateProducts,
+  queryPets,
   getPets,
   createPets,
   updatePets,

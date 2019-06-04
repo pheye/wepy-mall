@@ -1,0 +1,33 @@
+<template>
+    <petCard :item.sync="item"/>
+</template>
+<script>
+import wepy from 'wepy'
+import api from '@/api/api'
+import tip from '@/utils/tip'
+import {
+  ME
+} from '@/utils/constant';
+
+import PetCard from "@/components/pet_card"
+
+export default class PetCardPage extends wepy.page {
+  config = {
+    navigationBarTitleText: '宠证',
+  }
+  components = {
+    petCard: PetCard,
+  }
+  data = {
+    item: null
+  }
+  async onLoad (options) {
+    const res = await api.getPets(options.id)
+    console.log('data', res.data)
+    this.item= res.data
+    this.$apply()
+  }
+}
+</script>
+<style lang="less">
+</style>

@@ -20,7 +20,7 @@
 
             <view class="cell-group-title">芯片信息</view>
             <van-cell-group>
-                <van-field label="芯片码" placeholder="请输入" value="{{product.chip.name}}" @change="onChange('chip.name')"/>
+                <van-field label="芯片码" placeholder="请输入" value="{{product.chip.code}}" @change="onChange('chip.code')"/>
                 <van-field label="芯片厂商" placeholder="请输入" value="{{product.chip.vendor}}" @change="onChange('chip.vendor')"/>
             </van-cell-group>
             <view class="spacing"></view>
@@ -169,7 +169,9 @@ export default class PetRegister extends wepy.page {
           },
       ],
       product: {
+          title: '',
           status: 'draft',
+          chip: {},
           owner: {},
           photo: {},
           insect: [],
@@ -196,18 +198,13 @@ export default class PetRegister extends wepy.page {
       ]
   }
   init(product) {
-      const defProduct =  {
-          status: 'draft',
-          owner: {},
-          photo: {},
-          insect: [],
-          vaccin: [],
-          stock_quantity: 1,
-      },
-      this.product = {...defProduct, ...product}
+      this.product = {...this.product, ...product}
       this.photo_front = this.product.photo.front
       this.photo_left = this.product.photo.left
       this.photo_right = this.product.photo.right
+      if (typeof(this.product.title) == 'object') {
+        this.product.title = this.product.title.rendered
+      }
       this.$apply()
   }
   async onLoad (options) {
@@ -270,6 +267,8 @@ export default class PetRegister extends wepy.page {
         this.$apply()
       },
       addVaccin() {
+          if (!this.product.vaccin)
+            this.product.vaccin = []
           this.product.vaccin.push({
               date:  moment().format('l')
           })
@@ -291,6 +290,8 @@ export default class PetRegister extends wepy.page {
           }
       },
       addInsect() {
+          if (!this.product.insect)
+            this.product.insect = []
           this.product.insect.push({
               date:  moment().format('l')
           })
@@ -314,6 +315,8 @@ export default class PetRegister extends wepy.page {
       onChange(field, e) {
           const fields = field.split('.')
           if (fields.length == 2) {
+              if (!this.product[fields[0]])
+                this.product[fields[0]] = {}
               this.product[fields[0]][fields[1]] = e.detail
           } else {
               this.product[field] = e.detail

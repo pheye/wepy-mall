@@ -1,0 +1,100 @@
+<template>
+    <view class="pet-card" >
+      <view class="pet-card-main">
+        <view class="pet-card-main__part1">
+          <view class="part1__avatar">
+            <image src="{{item.photo.front}}" style="width:240rpx;height:240rpx;"></image>
+          </view>
+          <view class="part1__content">
+            <view class="font-second-title">{{petId}}</view>
+            <view class="cell">姓名: {{item.title.rendered}}</view>
+            <view class="cell">生日: {{item.birthday}}</view>
+            <view class="cell">性别: {{item.sex}}</view>
+            <view class="cell" wx:if="{{item.vaccin}}">免疫注射: {{item.vaccin.length}}次</view>
+            <view class="cell" wx:if="{{item.insect}}">驱虫处理: {{item.insect.length}}次</view>
+          </view>
+        </view>
+        <view class="pet-card-main__part2">
+        <van-row>
+          <van-col span="12">
+            <view class="text-default">宠主: {{item.owner.name}}</view>
+          </van-col>
+          <van-col span="12">
+            <view class="text-default">联系电话: {{mode == 'edit' ? item.owner.phone : '隐私保护'}}</view>
+          </van-col>
+        </van-row>
+        <view class="text-info center">客服电话: 17605033425</view>
+        </view>
+      </view>
+      <view class="pet-card-action" wx:if="{{mode=='edit'}}">
+        <van-cell title="查看公开信息"  is-link  arrow-direction="right" link-type="navigateTo" url="/pages/pet_card?id={{item.id}}"></van-cell>
+        <van-cell title="查看相册"  is-link  arrow-direction="right" link-type="navigateTo" url="/pages/pet_album?id={{item.id}}"></van-cell>
+        <van-cell title="宠证制作"  is-link  arrow-direction="right" link-type="navigateTo" url="/pages/pet_card_make?id={{item.id}}"></van-cell>
+        <van-cell title="修改信息"  is-link  arrow-direction="right" link-type="navigateTo" url="/pages/pet_register?id={{item.id}}"></van-cell>
+        <van-cell title="删除信息"  is-link  arrow-direction="right" @click="delPet({{item.id}})"></van-cell>
+      </view>
+    </view>
+</template>
+
+<script>
+import wepy from 'wepy'
+import { getPetId } from '@/utils/business_util'
+import api from '@/api/api'
+
+export default class PetCard extends wepy.component {
+    props = {
+        mode: {
+            default: 'view'
+        },
+        item: Object
+    }
+    data =  {
+    }
+    computed = {
+      petId () {
+        return getPetId(this.item)
+      }
+    }
+    methods = {
+      async delPet(id) {
+        console.log('id', id)
+        const res = await wepy.showModal({
+          title: '确认删除?',
+          content: '删除后将不可恢复'
+        })
+        console.log('delete', res)
+        if (res.confirm) {
+          await api.deletePets(id)
+        }
+      }
+    }
+}
+</script>
+<style lang="less">
+.pet-card {
+  margin:32rpx;
+  border:1px solid #ececec;
+  border-radius: 8rpx;
+  background-color: white;
+}
+
+.pet-card-main {
+  padding: 32rpx;
+}
+
+.pet-card-action {
+  border-top:1px solid #ececec;
+}
+
+.pet-card-main__part1 {
+  display:flex;
+  flex-direction: row;
+  .part1__content {
+    margin-left:16rpx;
+  }
+}
+
+.pet-card-main__part2 {
+  border-top:1px dashed #ccc;
+}
+</style>
