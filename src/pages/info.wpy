@@ -2,7 +2,7 @@
   <view class="info">
     <view class="header">
       <view class="header_content">
-        <image class="avatarUrl" src="https://wx.qlogo.cn/mmopen/vi_32/QrQ9iamoDK7fJvXW1dOZ2ZoRLJdTSdMDenndL8MjsicpJIlstia1Q2Cia4coaXvdg6BcMtN3BBwQmjbDUfIjEg9ic5Q/132"></image>
+        <image class="avatarUrl" src="{{me.avatar}}"></image>
         <view>
         <view class="nickName">昵称:{{me.display_name}}</view>
             <view>积分:0, 佣金: {{affiliateUnpaid}}</view>

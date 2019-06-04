@@ -67,6 +67,7 @@ export default class extends wepy.app {
       'pages/comment',
       'pages/comment_add',
       'pages/estate',
+      'pages/address_map',
       'pages/provider',
       'pages/estate_form',
       'pages/estate_detail',
