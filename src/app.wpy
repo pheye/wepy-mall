@@ -70,12 +70,14 @@ export default class extends wepy.app {
       'pages/comment',
       'pages/comment_add',
       'pages/earn',
+      'pages/cost',
       'pages/provider',
       'pages/coupons',
       'pages/complete',
       'pages/my_sale_pets',
       'pages/my_pets',
       'pages/pet_card',
+      'pages/product_pet_list',
     ],
     window: {
       backgroundTextStyle: 'dark',
@@ -102,7 +104,7 @@ export default class extends wepy.app {
         "iconPath": "images/icon_classify.png",
         "selectedIconPath": "images/icon_classify_active.png"
       }, {
-        "pagePath": "pages/shop_cart",
+        "pagePath": "pages/cost",
         "text": "花钱",
         "iconPath": "images/icon_shop_cart.png",
         "selectedIconPath": "images/icon_shop_cart_active.png"

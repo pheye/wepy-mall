@@ -1,0 +1,33 @@
+<template>
+   <view class="earn">
+        <navigator url="/pages/product_pet_list" style="width:100%;">
+            <button type="primary" block>萌宠馆</button>
+        </navigator>
+        <view class="spacing"></view>
+        <navigator style="width:100%;">
+            <button block disabled >商家名录</button>
+        </navigator>
+        <view class="spacing"></view>
+        <navigator  style="width:100%;">
+            <button block  disabled>淘宝贝</button>
+        </navigator>
+   </view>
+</template>
+<script>
+import wepy from 'wepy'
+export default class Earn extends wepy.page {
+  config = {
+    navigationBarTitleText: '花钱',
+  }
+}
+</script>
+<style lang="less">
+.earn {
+    margin: 0 32rpx;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+}
+</style>

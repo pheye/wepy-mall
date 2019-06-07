@@ -40,7 +40,7 @@
     <!--   </view> -->
     <!-- </view> -->
     <view class="nav_list">
-      <navigator open-type="navigate" url="/pages/sign_in">
+      <navigator open-type="navigate" url="/pages/product_pet_list">
         <image src="../images/icon_nav_01_new.png" class="nav_icon"></image>
         <view class="nav_text">萌宠馆</view>
       </navigator>
@@ -318,7 +318,7 @@ export default class Home extends wepy.page {
       query: {
         page: currentPage || 1,
         size: size || 10,
-        category: 'pets'
+        category: 17
       }
     });
     if (json.statusCode !== 200) {

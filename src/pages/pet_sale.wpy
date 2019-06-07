@@ -174,7 +174,7 @@ export default class PetSale extends wepy.page {
           photo: {},
           insect: [],
           vaccin: [],
-          categories: [21],
+          categories: [17,21],
           stock_quantity: 1,
       },
       photo_front:null,
@@ -316,6 +316,7 @@ export default class PetSale extends wepy.page {
                   break;
               case 1:
                   let dirty = false
+                  let image_id = null
                   if (!this.photo_front  || !this.photo_left || !this.photo_right) {
                       tip.error('请上传3张图片');
                       return
@@ -324,7 +325,7 @@ export default class PetSale extends wepy.page {
                       const res = await api.createMedia(this.photo_front, id)
                       const mediaID = res.data['id']
                       product.photo.front = mediaID
-                      product.image_id = mediaID
+                      image_id = mediaID
                       dirty = true
                   }
 
@@ -342,13 +343,21 @@ export default class PetSale extends wepy.page {
                       dirty = true
                   }
                   if (dirty) {
-                      const res = await api.updateProducts(id, {query: product})
+                      let params = {query: {
+                        photo: product.photo
+                      }}
+                      if (image_id) {
+                        params.query.image_id = image_id
+                      }
+                      const res = await api.updateProducts(id, params)
                       this.init(res.data)
                   }
                   break
               case 2:
                   {
-                  const res = await api.updateProducts(id, {query: this.product})
+                  const res = await api.updateProducts(id, {query: {
+                    owner: product.owner
+                  }})
                   this.init(res.data)
                   }
                   break

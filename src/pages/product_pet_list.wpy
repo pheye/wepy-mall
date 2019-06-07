@@ -1,0 +1,89 @@
+<template>
+  <view>
+    <filterBar wx:if="{{list.length>0||skuval !==''}}" @currentType.user="currentType"></filterBar>
+    <!-- 产品列表 -->
+    <petCardList :list.sync="list" ></petCardList>
+    <!--加载更多时动画-->
+    <bottomLoadMore :show.sync="showLoading" message="正在加载"></bottomLoadMore>
+    <!--暂无数据显示-->
+    <placeholder :show.sync="isEmpty" message="暂无发现数据"></placeholder>
+  </view>
+</template>
+<script>
+import wepy from 'wepy'
+import FilterBar from "../components/filter_bar"
+import BottomLoadMore from "../components/common/bottomLoadMore"
+import Placeholder from "../components/common/placeholder"
+import PetCardList from "@/components/pet_card_list"
+import api from '@/api/api'
+
+export default class ProductPetList extends wepy.page {
+  config = {
+    navigationBarTitleText: '待售宠物列表',
+  }
+  components = {
+    filterBar: FilterBar,
+    bottomLoadMore: BottomLoadMore,
+    placeholder: Placeholder,
+    petCardList: PetCardList,
+  }
+  data = {
+      list: [],
+      showLoading: false,
+      isEmpty: false,
+      //当前页面
+      currentPage: 0,
+      //总页数
+      pageTotal: 0,
+      // 防止重复加载
+      preventRepeatReuqest: false
+  }
+  async getProducts (currentPage, size) {
+    this.showLoading = true
+    this.$apply()
+    try {
+      const json = await api.queryProducts({
+        query: {
+          page: currentPage || 1,
+          per_page: size || 5,
+          category: 17
+        }
+      });
+      this.list = [...this.list, ...json.data]
+      this.pageTotal = json.header['X-WP-TotalPages']
+      this.currentPage = currentPage || 1
+    } catch (e) {
+        tip.error(e.data.message);
+        return;
+    }
+    if (this.list == 0) {
+      this.isEmpty = true
+    }
+    this.showLoading = false
+    this.$apply()
+  }
+  onLoad (options) {
+    this.getProducts()
+  }
+  //加载更多
+  onReachBottom() {
+    const that = this
+    if (that.isEmpty)
+      return;
+    console.log(that.pageTotal + "===" + that.currentPage);
+    //判断总页数是否大于翻页数
+    if ((that.pageTotal) > that.currentPage) {
+      //防止重复加载
+      if (that.preventRepeatReuqest) {
+        return true;
+      }
+      that.preventRepeatReuqest = true;
+      that.getProducts(this.currentPage + 1);
+      that.preventRepeatReuqest = false;
+      that.$apply()
+    }
+  }
+}
+</script>
+<style lang="less">
+</style>
