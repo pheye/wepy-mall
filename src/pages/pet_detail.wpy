@@ -463,7 +463,8 @@ export default class goodsDetail extends wepy.page {
     let query = {
         product_id: this.detail.id,
         quantity: 1,
-        checked: true
+        checked: true,
+        clear: true,
       }
     if (this.detail.type == 'variable') {
       query.variation_id = this.variantSelected
@@ -485,7 +486,7 @@ export default class goodsDetail extends wepy.page {
         this.$apply();
       }, 100)
       wepy.navigateTo({
-        url: "/pages/comfire_order?goodsId=" + that.goodsId + "&purchasetype=" + that.purchasetype
+        url: "/pages/comfirm_pet_order?goodsId=" + that.goodsId + "&purchasetype=" + that.purchasetype
       })
     } else {
       if (json.data.message) {

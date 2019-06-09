@@ -1,0 +1,957 @@
+<!--确认订单-->
+<template>
+  <view class="comfire_order">
+<van-steps
+  steps="{{ steps }}"
+  active="1"
+  custom-class="steps"
+/>
+<view class="goodsList">
+    <!--列表显示2个，绑定数据记得去掉，这里做调试-->
+<repeat for="{{list}}" key="index" index="index" item="item">
+<view class="list_box" wx:if="{{item.checked}}">
+  <swipeDelete :swipeData="item" @delItem.user="handleDelItem">
+      <view class="goods-info">
+        <view class="img-box">
+          <image src="{{item.product.images[0].shop_thumbnail}}" class="img" />
+        </view>
+        <view class="text-box">
+          <view class="goods-title">{{item.product.name}}</view>
+          <view class="goods-label">{{item.variantNames}}</view>
+          <view class="goods-price">¥ {{item.product.price}}</view>
+          <view class="buy-num">x{{item.quantity}}</view>
+        </view>
+      </view>
+  </swipeDelete>
+</view>
+</repeat>
+</view>
+
+    <view class="spacing"></view>
+    <view class="order_info">
+      <view class="block">
+        <view class="left" style="background-color:transparent">预订/购买</view>
+      </view>
+
+      <!-- 付款方式 -->
+      <van-radio-group value="full">
+          <view class="block">
+          <view class="left">预订</view>
+          <view class="right">
+            <van-radio name="deposit" value="deposit" checked-color="#5abb6a" disabled></van-radio>
+          </view>
+        </view>
+        <view class="block">
+          <view class="left">购买</view>
+          <view class="right">
+            <van-radio name="full" value="full" checked-color="#5abb6a" checked ></van-radio>
+          </view>
+        </view>
+      </van-radio-group>
+      <view class="spacing"></view>
+
+      <!-- 看宠地点 -->
+      <view class="block">
+        <view class="left">看宠地点</view>
+      </view>
+      <van-radio-group value="{{chosenShipping.method_id}}">
+          <view class="block">
+          <view class="left">自行联系</view>
+          <view class="right">
+            <van-radio name="flat_rate" value="flat_rate" checked-color="#5abb6a" ></van-radio>
+          </view>
+        </view>
+        <view class="block">
+          <view class="left">到店看宠</view>
+          <view class="right">
+            <van-radio name="local_pickup" value="local_pickup" checked-color="#5abb6a" checked ></van-radio>
+          </view>
+        </view>
+      </van-radio-group>
+    <view class="spacing"></view>
+    <view class="address" @tap="setAddress" wx:if="{{chosenShipping.method_id == 'flat_rate'}}">
+
+      <view class="empty_address" wx:if="{{!is_exit_address}}">
+        <view class="title">设置收货地址</view>
+        <view class="arrow">&gt;</view>
+      </view>
+      <view class="address_info" wx:else>
+        <view class="title">
+          <view class="user_info">
+            <text class="name">{{address.userName}} </text>
+            <text class="phone">{{address.telNumber}}</text>
+          </view>
+          <view class="active_address">
+            <text class="defult" wx:if="{{address.isdefault==1}}"> [默认]</text>
+            {{address.countryName}} {{address.provinceName}} {{address.cityName}} {{address.detailInfo}} {{address.postalCode}}
+          </view>
+        </view>
+        <view class="arrow">&gt;</view>
+      </view>
+    </view>
+    <view wx:if="{{chosenShipping.method_id == 'local_pickup' }}">
+
+      <navigator  url="/pages/estate">
+      <view class="block" >
+        <view class="left">
+            <view>门店</view>
+        </view>
+        <view class="arrow">&gt;</view>
+      </view>
+      </navigator>
+
+      <view class="spacing"></view>
+      <view class="block">
+        <view class="left"><text class='imp'>*</text>联系人:</view>
+        <view class="right input_box">
+          <input @input="changeCustomerName" value="{{customer.name}}" placeholder="请输入姓名" />
+        </view>
+      </view>
+      <view class="block">
+        <view class="left"><text class='imp'>*</text>手机号:</view>
+        <view class="right input_box">
+          <input @input="changeCustomerPhone" value="{{customer.phone}}" placeholder="请输入手机号" />
+        </view>
+      </view>
+      </view>
+      <view wx:elif="{{ chosenShipping.method_id == 'free_shipping'}}">
+      <view class="spacing"></view>
+      <view class="block">
+        <view class="left"><text class='imp'>*</text>收货人:</view>
+        <view class="right input_box">
+          <input @input="changeCustomerName" value="{{customer.name}}" placeholder="请输入姓名" />
+        </view>
+      </view>
+      <view class="block">
+        <view class="left"><text class='imp'>*</text> 手机号:</view>
+        <view class="right input_box">
+          <input @input="changeCustomerPhone" value="{{customer.phone}}" placeholder="请输入手机号" />
+        </view>
+      </view>
+      </view>
+      <view class="block">
+        <view class="left"><text class='imp'>*</text> 买家留言:</view>
+        <view class="right input_box">
+          <input bindinput="bindKeyInput" placeholder="对本次交易的说明" />
+        </view>
+      </view>
+
+      <view class="spacing"></view>
+        <view class="block">
+        <view class="left total_jf">积分 \t共{{total_jf_num}}\t可用{{can_use_score}}</view>
+        <view class="right"><input type="number" class="dk-jf" value="{{jf_num}}" bindinput="jfInput" placeholder="输入抵扣积分"/></view>
+      </view>
+      <view class="spacing"></view>
+       <view class="block">
+        <!-- <view class="left input_box"><input  value="{{couponId}}" @input="onCouponIdChange" placeholder="优惠券代码" /></view> -->
+        <view class="left input_box">优惠券</view>
+        <view class="right">
+          <button @tap="addCoupons" class="coupons_button">使用优惠券</button>
+        </view>
+      </view>
+      <view class="couponsList">
+        <repeat for="{{coupons}}" key="index2" index="index2" item="item2">
+        <view class="coupons_box" >
+              <view class="coupons-info" style='height: 100rpx;'>
+                <view class="coupons-price" style="width:200rpx;">
+                  <text wx:if="{{item2.discount_type == 'percent'}}">-{{item2.amount}}%</text>
+                  <text wx:else if="{{item2.discount_type == 'fixed_cart'}}">-￥{{item2.amount}}</text>
+                </view>
+                <view >
+                  <view class="coupons-title">{{item2.description}}</view>
+<!--                   <view class="coupons-label">使用规则:{{}}</view>
+ -->                </view>
+                <!-- 删除按钮 -->
+                <image class="del-btn"  src="../images/del.png" @tap="delCoupons({{item2.code}})"  />
+              </view>
+        </view>
+        </repeat>
+      </view>
+      <view class="count_block">
+        <view class="left tongji">合计</view>
+        <view>
+          <view class="right price" wx:if="{{discountCart>0}}" >
+            <view>商品金额:￥{{cartSubtotal}}</view>
+            <view>+ 运费:￥{{chosenShipping.cost}}</view>
+            <view> - 优惠:￥{{discountCart}}</view>
+          </view>
+          <view class="right price">应付:￥{{cartContentsTotal + chosenShipping.cost}}<text wx:if="{{chosenShipping.cost != 0}}"> (运费:￥{{chosenShipping.cost}})</text></view>
+        </view>
+      </view>
+
+    </view>
+
+    <view class="pay_box">
+      <form report-submit bindsubmit="goPay" >
+        <button form-type="submit" class="button type_green">微信支付</button>
+      </form>
+    </view>
+  </view>
+</template>
+<script>
+import wepy from 'wepy';
+import api from '@/api/api';
+import tip from '@/utils/tip';
+import {getStateCode} from '@/utils/util';
+import {
+  SYSTEM_INFO,
+  ADDRESS_ID,
+  ME,
+} from '@/utils/constant';
+import swipeDelete from '@/components/common/wepy-swipe-delete'
+var app = getApp()
+export default class ComfireOrder extends wepy.page {
+  config = {
+    navigationBarTitleText: '确认订单',
+  }
+  components = {
+    swipeDelete
+  }
+
+  data = {
+    list: [],
+    steps: [
+        {
+            text: '选宠',
+        },
+        {
+            text: '付款',
+        },
+        {
+            text: '门店服务',
+        },
+        {
+            text: '在线确认',
+        }
+    ],
+    goodsId: "",
+    //卖家留言
+    sellerMessage: "",
+    // 买家信息
+    customer: {},
+
+    //是否存在默认地址
+    is_exit_address: false,
+    address: {},
+    //总价
+    cartContentsTotal: 0,
+    shippingTotal: 0,
+    totalPrice:0,
+    actualPrice : 0,
+    purchaseType : 1,
+    //总积分
+    total_jf_num: 0,
+    can_use_score:0,
+    deduScore:0,
+    deduFee : 0,
+    //输入抵扣积分
+    jf_num: 0,
+    reduce_fee : 0,
+    operating: false,
+    shipping: [],
+    chosenShipping: {},
+    estate: {},
+    wpnonce: "",
+    variantNames:[],
+    couponId:'',
+    coupons:[],
+    discountCart: 0,
+    cartSubtotal: 0
+
+  }
+  // 设置订单运货方式
+  async setCartShipping(){
+    let that = this;
+    const json = await api.updateCartShipping({
+      query: {
+        shipping_method: that.chosenShipping.id
+      }
+    })
+    if (json.statusCode == 200) {
+        that.getOrderDetailInfo();
+    }else{
+      tip.error(json.data.msg)
+    }
+  }
+  //获取订单详情
+  async getOrderDetailInfo() {
+    let that = this;
+    const json = await api.getCart({
+      query: {
+        shipping: true,
+        coupons: true,
+      }
+    });
+    if (json.statusCode == 200) {
+      let data = json.data;
+      console.log(data);
+      if (!data.cart) {
+          return 0;
+      }
+      this.list = Object.keys(data.cart).map((k) => data.cart[k])
+      // this.cartContentsTotal = data.cart_contents_total
+      // this.shippingTotal = data.shipping_total;没有勾选的不计算总价格
+      //
+      // 总价格
+      this.totalPrice = data.cart_subtotal;
+
+      for (var i = 0; i < this.list.length; i++) {
+          if (!this.list[i].checked) {
+            // this.totalPrice -= this.list[i].line_total;
+          }
+          // 读取规格数据
+          if (this.list[i].product.type == 'variation'){
+           let attrKey = Object.keys(this.list[i].product.attributes);
+           this.list[i].variantNames = [];
+           for (let j = 0; j < attrKey.length; j++) {
+             this.list[i].variantNames.push(decodeURI(attrKey[j]).split('_').slice(-1)[0] +":" + decodeURI(this.list[i].product.attributes[attrKey[j]].option));
+           }
+          }
+
+      }
+
+      // 勾选物品总金额
+      this.cartSubtotal = this.totalPrice.toFixed(2);
+      // 折扣价
+      this.discountCart = data.discount_cart;
+      // 优惠券后总金额
+      this.cartContentsTotal = data.cart_contents_total;
+      // this.is_exit_address = data.hasDefaultAddress;
+      // 优惠券使用情况
+      this.coupons = Object.keys(data.coupons).map((k) => data.coupons[k])
+
+      this.address = data.defaultAddress;
+      this.total_jf_num = data.userScore;
+      this.can_use_score = data.canUseScore;
+      this.deduScore = data.deduScore;
+      this.deduFee = data.deduFee;
+      this.jf_num = data.canUseScore;
+      this.reduce_fee = 0; // data.reduceFee;
+      this.shipping = data.shipping;
+      this.wpnonce = data._wpnonce;
+      this.chosenShipping = data.shipping.methods.find(item => {
+        return item.id == data.shipping.chosen_method
+      })
+          } else {
+      tip.error(json.data.message)
+    }
+
+    that.$apply();
+  }
+
+  async getAddressInfo(id) {
+    const json = await api.receiverInfoById({
+      query: {
+        id: id
+      }
+    });
+    if (json.statusCode == 200) {
+      this.is_exit_address = true;
+      this.address=json.data.receiverInfo;
+    } else {
+      tip.error(json.data.msg)
+    }
+  }
+  onLoad(option) {
+    let that = this;
+    this.actualPrice = 0;
+    this.totalPrice = 0;
+    this.discountPrice = 0;
+    this.total_jf_num = 0;
+    this.can_use_score = 0;
+    this.deduScore = 0;
+    this.deduFee = 0;
+    this.jf_num = 0;
+    this.reduce_fee = 0;
+    this.operating = false;
+    that.goodsId = option.goodsId==undefined?"":option.goodsId;
+    // this.purchaseType = option.purchasetype==undefined?"1":option.purchasetype;
+    /*that.list = bb.result.products;
+    console.log(bb.result.products)*/
+    // that.getOrderDetailInfo();
+    let from = option.from==undefined?"":option.from;
+    if (from=="selAdd") {
+      this.getAddressInfo(wepy.getStorageSync(ADDRESS_ID))
+    }
+    // 加载买家信息
+    const me = wx.getStorageSync(ME);
+    if (me.billing) {
+      this.customer = {
+        name: me.billing.first_name,
+        phone: me.billing.phone,
+        roomNo: me.billing.room_no
+      }
+    }
+    this.couponId = '';
+
+  }
+  computed = {
+      enabledShipping () {
+        let enabled = {
+            'flat_rate': true,
+            'local_pickup': true,
+            'free_shipping': true
+        }
+        if (!this.estate)
+            return enabled
+        if (!this.estate.disabled_shippings)
+            return enabled
+        this.estate.disabled_shippings.map(item => {
+            switch (item) {
+                case 'post':
+                enabled.flat_rate = false
+                break
+                case 'local_pickup':
+                enabled.local_pickup = false
+                break;
+                case 'shipping':
+                enabled.free_shipping = false
+                break
+            }
+        })
+        return enabled
+      }
+  }
+
+  async goToPay(formId) {
+    //测试调用接口用，可注释
+    tip.loading("提交订单中");
+    app.aldstat.sendEvent('点击下单');
+    let params = {}
+    if (this.chosenShipping.method_id == 'local_pickup' || this.chosenShipping.method_id == 'free_shipping') {
+
+      params.billing_first_name = this.customer.name;
+      params.billing_phone =  this.customer.phone;
+      // 新增门牌号字段
+      params.billing_country = 'CN';
+      params.billing_state = getStateCode('福建');
+      params.billing_city = '福州';
+      params.billing_address_1 = '融信';
+    } else {
+      let address = this.address;
+      params.billing_first_name = address.userName;
+      params.billing_phone = address.telNumber;
+      params.billing_country = 'CN';
+      params.billing_state = getStateCode(address.provinceName);
+      params.billing_city = address.cityName;
+      params.billing_address_1 = address.detailInfo;
+      params.billing_postcode = address.postalCode;
+    }
+    const json = await api.saveByCart({
+      query: {
+        _wpnonce: this.wpnonce,
+        terms: true,
+        form_id: formId,
+        shipping_method: this.chosenShipping.id,
+        payment_method: 'wxapay',
+        order_comments: this.sellerMessage,
+        ...params
+        // reduceScore: this.jf_num
+      }
+    });
+    if (json.statusCode  == 200 && json.data.result == 'failure') {
+      let message = json.data.messages;
+      let pattern = new RegExp('.+(?=</li>)');
+      // var pattern=(?<=\b<li>)\w+.+(?=</li>\b);
+      let result = pattern.exec(message)[0];
+       tip.confirm(result,{},"提示",false);
+    }
+
+    if (json.statusCode  == 200 && json.data.result == 'success') {
+      let me = wepy.getStorageSync(ME) || {};
+      //保存成功了后进行微信支付
+      if (!json.data.order) {
+          wepy.redirectTo({
+                url: "/pages/order?type=2"
+          })
+          return;
+      };
+      const pay = await api.toPay({
+        query:{
+          id: json.data.order.id,
+          openid: me.openid,
+          ref: 3
+        }
+      });
+
+      if (pay.data.success) {
+        //以下是微信支付
+        wx.requestPayment({
+          appId: pay.data.appId,
+          timeStamp: pay.data.timeStamp,
+          nonceStr: pay.data.nonceStr,
+          package: pay.data.package,
+          signType: 'MD5',
+          paySign: pay.data.paySign,
+          success: function (res) {
+            console.log('pay', res)
+            app.aldstat.sendEvent('支付成功');
+            setTimeout(() => {
+              //支付成功 关闭loadding 跳转到支付成功页面
+              tip.loaded();
+              wepy.redirectTo({
+                url: "/pages/pay_success?orderNo="+json.data.order.id
+              })
+            }, 2000)
+          },
+          fail: function (res) {
+            tip.alert('支付失败');
+            setTimeout(() => {
+              //支付成功 关闭loadding 跳转到支付成功页面
+              tip.loaded();
+              wepy.redirectTo({
+                url: "/pages/order"
+              })
+            }, 2000)
+          }
+        })
+      } else {
+        tip.alert('支付失败');
+        setTimeout(() => {
+          //支付成功 关闭loadding 跳转到支付成功页面
+          tip.loaded();
+          wepy.navigateTo({
+            url: "/pages/order"
+          })
+        }, 2000)
+      }
+    } else {
+      tip.error('失败:' + json.data.message)
+    }
+
+  }
+
+  methods = {
+    bindKeyInput(e) {
+      this.sellerMessage = e.detail.value;
+    },
+    changeCustomerName(e) {
+      this.customer.name = e.detail.value;
+    },
+    changeCustomerPhone(e) {
+      this.customer.phone = e.detail.value;
+    },
+    changeCustomerRoomNo(e) {
+      this.customer.roomNo = e.detail.value;
+    },
+    async goPay(e) {
+      var fId = e.detail.formId;
+      if (!this.enabledShipping[this.chosenShipping.method_id]) {
+          tip.alert('请选择配送方式')
+          return false
+      }
+      if (this.chosenShipping.method_id == 'flat_rate' && !this.is_exit_address) {
+
+        await tip.confirm('请设置收货地址');
+        wepy.navigateTo({
+          url: "/pages/address?type=order"
+        })
+        return false;
+      }
+      if (this.chosenShipping.method_id !== 'flat_rate' && !this.customer.name) {
+
+         tip.confirm('请填写联系人',{},"提示",false);
+        return false;
+      }
+      if (this.chosenShipping.method_id !== 'flat_rate' && !this.customer.phone) {
+
+         tip.confirm('请填写联系手机',{},"提示",false);
+        return false;
+      }
+      this.goToPay(fId);
+    },
+    async setAddress() {
+      try {
+        await wepy.authorize({scope: "scope.address"});
+        let address = await wepy.chooseAddress();
+        this.address = address;
+        this.is_exit_address = true;
+        console.log('address', address);
+      } catch (e) {
+      }
+    },
+    jianBtnTap(e) {
+      if (this.operating) {
+        return;
+      }
+      this.operating = true;
+      var index = parseInt(e.currentTarget.dataset.index);
+      var id =  e.currentTarget.dataset.id;
+      var num = this.list[index].num;
+      // 如果只有1件了，就不允许再减了
+      if (num > 1) {
+        num --;
+      } else {
+        return;
+      }
+      // 购物车数据
+      //this.list[index].num = num;
+      //this.totalPrice = this.totalPrice-this.list[index].price;
+      //this.actualPrice = this.totalPrice - this.reduce_fee;
+      //this.$apply();
+      this.reduceGoodNum(id, num, index);
+    },
+    jiaBtnTap(e) {
+      if (this.operating) {
+        return;
+      }
+      this.operating = true;
+      var index = parseInt(e.currentTarget.dataset.index);
+      var num = this.list[index].num;
+      var id =  e.currentTarget.dataset.id;
+      // 自增
+      num ++;
+      // 购物车数据
+      /*this.list[index].num = num;
+      this.totalPrice = parseInt(this.totalPrice)+parseInt(this.list[index].price);
+      this.actualPrice = this.totalPrice - this.reduce_fee;
+      this.$apply();*/
+      this.addGoodNum(id, num, index);
+    },
+    jfInput(e) {
+      let num = e.detail.value * 10 / 10;
+      let reg = /^[0-9]+$/;
+      if (!reg.test(num)) {
+        tip.error("输入类型有误");
+        this.jf_num="";
+        return {
+          value: ""
+        };;
+      }
+      if (this.can_use_score != num && num !=0  ) {
+        this.jf_num = this.can_use_score;
+      }/* else if(parseInt(this.jf_num)%this.deduScore) {
+        this.jf_num = Math.floor(parseInt(this.jf_num)/this.deduScore)*this.deduScore;
+      }*/ else {
+        this.jf_num = num;
+      }
+      let beishu = this.jf_num/this.deduScore;
+      this.reduce_fee = beishu * this.deduFee;
+      this.actualPrice = this.totalPrice - this.reduce_fee;
+      return {
+        value: this.jf_num
+      };
+    },
+    changeShipping (name, e) {
+      if (!name) {
+        name = e.detail;
+      }
+      this.chosenShipping = this.shipping.methods.find(item => {
+        return item.method_id == name
+      })
+
+      console.log("shipping", e, this.chosenShipping)
+     this.setCartShipping();
+      this.$apply()
+    },
+    // 添加优惠券
+    async addCoupons() {
+        let that = this;
+        wepy.navigateTo({
+            url:'/pages/coupons?selectable=1'
+        })
+    },
+    // 优惠券输入
+    onCouponIdChange(e) {
+      let couponId = e.detail.value ;
+      this.couponId = couponId;
+    },
+    // 删除
+    async delCoupons(couponId) {
+          let that = this;
+          const json = await api.delCoupons({
+              query: {
+                  coupons: [couponId]
+              }
+          });
+          if (json.data.errors.length == 0) {
+              tip.success("成功删除优惠券");
+              that.getOrderDetailInfo();
+          }
+      }
+  }
+  events = {
+
+  }
+
+  onShow () {
+  // 更新自提点信息
+    this.getOrderDetailInfo();
+    this.$apply()
+  }
+}
+
+</script>
+<style lang="less">
+.steps {
+    margin-bottom:16rpx;
+
+    .van-step__title {
+        font-weight: bold;
+    }
+}
+
+.estate_container {
+    color: #000;
+    align-items: center;
+}
+.address {
+  border-top: 1px solid #efefef;
+  background: #fff;
+  .empty_address,
+  .address_info {
+    display: flex;
+    justify-content: space-between;
+    height: 103rpx;
+    align-items: center;
+    padding: 0rpx 35rpx;
+    .title {
+      color: #000;
+    }
+    .arrow {
+      color: #9a9a9a;
+    }
+    .user_info {
+      color: #1a1a1a;
+    }
+    .active_address {
+      margin-top: 20rpx;
+    }
+    .defult {
+      color: #ea4a3a;
+    }
+  }
+  .address_info {
+    height: 150rpx;
+  }
+}
+
+.order_info {
+  .block {
+    display: flex;
+    justify-content: space-between;
+    // height: 91rpx;
+    align-items: center;
+    padding: 20rpx 35rpx 20rpx;
+    border-bottom: 1px solid #efefef;
+    background: #fff;
+
+    .txt {
+      font-size: 32rpx;
+    }
+    .left {
+      color: #000;
+    }
+    .right {
+      color: #9a9a9a;
+      text-align: right;
+    }
+    .price {
+      color: #ea4a3a;
+      font-size: 32rpx;
+    }
+    .tongji {
+      font-size: 32rpx;
+    }
+    .input_box {
+      flex: 1;
+      margin-left: 20rpx;
+    }
+    .total_jf{
+      font-size: 32rpx;
+    }
+  }
+}
+.list_box {
+  height: 200rpx;
+}
+.coupons-info {
+  border-bottom: 1px solid #eee;
+  display: flex;
+  padding: 20rpx;
+  box-sizing: border-box;
+  position: relative;
+  background: #fff;
+  .coupons-price{
+    color: #fa8c16;
+    font-size:120%;
+    font-weight:700;
+    text-align: center;
+    padding:5rpx;
+  }
+  .coupons-title{
+    color: #000;
+    font-weight:700;
+    width:450rpx;
+    line-height:35rpx;
+  }
+  .coupons-label {
+    font-size:80%;
+  }
+  .del-btn {
+      width: 40rpx;
+      height: 40rpx;
+      position: absolute;
+      right: 30rpx;
+      top: 30rpx;
+      display: flex;
+      font-size: 24rpx;
+      text-align: center;
+    }
+}
+.coupons_button {
+  color: #fff;
+  background-color:#fa8c16;
+  width:200rpx;
+  height:70rpx;
+  font-size:28rpx;
+  font-weight:700;
+}
+.goods-info {
+  border-bottom: 1px solid #eee;
+  display: flex;
+  padding: 20rpx;
+  box-sizing: border-box;
+  position: relative;
+  background: #fff;
+}
+
+.goods-info .img-box {
+  width: 160rpx;
+  height: 160rpx;
+  overflow: hidden;
+  margin-right: 28rpx;
+  background-color: #d8d8d8;
+}
+
+.goods-info .text-box {
+  width: 480rpx;
+}
+
+.goods-info .text-box .goods-title {
+  font-size: 32rpx;
+  color: #414141;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  padding: 10rpx 20rpx 5rpx 0;
+}
+
+.goods-info .text-box .goods-label {
+  font-size: 24rpx;
+  color: #999;
+  height: 38rpx;
+  line-height: 38rpx;
+  margin: 8rpx 0 25rpx 0;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.goods-info .text-box .goods-price {
+  font-size: 34rpx;
+  color: #fa8c16;
+}
+
+.goods-info .text-box .buy-num {
+
+  line-height: 48rpx;
+  position: absolute;
+  right: 30rpx;
+  bottom: 15rpx;
+  display: flex;
+  font-size: 26rpx;
+  text-align: center
+}
+
+.goods-info .text-box .buy-num .jian-btn {
+  width: 48rpx;
+  height: 100%;
+  border-left: 1rpx solid #ccc;
+  border-bottom: 1rpx solid #ccc;
+  border-top: 1rpx solid #ccc;
+  border-bottom-left-radius: 6rpx;
+  border-top-left-radius: 6rpx;
+}
+
+.goods-info .text-box .buy-num .jian-btn.disabled {
+  background-color: #f5f5f9;
+  border-left: 1rpx solid #eee;
+  border-bottom: 1rpx solid #eee;
+  border-top: 1rpx solid #eee;
+  color: #ccc;
+}
+
+.goods-info .text-box .buy-num .jia-btn {
+  width: 48rpx;
+  height: 100%;
+  border-right: 1rpx solid #ccc;
+  border-bottom: 1rpx solid #ccc;
+  border-top: 1rpx solid #ccc;
+  border-bottom-right-radius: 6rpx;
+  border-top-right-radius: 6rpx;
+}
+
+.goods-info .text-box .buy-num .jia-btn.disabled {
+  background-color: #f5f5f9;
+  border-right: 1rpx solid #eee;
+  border-bottom: 1rpx solid #eee;
+  border-top: 1rpx solid #eee;
+  color: #ccc;
+}
+
+.goods-info .text-box .buy-num input {
+  width: 68rpx;
+  height: 48rpx;
+  min-height: 48rpx;
+  text-align: center;
+  font-size: 24rpx;
+  border: 1rpx solid #ccc;
+}
+
+.goods-info .img-box .img {
+  width: 160rpx;
+  height: 160rpx;
+}
+
+.pay_box {
+  margin-top: 104rpx;
+  padding: 0 22rpx;
+}
+.dk-jf {
+  text-align: right;
+  color: #666;
+}
+ .count_block {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 30rpx 35rpx 30rpx 40rpx;
+    border-bottom: 1px solid #efefef;
+    background: #fff;
+    .left {
+      color: #000;
+    }
+    .right {
+      color: #9a9a9a;
+      text-align: right;
+    }
+    .price {
+      color: #ea4a3a;
+      font-size: 32rpx;
+    }
+    .tongji {
+      font-size: 32rpx;
+    }
+  }
+.imp{
+  font-size:30rpx;
+  color: #fa8c16;
+  font-weight:700;
+}
+.address_content{
+  font-size:32rpx;
+  color: #000;
+  font-weight:700;
+}
+</style>
