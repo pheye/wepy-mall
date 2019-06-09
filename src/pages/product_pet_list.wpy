@@ -97,6 +97,16 @@ export default class ProductPetList extends wepy.page {
                     order: params.order
                 })
                 break
+            case 'category':
+                this.list = []
+                await this.getProducts(1, 10, {
+                    category: params.category
+                })
+                break
+           default:
+                this.list = []
+                await this.getProducts(1, 10)
+                break
         }
         // this.getProducts(1, 10)
       }

@@ -3,7 +3,7 @@
   <view class="bar">
     <view class="filter">
       <view class="nav {{currentType=='zonghe' ? 'nav_active' : ''}}" data-current="zonghe" @tap="orderBy">综合</view>
-      <view class="nav  {{currentType=='sale' ? 'nav_active' : ''}}" data-current="sale" @tap="orderBy">种类</view>
+      <view class="nav  {{currentType=='sale' ? 'nav_active' : ''}}" data-current="category" @tap="filter('category')">{{ categoryDesc || '种类' }}</view>
       <view class="grid nav">
         <view class="price {{currentType=='price' ? 'nav_active' : ''}}" data-current="price" @tap.stop="orderBy">价格</view>
         <view>
@@ -22,15 +22,34 @@
 <script>
   import wepy from 'wepy';
   import FilterSlider from '@/components/filterSlider'
+  import {
+      SELECT_CATEGORY,
+  } from '@/utils/constant';
+
   export default class ProductPetFilterBar extends wepy.component {
     data = {
       currentType: "",
       arrowType: "",
       flag: false,
-      type: "desc"
+      type: "desc",
+      categoryDesc: '',
     }
     components = {
       filterSlider: FilterSlider
+    }
+    onLoad () {
+      this.categoryChannel = PubSub.subscribe(SELECT_CATEGORY, async (msg, data) => {
+        console.log('cats', data)
+        this.categoryDesc = data.desc
+        this.$apply()
+        this.$emit("orderBy", {
+            orderBy: 'category',
+            category: data.ids[2]
+        })
+      })
+    }
+    onUnload () {
+        PubSub.unsubscribe(this.categoryChannel)
     }
     methods = {
       filterSearch() {
@@ -47,6 +66,15 @@
         }
         that.priceOrderBy(e.target.dataset.current)
         that.$apply();
+      },
+      filter(type) {
+          switch (type) {
+              case 'category':
+                  wepy.navigateTo({
+                    url: '/pages/product_pet_categories'
+                  })
+                  break;
+          }
       }
     }
     priceOrderBy(orderBy) {
@@ -60,6 +88,7 @@
       } else {
         that.arrowType = "";
       }
+      this.categoryDesc = '';
 
         that.$emit("orderBy", {
             orderBy: orderBy,

@@ -12,7 +12,6 @@
         </swiper-item>
       </block>
     </swiper>
-    <cartAdvise></cartAdvise>
     <view class="details-msg" style="margin-top:{{scrMove}}rpx;padding-left:30rpx;padding-right:30rpx;">
       <view class="details_pinfo" >
         <view>
@@ -129,8 +128,8 @@
         <!--   <i class="iconfont icon-collection"></i> -->
         <!--   <view class="doc">收藏</view> -->
         <!-- </view> -->
-        <view class="sy-bottom {{canOrder?'btn_cart':'cart_color'}}" @tap="takeCart">预订</view>
-        <view class="sy-bottom {{canOrder?'btn_order':'order_color'}}" @tap="takeOrder">{{purchaseText}}</view>
+        <view class="sy-bottom {{detail.in_stock ?'btn_cart':'cart_color'}}" @tap="doTakeOrder(1)">预订</view>
+        <view class="sy-bottom {{detail.in_stock ?'btn_order':'order_color'}}" @tap="doTakeOrder(0)">{{purchaseText}}</view>
       </view>
     </view>
     <view class="over_model {{hidden?'hidden':''}}"></view>
@@ -459,11 +458,11 @@ export default class goodsDetail extends wepy.page {
     }
   }
   //立即购买
-  async doTakeOrder() {
+  async doTakeOrder(type) {
     let that = this;
     let query = {
-        product_id: that.goodsId,
-        quantity: this.orderNum,
+        product_id: this.detail.id,
+        quantity: 1,
         checked: true
       }
     if (this.detail.type == 'variable') {

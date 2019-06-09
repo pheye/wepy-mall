@@ -211,7 +211,7 @@ export default class PetSale extends wepy.page {
       }
       this.categoryChannel = PubSub.subscribe(SELECT_CATEGORY, async (msg, data) => {
         console.log('cats', data)
-        this.category = data.ids
+        this.product.categories = data.ids
         this.categoryDesc = data.desc
         this.$apply()
       })
