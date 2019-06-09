@@ -48,7 +48,7 @@
         <image src="../images/icon_nav_02_new.png" class="nav_icon"></image>
         <view class="nav_text">淘宝贝</view>
       </navigator>
-      <navigator open-type="navigate" url="/pages/wholesale">
+      <navigator open-type="navigate" url="/pages/vendors">
         <image src="../images/icon_nav_03_new.png" class="nav_icon"></image>
         <view class="nav_text">商家名录</view>
       </navigator>
@@ -271,39 +271,6 @@ export default class Home extends wepy.page {
       tip.error(json.data.message);
     }
     that.showLoading = false;
-  }
-  async getProductsForTabs() {
-    const json = await api.queryProducts({
-      query: {
-        orderby:'meta_value_num',
-        meta_key: '_sale_price_dates_from',
-        size: 30,
-        order: 'desc'
-      }
-    });
-    if (json.statusCode !== 200) {
-        tip.error(json.data.message);
-        return;
-    }
-
-    // let day2am10 = moment().add(1, 'days').format('YYYY-MM-DD 10:00:00')
-    this.tabs0 = json.data.filter(item => moment(item.date_on_sale_from).format('HH') == 10)
-    this.tabs1 = json.data.filter(item => moment(item.date_on_sale_from).format('HH') == 13)
-    this.tabs2 = json.data.filter(item => moment(item.date_on_sale_from).format('HH') == 16)
-    this.tabs3 = json.data.filter(item => moment(item.date_on_sale_from).format('HH') == 21)
-    if(this.tabs0.length != 0){
-      this.currentTabsIndex = 0 ;
-    } else if(this.tabs1.length != 0 ){
-      this.currentTabsIndex = 1 ;
-    } else if(this.tabs2.length != 0 ){
-      this.currentTabsIndex = 2 ;
-    } else if(this.tabs3.length != 0 ){
-      this.currentTabsIndex = 3 ;
-    } else {
-      this.currentTabsIndex = -1 ;
-    }
-    this.$apply()
-    // console.log('json', this.tabsProducts, json.data, now )
   }
   async getAdList() {
     const json = await api.getBanners();

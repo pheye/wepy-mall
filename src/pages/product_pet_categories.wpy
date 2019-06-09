@@ -1,0 +1,107 @@
+<template>
+  <view>
+    <!-- 一级分类 -->
+    <view class="grid">
+      <repeat for="{{categories}}" key="index" index="index" item="item">
+          <view class="grid-cell" @tap="onLoadSubCat({{item.id}})"> 
+          <image class="grid-cell__image" src="{{item.image}}" mode='widthFix'>{{item.image}}</image>
+          <view class="grid-cell__title font-second-title center">{{item.name}}</view>
+        </view>
+      </repeat>
+    </view>
+    <view class="spacing"></view>
+    <!-- 二级分类 -->
+    <view class="grid">
+      <repeat for="{{subCategories}}" key="index" index="index" item="item">
+          <view class="grid-cell2" @tap="onSelect({{index}})"> 
+            <image class="grid-cell__image" src="{{item.image}}" style="height:180rpx;border-radius:90rpx;">{{item.image}}</image>
+          <view class="grid-cell__title center">{{item.name}}</view>
+        </view>
+      </repeat>
+    </view>
+  </view>
+</template>
+<script>
+import wepy from 'wepy'
+import api from '@/api/api'
+import {
+  SELECT_CATEGORY,
+} from '@/utils/constant';
+
+export default class ProductPetCategories extends wepy.page {
+  config = {
+    navigationBarTitleText: '宠物分类',
+  }
+  data = {
+    categories: [],
+    subCategories: [],
+    mainCategoryId: 0,
+    subCategoryId: 0,
+  }
+  async init (parent) {
+    const res = await api.queryCategories({parent: parent})
+    this.categories = res.data
+    this.$apply()
+    if (this.categories.length > 0) {
+      await this.loadSubCategories(this.categories[0].id)
+    }
+  }
+  async loadSubCategories(parent) {
+      this.mainCategoryId = parent
+      const res = await api.queryCategories({parent: parent, per_page: 100})
+      this.subCategories = res.data
+      this.$apply()
+  }
+  onLoad() {
+    this.init(17)  
+  }
+  methods = {
+    async onLoadSubCat(parent) {
+      await this.loadSubCategories(parent)
+    },
+    onSelect(index) {
+      const item = this.subCategories[index]
+      this.subCategoryId = item.id
+      PubSub.publish(SELECT_CATEGORY, {ids: [17, this.mainCategoryId, item.id], desc: item.name})
+      wepy.navigateBack()
+    }
+  }
+}
+</script>
+<style lang="less">
+.grid {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  .grid-cell {
+    display: flex;  
+    flex-direction: column;
+    width: 250rpx;
+    flex-shrink: 1;
+    border:1px solid #ececec;
+    border-radius: 8rpx;
+    background-color: white;
+    box-sizing:border-box;
+  }
+  .grid-cell__title {
+    
+  }
+  .grid-cell__image {
+    display:block;
+    width: 100%;
+    overflow:hidden;
+  }
+  .grid-cell2 {
+    display: flex;  
+    flex-direction: column;
+    width: 180rpx;
+    flex-shrink: 1;
+    border:1px solid #ececec;
+    border-radius: 8rpx;
+    background-color: white;
+    box-sizing:border-box;
+    margin-bottom:4px;
+  }
+}
+</style>

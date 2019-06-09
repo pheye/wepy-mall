@@ -167,6 +167,7 @@ const refundApply = (params) => wxRequest(params, apiMall + '/api/mall/refund/sa
 //商品分类--begin
 //一级分类
 const rootCtegoryList = (params) => request(`${host}/wp-json/w2w/v1/products/categories?parent=0&per_page=100`, {...params, noauth: true});
+const queryCategories = (params) => request(`${host}/wp-json/w2w/v1/products/categories?${stringify(params)}`, {noauth: true});
 //二级三级分类
 const childGoodsCatetoryList = (params) => wxRequest(params, apiMall + '/api/mall/childGoodsCatetoryList');
 //商品分类--end
@@ -179,7 +180,6 @@ const queryCities = (params) => request(`${host}/wp-json/wp/v2/cities?per_page=1
 
 
 //获取小区
-const queryEstates = ({query = {}}) => request(`${host}/wp-json/wp/v2/estates`, {query: {...query, status: 'publish', per_page: 100}, noauth: true});
 const queryPages =  (params) => request(`${host}/wp-json/wp/v2/pages`, params)
 
 export default {
@@ -223,6 +223,7 @@ export default {
   updateOrders,
   saveByCart,
   toPay,
+  queryCategories,
   rootCtegoryList,
   childGoodsCatetoryList,
   getOrderInfo,
@@ -237,7 +238,6 @@ export default {
   getOrders,
   getBanners,
   queryCities,
-  queryEstates,
   queryPages,
   getCoupons,
   takeCoupons,

@@ -25,7 +25,7 @@ export default class PetCardPage extends wepy.page {
   async onLoad (options) {
     try {
       const res = await api.getPets(options.id)
-      console.log('data', res.data)
+      // console.log('data', res.data)
       this.item= res.data
     } catch (e) {
       console.log(e.message)

@@ -60,6 +60,11 @@
       } else {
         that.arrowType = "";
       }
+
+        that.$emit("orderBy", {
+            orderBy: orderBy,
+            order:  that.arrowType
+        })
     }
 
     setSkuVal (sku) {

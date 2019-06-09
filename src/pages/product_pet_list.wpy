@@ -1,6 +1,6 @@
 <template>
   <view>
-    <filterBar wx:if="{{list.length>0||skuval !==''}}" @currentType.user="currentType"></filterBar>
+    <filterBar wx:if="{{list.length>0||skuval !==''}}"  @orderBy.user="orderBy"></filterBar>
     <!-- 产品列表 -->
     <petCardList :list.sync="list" ></petCardList>
     <!--加载更多时动画-->
@@ -11,11 +11,12 @@
 </template>
 <script>
 import wepy from 'wepy'
-import FilterBar from "../components/filter_bar"
+import FilterBar from "../components/product_pet_filter_bar"
 import BottomLoadMore from "../components/common/bottomLoadMore"
 import Placeholder from "../components/common/placeholder"
 import PetCardList from "@/components/pet_card_list"
 import api from '@/api/api'
+import tip from '@/utils/tip'
 
 export default class ProductPetList extends wepy.page {
   config = {
@@ -38,15 +39,16 @@ export default class ProductPetList extends wepy.page {
       // 防止重复加载
       preventRepeatReuqest: false
   }
-  async getProducts (currentPage, size) {
+  async getProducts (currentPage, size, params) {
     this.showLoading = true
     this.$apply()
     try {
       const json = await api.queryProducts({
         query: {
           page: currentPage || 1,
-          per_page: size || 5,
-          category: 17
+          per_page: size || 10,
+          category: 17,
+          ...params
         }
       });
       this.list = [...this.list, ...json.data]
@@ -82,6 +84,22 @@ export default class ProductPetList extends wepy.page {
       that.preventRepeatReuqest = false;
       that.$apply()
     }
+  }
+  methods = {
+      async orderBy (params) {
+        console.log('params', params)    
+        switch (params.orderBy) {
+            case 'price':
+                this.list = []
+                await this.getProducts(1, 10, {
+                    orderby: 'meta_value_num', 
+                    meta_key: '_regular_price',
+                    order: params.order
+                })
+                break
+        }
+        // this.getProducts(1, 10)
+      }
   }
 }
 </script>

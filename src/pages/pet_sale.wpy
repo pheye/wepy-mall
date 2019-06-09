@@ -14,7 +14,7 @@
                     </view>
                 </van-cell>
                 <van-cell title="性别" value="{{product.sex || '请选择'}}" arrow-direction="down" clickable is-link @click="onShowSexPicker"/>
-                <van-cell title="类别" value="{{product.category || '请选择'}}" arrow-direction="right" clickable is-link disabled/>
+                <van-cell title="类别" value="{{categoryDesc || '请选择'}}" arrow-direction="right" clickable is-link link-type="navigateTo" url="/pages/product_pet_categories"/>
             </van-cell-group>
             <view class="spacing"></view>
             <van-cell-group>
@@ -141,6 +141,9 @@ import Card from "@/components/card"
 import moment from 'moment'
 import api from '@/api/api'
 import tip from '@/utils/tip'
+import {
+  SELECT_CATEGORY,
+} from '@/utils/constant';
 
 export default class PetSale extends wepy.page {
   config = {
@@ -177,6 +180,7 @@ export default class PetSale extends wepy.page {
           categories: [17,21],
           stock_quantity: 1,
       },
+      categoryDesc: '',
       photo_front:null,
       photo_left:null,
       photo_right:null,
@@ -197,6 +201,7 @@ export default class PetSale extends wepy.page {
       this.photo_front = this.product.photo.front
       this.photo_left = this.product.photo.left
       this.photo_right = this.product.photo.right
+      this.categoryDesc = this.product.categories.map(item => item.name).join(',')
       this.$apply()
   }
   async onLoad (options) {
@@ -204,6 +209,16 @@ export default class PetSale extends wepy.page {
           const res = await api.getProducts(options.id)
           this.init(res.data)
       }
+      this.categoryChannel = PubSub.subscribe(SELECT_CATEGORY, async (msg, data) => {
+        console.log('cats', data)
+        this.category = data.ids
+        this.categoryDesc = data.desc
+        this.$apply()
+      })
+  }
+  onUnload () {
+    PubSub.unsubscribe(this.categoryChannel)
+    console.log('unload')
   }
   methods = {
       onSelectProvince () {

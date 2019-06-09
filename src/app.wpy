@@ -12,8 +12,6 @@ import api from '@/api/api';
 import QQMapWX from 'qqmap-wx-jssdk';
 import moment from 'moment';
 import {
-  ESTATES,
-  CURRENT_ESTATE,
   ME,
   TOKEN,
   TOKEN_EXPIRED,
@@ -47,6 +45,7 @@ export default class extends wepy.app {
       'pages/pet_register',
       'pages/pet_sale',
       'pages/pet_detail',
+      'pages/product_pet_categories',
       'pages/sign_in',
       'pages/exchange_goods',
       'pages/wholesale',
