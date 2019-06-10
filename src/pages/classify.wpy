@@ -123,12 +123,12 @@ export default class Classify extends wepy.page {
     let systemInfo = wx.getStorageSync(SYSTEM_INFO);
     this.windowHeight = systemInfo.windowHeight;
 
+    this.getRootCateTopLevel();
     this.$apply();
 
   }
 
   onShow() {
-    this.getRootCateTopLevel();
     PubSub.publish(CART)
   }
 
