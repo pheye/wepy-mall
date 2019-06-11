@@ -17,6 +17,7 @@
   "license": "MIT",
   "dependencies": {
     "moment": "^2.24.0",
+    "ngeohash": "^0.6.3",
     "pubsub-js": "^1.7.0",
     "qqmap-wx-jssdk": "^1.0.0",
     "qs": "^6.7.0",

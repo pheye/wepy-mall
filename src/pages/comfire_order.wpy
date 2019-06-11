@@ -72,7 +72,7 @@
     </view>
     <view wx:if="{{chosenShipping.method_id == 'local_pickup' }}">
 
-      <navigator  url="/pages/estate">
+      <navigator  url="/pages/address_map">
       <view class="block" >
         <view class="left">
           <view><text class='imp'>[提货地址]</text><text class='address_content'>{{estate.title.rendered}}{{estate.address}}</text></view>

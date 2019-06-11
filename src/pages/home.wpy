@@ -2,7 +2,7 @@
   <view class="container">
     <van-row>
       <van-col span="12">
-        <navigator class="loc" url="/pages/estate">
+        <navigator class="loc" url="/pages/address_map">
           <van-icon name="location-o"></van-icon>
           <text style="font-size:36rpx;">{{(currentEstate.title && currentEstate.title.rendered) || '选择小区'}} &gt; </text>
         </navigator>
