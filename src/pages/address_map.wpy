@@ -4,7 +4,29 @@
         <!--     <image src="../images/estate_banner.jpg" mode="widthFix" style="width:100%;display:block;" /> -->
         <!-- </navigator> -->
         <van-cell icon="location-o" title="{{cities[mainActiveIndex].name}}" clickable value="切换城市" bind:click="onSelectCity" />
-            <map id="map" longitude="{{longitude}}" latitude="{{latitude}}" markers="{{markers}}" style="width:100%;height:50vh;" scale="17" @regionchange="onRegionChange" />
+        <view style="position:absolute;top:55px;left:5vw;width:90vw;background-color:white;z-index:99999999;">
+            <van-search
+                        placeholder="搜索小区/写字楼等"
+                        show-action
+                        @focus="onFocus"
+                        @search="onChange"
+                        @cancel="onCancel"
+                        >
+            </van-search>
+            <view wx:if="{{showResultPanel}}" style="min-height:70vh">
+            <repeat for="{{searched}}" key="index" index="index" item="item">
+            <van-cell value="进入" clickable="true" arrow-direction="right" custom-class="estate-cell" center="true" bind:click="onSelectEstateZone({{item.id}})">
+                <view slot="title" class="estate-cell__title">
+                <view class="van-cell__text">{{item.title.rendered}}</view>
+                <van-icon name="passed" color="#ff6a3c" wx:if="{{item.id == currentEstate.id}}" size="14px" custom-class="estate-cell__icon"></van-icon>
+                <van-tag wx:if="{{item.disabled}}" type="danger">区长招募中</van-tag>
+                </view>
+            </van-cell>
+            </repeat>
+            </view>
+        </view>
+        <view class="mask" wx:if="{{showResultPanel}}"></view>
+        <map id="map" longitude="{{longitude}}" latitude="{{latitude}}" markers="{{markers}}" style="width:100%;height:50vh;" scale="17" @regionchange="onRegionChange" />
         <repeat for="{{items}}" key="index" index="index" item="item">
             <van-cell value="进入" clickable="true" arrow-direction="right" custom-class="estate-cell" center="true" bind:click="onSelectEstateZone({{item.id}})">
                 <view slot="icon">
@@ -44,6 +66,9 @@ export default class Estate extends wepy.page {
     cities: [],
     latitude: 23.2,
     longitude: 126.1,
+    searchText: '',
+    searched: [],
+    showResultPanel: false,
   }
   computed = {}
   async initCurrent () {
@@ -202,7 +227,7 @@ export default class Estate extends wepy.page {
     },
     async onSelectEstateZone(id) {
       // console.log("id", id, this.currentEstate)
-      const currentEstate = this.estates.find(item => item.id == id)
+        const currentEstate = this.estates.find(item => item.id == id) || this.searched.find(item => item.id === id)
       if (!currentEstate.contact) {
           tip.alert('该小区正在招募小区长');
           return;
@@ -248,7 +273,31 @@ export default class Estate extends wepy.page {
                   }
               })
           }
-      }
+      },
+      onFocus() {
+          this.showResultPanel = true
+          this.$apply()
+      },
+      onCancel() {
+          this.showResultPanel = false
+          this.$apply()
+      },
+      async onChange(e) {
+          console.log('e', e.detail)
+          if (!e.detail) {
+              this.showResultPanel = false
+              this.$apply()
+              return
+          }
+          const json = await api.queryEstates({
+            query: {
+                search: e.detail    
+            }
+          })
+          this.searched = json.data
+          this.$apply()
+          console.log("results:", json.data)
+      },
   }
 }
 </script>
@@ -256,7 +305,7 @@ export default class Estate extends wepy.page {
 .estate-cell {
     .van-cell__title {
         flex:2;
-        line-height: 40px;
+    //    line-height: 40px;
     }
     .estate-cell__title {
         display:flex;
@@ -277,4 +326,24 @@ export default class Estate extends wepy.page {
         text-align:center;
     }
 }
+
+.mask {
+  background-color: rgba(0, 0, 0, .6);
+  position: fixed;
+  z-index: 2000;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  top: 0;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
 </style>
