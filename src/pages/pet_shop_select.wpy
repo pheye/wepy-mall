@@ -1,6 +1,6 @@
 <template>
     <repeat for="{{shopes}}" key="index" index="index" item="item">
-    <van-cell value="进入" clickable="true" arrow-direction="right" custom-class="estate-cell" center="true" bind:click="onSelect({{item}})">
+    <van-cell value="选择" clickable="true" arrow-direction="right" custom-class="estate-cell" center="true" bind:click="onSelect({{item}})">
         <view slot="title" class="estate-cell__title">
         <view class="van-cell__text">{{item.title.rendered}}</view>
         <van-icon name="passed" color="#ff6a3c" wx:if="{{item.id == currentId}}" size="14px" custom-class="estate-cell__icon"></van-icon>
@@ -41,7 +41,8 @@ export default class PetShopSelect extends wepy.page {
   }
   async query(page = 1) {
       const res = await api.query('pet_shop', {
-          page
+          page,
+          per_page: 100
       })
       this.shopes = [...this.shopes, ...res.data]
       this.$apply()
