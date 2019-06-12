@@ -4,7 +4,7 @@
         <!--     <image src="../images/estate_banner.jpg" mode="widthFix" style="width:100%;display:block;" /> -->
         <!-- </navigator> -->
         <van-cell icon="location-o" title="{{cities[mainActiveIndex].name}}" clickable value="切换城市" bind:click="onSelectCity" />
-        <view style="position:absolute;top:55px;left:5vw;width:90vw;background-color:white;z-index:99999999;">
+        <view style="position:relative;top:4px;left:5vw;width:90vw;background-color:white;z-index:99999999;">
             <van-search
                         placeholder="搜索小区/写字楼等"
                         show-action
