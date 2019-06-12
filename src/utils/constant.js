@@ -37,4 +37,8 @@ export const SEARCH_LIST = 'searchList';
 
 export const CART = 'CART';
 
+// 选择宠物类别
 export const SELECT_CATEGORY = 'SELECT_CATEGORY'
+
+// 选择宠物门店
+export const SELECT_PET_SHOP = 'SELECT_PET_SHOP'

@@ -27,6 +27,7 @@ import api from '@/api/api'
 import {
   SELECT_CATEGORY,
 } from '@/utils/constant';
+import PubSub from 'pubsub-js'
 
 export default class ProductPetCategories extends wepy.page {
   config = {

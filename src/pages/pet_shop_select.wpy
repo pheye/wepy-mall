@@ -1,0 +1,63 @@
+<template>
+    <repeat for="{{shopes}}" key="index" index="index" item="item">
+    <van-cell value="进入" clickable="true" arrow-direction="right" custom-class="estate-cell" center="true" bind:click="onSelect({{item}})">
+        <view slot="title" class="estate-cell__title">
+        <view class="van-cell__text">{{item.title.rendered}}</view>
+        <van-icon name="passed" color="#ff6a3c" wx:if="{{item.id == currentId}}" size="14px" custom-class="estate-cell__icon"></van-icon>
+        </view>
+    </van-cell>
+    </repeat>
+  <!--加载更多时动画-->
+  <bottomLoadMore :show.sync="showLoading" message="正在加载"></bottomLoadMore>
+  <!--暂无数据显示-->
+  <placeholder :show.sync="isEmpty" message="暂无发现数据"></placeholder>
+</template>
+<script>
+import wepy from 'wepy'
+import QQMapWX from 'qqmap-wx-jssdk'
+import geohash from 'ngeohash'
+import PubSub from 'pubsub-js'
+import tip from '@/utils/tip'
+import api from '@/api/api'
+import BottomLoadMore from "../components/common/bottomLoadMore"
+import Placeholder from "../components/common/placeholder"
+import {
+  SELECT_PET_SHOP,
+} from '@/utils/constant';
+
+export default class PetShopSelect extends wepy.page {
+  config = {
+    navigationBarTitleText: '选择商店',
+  }
+  components = {
+      bottomLoadMore: BottomLoadMore,
+      placeholder: Placeholder
+  }
+  data = {
+    shopes: [],
+    showLoading: false,
+    isEmpty: false,
+    currentId: -1,
+  }
+  async query(page = 1) {
+      const res = await api.query('pet_shop', {
+          page
+      })
+      this.shopes = [...this.shopes, ...res.data]
+      this.$apply()
+  }
+  onLoad(options) {
+      console.log('options', options)
+      this.currentId = options.id
+      this.query()
+  }
+  methods = {
+    onSelect(item) {
+      PubSub.publish(SELECT_PET_SHOP, item)
+      wepy.navigateBack()
+    }
+  }
+}
+</script>
+<style lang="less">
+</style>

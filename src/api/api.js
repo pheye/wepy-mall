@@ -182,6 +182,9 @@ const queryCities = (params) => request(`${host}/wp-json/wp/v2/cities?per_page=1
 //获取小区
 const queryPages =  (params) => request(`${host}/wp-json/wp/v2/pages`, params)
 
+// 通用查询接口
+const query= (resource, {query}) => request(`${host}/wp-json/wp/v2/${resource}?${stringify(query)}`);
+
 export default {
   querySettings,
   queryProducts,
@@ -246,4 +249,5 @@ export default {
   getOrderStatics,
   updateCartShipping,
   createMedia,
+  query,
 }

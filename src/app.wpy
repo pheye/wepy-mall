@@ -78,6 +78,7 @@ export default class extends wepy.app {
       'pages/my_pets',
       'pages/pet_card',
       'pages/product_pet_list',
+      'pages/pet_shop_select',
     ],
     window: {
       backgroundTextStyle: 'dark',
