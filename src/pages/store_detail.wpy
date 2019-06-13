@@ -1,5 +1,24 @@
 <template>
-    <view>商家详情</view>
+    <view class="store">
+        <image src="{{store['_embedded']['wp:featuredmedia'][0].source_url}}" class="store__banner" mode="widthFix"></image>
+        <view class="store__main">
+            <view class="font-title center">{{store.title.rendered}}</view>
+            <view>
+                <van-tag wx:for="{{tags}}" type="primary" plain style="margin-right:8rpx;">
+                    {{item}}
+                </van-tag>
+            </view>
+            <view class="text-default">
+                <van-icon name="location-o" />{{store.address}}
+            </view>
+            <view class="text-default">
+                <van-icon name="phone-o" /> {{store.phone}}
+            </view>
+        </view>
+        <view class="spacing"></view>
+        <view class="store__detail">
+        </view>
+    </view>
 </template>
 <script>
 import wepy from 'wepy'
@@ -10,13 +29,30 @@ export default class StoreDetail extends wepy.page {
     navigationBarTitleText: '商家详情',
   }
   data = {
-      detail: {},
+      store: {},
       loading: false
+  }
+  computed = {
+      tags () {
+          let tags = []
+          if (!this.store['_embedded'])
+              return tags
+          const terms = this.store['_embedded']['wp:term']
+          if (terms) {
+            tags = terms[0].map(item => item.name)
+          }
+          // console.log('terms', index, terms, tags[index])
+          return tags
+      }
   }
   async init (id) {
     this.loading = true
-    const res = await api.get('store', id)
-    this.detail = res.data
+    const res = await api.get('store', id, {
+        query: {
+            _embed: true
+        }
+    })
+    this.store = res.data
     this.loading = false
     this.$apply()
   }
@@ -26,4 +62,17 @@ export default class StoreDetail extends wepy.page {
 }
 </script>
 <style lang="less">
+.store {
+    .store__banner {
+        width: 100%;
+        display: block;
+    }
+    .store__main { 
+        padding: 16rpx;
+        background-color: white;    
+    }
+    .store__detail {
+        background-color: white;    
+    }
+}
 </style>

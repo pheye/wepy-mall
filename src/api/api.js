@@ -186,6 +186,7 @@ const queryPages =  (params) => request(`${host}/wp-json/wp/v2/pages`, params)
 const query= (resource, {query}) => request(`${host}/wp-json/wp/v2/${resource}?${stringify(query)}`);
 // 通用查询接口
 const get = (resource, id, {query}) => request(`${host}/wp-json/wp/v2/${resource}/${id}?${stringify(query)}`);
+
 export default {
   querySettings,
   queryProducts,

@@ -59,7 +59,7 @@ export default class StoreList extends wepy.page {
             if (terms) {
                 tags[index] = terms[0].map(item => item.name)
             }
-            console.log('terms', index, terms, tags[index])
+            // console.log('terms', index, terms, tags[index])
           })
           return tags
       }
