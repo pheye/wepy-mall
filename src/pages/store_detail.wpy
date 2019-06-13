@@ -1,0 +1,29 @@
+<template>
+    <view>商家详情</view>
+</template>
+<script>
+import wepy from 'wepy'
+import api from '@/api/api'
+
+export default class StoreDetail extends wepy.page {
+  config = {
+    navigationBarTitleText: '商家详情',
+  }
+  data = {
+      detail: {},
+      loading: false
+  }
+  async init (id) {
+    this.loading = true
+    const res = await api.get('store', id)
+    this.detail = res.data
+    this.loading = false
+    this.$apply()
+  }
+  onLoad(options) {
+    this.init(options.id)    
+  }
+}
+</script>
+<style lang="less">
+</style>

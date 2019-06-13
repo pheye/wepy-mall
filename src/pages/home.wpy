@@ -48,7 +48,7 @@
         <image src="../images/icon_nav_02_new.png" class="nav_icon"></image>
         <view class="nav_text">淘宝贝</view>
       </navigator>
-      <navigator open-type="navigate" url="/pages/vendors">
+      <navigator open-type="navigate" url="/pages/store_list">
         <image src="../images/icon_nav_03_new.png" class="nav_icon"></image>
         <view class="nav_text">商家名录</view>
       </navigator>
@@ -117,7 +117,7 @@ import moment from 'moment'
 
 export default class Home extends wepy.page {
   config = {
-    navigationBarTitleText: '邻区乐',
+    navigationBarTitleText: '宠证',
   }
   components = {
     discover: Discover,
@@ -349,7 +349,7 @@ export default class Home extends wepy.page {
        }
        console.log(url);
       return {
-        title: '邻区乐',
+        title: '宠证',
         path: url,
         success: function(res) {
           // 转发成功

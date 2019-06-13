@@ -4,8 +4,8 @@
             <button type="primary" block>萌宠馆</button>
         </navigator>
         <view class="spacing"></view>
-        <navigator style="width:100%;">
-            <button block disabled >商家名录</button>
+        <navigator url="/pages/store_list" style="width:100%;">
+            <button block >商家名录</button>
         </navigator>
         <view class="spacing"></view>
         <navigator  style="width:100%;">
