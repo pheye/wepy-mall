@@ -89,6 +89,12 @@
         </view>
         <view class="arrow">&gt;</view>
       </navigator>
+      <navigator class="item" url="/pages/promotions">
+        <view class="item_content">
+          <view class="text">我的推广</view>
+        </view>
+        <view class="arrow">&gt;</view>
+      </navigator>
       <view class="item">
         <view class="item_content contact_container">
           <view class="text">联系客服</view>

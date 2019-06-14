@@ -72,6 +72,7 @@ export default class extends wepy.app {
       'pages/estate_form',
       'pages/estate_detail',
       'pages/coupons',
+      'pages/promotions',
     ],
     window: {
       backgroundTextStyle: 'dark',

@@ -184,6 +184,9 @@ const queryCities = (params) => request(`${host}/wp-json/wp/v2/cities?per_page=1
 const queryEstates = ({query = {}}) => request(`${host}/wp-json/wp/v2/estates`, {query: {...query, status: 'publish', per_page: 100}, noauth: true});
 const queryPages =  (params) => request(`${host}/wp-json/wp/v2/pages`, params)
 
+// 获取推广订单
+const queryPromotions = ({query}) => request(`${host}/wp-json/w2w/v1/customers/promotions?${stringify(query)}`)
+
 export default {
   querySettings,
   hostGoodsList,
@@ -247,5 +250,6 @@ export default {
   addCoupons,
   delCoupons,
   getOrderStatics,
-  updateCartShipping
+  updateCartShipping,
+  queryPromotions,
 }
