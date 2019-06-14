@@ -6,20 +6,20 @@
         <!-- <van-cell icon="location-o" title="{{cities[mainActiveIndex].name}}" clickable value="切换城市" bind:click="onSelectCity" /> -->
         <view style="position:absolute;top:2vw;left:4vw;width:92vw;background-color:white;z-index:99999999;">
             <view style="display:flex;flex-direction:row;padding:16rpx 8rpx;">
-                        <view style="display:flex;flex:6;justify-content:center;align-items:center;font-size:14px;" @tap="onSelectCity">
-                            <van-icon name="location-o" />{{cities[mainActiveIndex].name}}
-                        </view>
-                        <view style="display:flex;flex:14;">
-                            <input 
-                                placeholder="搜索小区/写字楼等"
-                                @focus="onFocus"
-                                @confirm="onChange"
-                                style="font-size:15px;line-height:20px;border:1px solid #ececec;padding:4px 8rpx;backgorund-color:#eee;"
-                            />
-                        </view>
-                        <view style="display:flex;flex:4;align-items:center;justify-content:center;font-size:16px;" @tap="onCancel">
-                           取消
-                        </view>
+                <view style="display:flex;flex:6;justify-content:center;align-items:center;font-size:14px;" @tap="onSelectCity">
+                    <van-icon name="location-o" />{{cities[mainActiveIndex].name}}
+                </view>
+                <view style="display:flex;flex:14;">
+                    <input 
+                        placeholder="搜索小区/写字楼等"
+                        @focus="onFocus"
+                        @confirm="onChange"
+                        style="font-size:15px;line-height:20px;border:1px solid #ececec;padding:4px 8rpx;backgorund-color:#eee;"
+                    />
+                </view>
+                <view style="display:flex;flex:4;align-items:center;justify-content:center;font-size:16px;" @tap="onCancel">
+                   取消
+                </view>
             </view>
             <view wx:if="{{showResultPanel}}" style="min-height:70vh">
             <repeat for="{{searched}}" key="index" index="index" item="item">
@@ -34,7 +34,7 @@
             </view>
         </view>
         <view class="mask" wx:if="{{showResultPanel}}"></view>
-        <map id="map" longitude="{{longitude}}" latitude="{{latitude}}" markers="{{markers}}" style="width:100%;height:50vh;" scale="17" @regionchange="onRegionChange" enable-zoom  />
+        <map id="map" longitude="{{longitude}}" latitude="{{latitude}}" markers="{{markers}}" style="width:100%;height:50vh;" scale="17" @regionchange="onRegionChange" enable-zoom  ></map>
         <repeat for="{{items}}" key="index" index="index" item="item">
             <van-cell value="进入" clickable="true" arrow-direction="right" custom-class="estate-cell" center="true" bind:click="onSelectEstateZone({{item.id}})">
                 <view slot="icon">
