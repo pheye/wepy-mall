@@ -1,0 +1,70 @@
+<template>
+  <view class="product-card">
+    <view class="product-card__left">
+      <navigator url="/pages/goods_detail?id={{product.id}}">
+       <image class="product-card__thumbnail" src="{{product.images[0].shop_single}}" />
+      </navigator>
+    </view>
+    <view class="product-card__right">
+      <navigator class="product-card__title" url="/pages/goods_detail?id={{product.id}}">{{product.name}}</navigator>
+      <view class="product-card__price">
+          {{ '￥' + product.price }}
+      </view>
+      <view class="product-card__bottom">
+        <van-button class="product-card__cart" plain type="primary" size="small" @tap="go" >查看</van-button>
+      </view>
+    </view>
+  </view>
+</template>
+<script>
+import wepy from 'wepy'
+
+export default class ProductCard extends wepy.component {
+  props =  {
+    product: Object
+  }
+  methods = {
+    go () {
+      wepy.navigateTo({
+        url: "/pages/goods_detail?id=" + this.product.id
+      })
+    }
+  }
+}
+</script>
+<style lang="less">
+.product-card {
+  display: flex;
+  flex-direction: row;
+  background-color: white;
+  padding: 8px;
+  margin-bottom: 8px;
+}
+.product-card__left {
+  display: flex;
+  flex-direction: column;
+  width: 250rpx;
+  height: 250rpx;
+  box-sizing: border-box;
+}
+.product-card__right {
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  margin-left: 8px;
+}
+.product-card__bottom {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+}
+.product-card__price {
+  font-size:16px;
+  font-weight: 700;
+  color:#fa8c16;
+}
+.product-card__thumbnail {
+  width: 220rpx;
+  height: 220rpx;
+}
+</style>

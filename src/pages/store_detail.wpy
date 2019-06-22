@@ -17,12 +17,16 @@
         </view>
         <view class="spacing"></view>
         <view class="store__detail">
+          <repeat for="{{products}}" key="index" index="index" item="product">
+            <productCard :product.sync="product"></productCard>
+          </repeat>
         </view>
     </view>
 </template>
 <script>
 import wepy from 'wepy'
 import api from '@/api/api'
+import ProductCard from "@/components/product_card"
 
 export default class StoreDetail extends wepy.page {
   config = {
@@ -30,7 +34,11 @@ export default class StoreDetail extends wepy.page {
   }
   data = {
       store: {},
+      products: [],
       loading: false
+  }
+  components = {
+    productCard: ProductCard
   }
   computed = {
       tags () {
@@ -53,6 +61,17 @@ export default class StoreDetail extends wepy.page {
         }
     })
     this.store = res.data
+    const res2 = await api.queryProducts({
+      query: {
+        category: 18,
+        page: 1,
+        size: 100,
+        'filter[meta_key]': 'store',
+        'filter[meta_value]': this.store.id
+      }
+    });
+    console.log('res2', res2.data)
+    this.products = res2.data
     this.loading = false
     this.$apply()
   }
@@ -72,7 +91,6 @@ export default class StoreDetail extends wepy.page {
         background-color: white;    
     }
     .store__detail {
-        background-color: white;    
     }
 }
 </style>
