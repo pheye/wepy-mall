@@ -200,7 +200,8 @@ export default class goodsDetail extends wepy.page {
     variantSelected: 0,
     cartQuantity: 0,
     confirmData: 0,
-    scrMove :0
+    scrMove :0,
+    productType: 'regular'
   }
 
   components = {
@@ -230,6 +231,7 @@ export default class goodsDetail extends wepy.page {
     this.hidden = true;
     this.winHeight = "100%";
     this.cartQuantity = wepy.$instance.globalData.cart.cart_contents_count
+    this.productType = option.type ? option.type : 'regular'
 
     that.detail = {};
     that.$apply();
@@ -366,7 +368,8 @@ export default class goodsDetail extends wepy.page {
     let query = {
         product_id: that.goodsId,
         quantity: this.orderNum,
-        checked: true
+        checked: true,
+        clear: true,
       }
     if (this.detail.type == 'variable') {
       query.variation_id = this.variantSelected
@@ -406,7 +409,8 @@ export default class goodsDetail extends wepy.page {
     let query = {
         product_id: that.goodsId,
         quantity: this.orderNum,
-        checked: true
+        checked: true,
+        clear: true,
       }
     if (this.detail.type == 'variable') {
       query.variation_id = this.variantSelected
@@ -428,7 +432,7 @@ export default class goodsDetail extends wepy.page {
         this.$apply();
       }, 100)
       wepy.navigateTo({
-        url: "/pages/comfire_order?goodsId=" + that.goodsId + "&purchasetype=" + that.purchasetype
+        url: "/pages/comfire_order?goodsId=" + that.goodsId + "&type=" + that.productType
       })
     } else {
       if (json.data.message) {

@@ -1,4 +1,3 @@
-<!--确认订单-->
 <template>
   <view class="comfire_order">
 <van-steps
@@ -29,30 +28,6 @@
 
     <view class="spacing"></view>
     <view class="order_info">
-      <view class="block">
-        <view class="left">配送方式</view>
-      </view>
-
-      <van-radio-group value="{{chosenShipping.method_id}}">
-          <view class="block" @tap.="changeShipping('flat_rate')" wx:if="{{enabledShipping.flat_rate}}">
-          <view class="left">邮寄</view>
-          <view class="right">
-            <van-radio name="flat_rate" value="flat_rate" checked-color="#5abb6a" ></van-radio>
-          </view>
-        </view>
-        <view class="block" @tap="changeShipping('local_pickup')" wx:if="{{enabledShipping.local_pickup}}">
-          <view class="left">自提</view>
-          <view class="right">
-            <van-radio name="local_pickup" value="local_pickup" checked-color="#5abb6a"  ></van-radio>
-          </view>
-        </view>
-        <view class="block" @tap="changeShipping('free_shipping')" wx:if="{{enabledShipping.free_shipping}}">
-          <view class="left">送货上门</view>
-          <view class="right">
-            <van-radio name="free_shipping" value="free_shipping" checked-color="#5abb6a"  ></van-radio>
-          </view>
-        </view>
-      </van-radio-group>
     <view class="spacing"></view>
     <view class="address" @tap="setAddress" wx:if="{{chosenShipping.method_id == 'flat_rate'}}">
 
@@ -76,72 +51,32 @@
     </view>
     <view wx:if="{{chosenShipping.method_id == 'local_pickup' }}">
 
-      <navigator  url="/pages/estate">
+      <navigator  url="/pages/pet_shop_select">
       <view class="block" >
         <view class="left">
-          <view><text class='imp'>[提货地址]</text><text class='address_content'>{{estate.title.rendered}}{{estate.address}}</text></view>
-          <view><text>营业时间:{{estate.timerange}}</text></view>
-          <view><text>小区代理:{{estate.contact}} </text></view>
-          <!-- 主动隐藏电话，防止竞争对手获取 -->
-          <!-- <view><text>小区代理:{{estate.contact}}  {{estate.phone}}</text></view> -->
+            <view>门店</view>
         </view>
-        <view class="arrow">&gt;</view>
+        <view class="arrow">
+          {{store.address}}
+        </view>
       </view>
       </navigator>
-
-<!--       <navigator  url="/pages/estate">
-      <view class="block">
-        <view class="left">自提点:</view>
-        <view class="right">{{estate.title.rendered}}</view>
-      </view>
-      </navigator>
-      <view class="block">
-        <view class="left">站长</view>
-        <view class="right">{{estate.contact}}</view>
-      </view>
-      <view class="block">
-        <view class="left">站长电话</view>
-        <view class="right">{{estate.phone}}</view>
-      </view>
-
-      <view class="block">
-        <view class="left">地址</view>
-        <view class="right">{{estate.address}}</view>
-      </view>
-      <view class="block">
-        <view class="left">营业时间</view>
-        <view class="right">{{estate.timerange}}</view>
-      </view> -->
 
       <view class="spacing"></view>
       <view class="block">
-        <view class="left"><text class='imp'>*</text>提货人:</view>
+        <view class="left"><text class='imp'>*</text>联系人:</view>
         <view class="right input_box">
           <input @input="changeCustomerName" value="{{customer.name}}" placeholder="请输入姓名" />
         </view>
       </view>
       <view class="block">
-        <view class="left"><text class='imp'>*</text> 手机号:</view>
+        <view class="left"><text class='imp'>*</text>手机号:</view>
         <view class="right input_box">
           <input @input="changeCustomerPhone" value="{{customer.phone}}" placeholder="请输入手机号" />
         </view>
       </view>
-      <view class="block">
-        <view class="left"><text class='imp'>*</text> 门牌号:</view>
-        <view class="right input_box">
-          <input @input="changeCustomerRoomNo" value="{{customer.roomNo}}" placeholder="请输入门牌号" />
-        </view>
-      </view>
       </view>
       <view wx:elif="{{ chosenShipping.method_id == 'free_shipping'}}">
-      <navigator  url="/pages/estate">
-      <view class="block" >
-        <view class="left">
-          <view ><text class='imp'>[小区]</text><text class='address_content'>{{estate.title.rendered}}</text></view>
-        </view>
-        <view class="arrow">&gt;</view>
-      </view>
-      </navigator>
       <view class="spacing"></view>
       <view class="block">
         <view class="left"><text class='imp'>*</text>收货人:</view>
@@ -153,12 +88,6 @@
         <view class="left"><text class='imp'>*</text> 手机号:</view>
         <view class="right input_box">
           <input @input="changeCustomerPhone" value="{{customer.phone}}" placeholder="请输入手机号" />
-        </view>
-      </view>
-      <view class="block">
-        <view class="left"><text class='imp'>*</text> 门牌号:</view>
-        <view class="right input_box">
-          <input @input="changeCustomerRoomNo" value="{{customer.roomNo}}" placeholder="请输入门牌号" />
         </view>
       </view>
       </view>
@@ -228,13 +157,15 @@ import tip from '@/utils/tip';
 import {getStateCode} from '@/utils/util';
 import {
   SYSTEM_INFO,
-  USER_SPECICAL_INFO,
   ADDRESS_ID,
-  CURRENT_ESTATE,
   ME,
+  SELECT_PET_SHOP,
 } from '@/utils/constant';
 import swipeDelete from '@/components/common/wepy-swipe-delete'
+import PubSub from 'pubsub-js'
+
 var app = getApp()
+
 export default class ComfireOrder extends wepy.page {
   config = {
     navigationBarTitleText: '确认订单',
@@ -247,10 +178,16 @@ export default class ComfireOrder extends wepy.page {
     list: [],
     steps: [
         {
-            text: '晚上10点前下单',
+            text: '选择商品',
         },
         {
-            text: '明早11点前送达',
+            text: '完成付款',
+        },
+        {
+            text: '获取消费码',
+        },
+        {
+            text: '到店服务',
         }
     ],
     goodsId: "",
@@ -279,14 +216,15 @@ export default class ComfireOrder extends wepy.page {
     operating: false,
     shipping: [],
     chosenShipping: {},
-    estate: {},
     wpnonce: "",
     variantNames:[],
     couponId:'',
     coupons:[],
     discountCart: 0,
-    cartSubtotal: 0
-
+    cartSubtotal: 0,
+    petShopAddress: {},
+    productType: 'regular',
+    store: {},
   }
   // 设置订单运货方式
   async setCartShipping(){
@@ -365,16 +303,10 @@ export default class ComfireOrder extends wepy.page {
       tip.error(json.data.message)
     }
 
-    // 加载自提点信息
-
-    // this.estate= wepy.getStorageSync(CURRENT_ESTATE);
-
-console.log("load");
     that.$apply();
   }
 
   async getAddressInfo(id) {
-    let userSpecialInfo = wepy.getStorageSync(USER_SPECICAL_INFO) || {};
     const json = await api.receiverInfoById({
       query: {
         id: id
@@ -400,13 +332,14 @@ console.log("load");
     this.reduce_fee = 0;
     this.operating = false;
     that.goodsId = option.goodsId==undefined?"":option.goodsId;
-    // this.purchaseType = option.purchasetype==undefined?"1":option.purchasetype;
-    /*that.list = bb.result.products;
-    console.log(bb.result.products)*/
-    // that.getOrderDetailInfo();
+    this.productType = option.type || 'regular'
+
     let from = option.from==undefined?"":option.from;
     if (from=="selAdd") {
       this.getAddressInfo(wepy.getStorageSync(ADDRESS_ID))
+    }
+    if (this.productType === 'train-ship') {
+      this.store = wepy.$instance.globalData['current_store']
     }
     // 加载买家信息
     const me = wx.getStorageSync(ME);
@@ -414,11 +347,12 @@ console.log("load");
       this.customer = {
         name: me.billing.first_name,
         phone: me.billing.phone,
-        roomNo: me.billing.room_no
       }
     }
     this.couponId = '';
-
+  }
+  onUnload() {
+    PubSub.unsubscribe(this.token)
   }
   computed = {
       enabledShipping () {
@@ -427,23 +361,6 @@ console.log("load");
             'local_pickup': true,
             'free_shipping': true
         }
-        if (!this.estate)
-            return enabled
-        if (!this.estate.disabled_shippings)
-            return enabled
-        this.estate.disabled_shippings.map(item => {
-            switch (item) {
-                case 'post':
-                enabled.flat_rate = false
-                break
-                case 'local_pickup':
-                enabled.local_pickup = false
-                break;
-                case 'shipping':
-                enabled.free_shipping = false
-                break
-            }
-        })
         return enabled
       }
   }
@@ -453,20 +370,13 @@ console.log("load");
     tip.loading("提交订单中");
     app.aldstat.sendEvent('点击下单');
     let params = {}
-    if (this.chosenShipping.method_id == 'local_pickup' || this.chosenShipping.method_id == 'free_shipping') {
-
+    if (this.chosenShipping.method_id == 'local_pickup') {
       params.billing_first_name = this.customer.name;
       params.billing_phone =  this.customer.phone;
-      // 新增门牌号字段
-      params.billing_room_no =  this.customer.roomNo;
       params.billing_country = 'CN';
-      params.billing_state = getStateCode('福建');
-      params.billing_city = this.estate.city;
-      params.billing_address_1 = this.estate.title.rendered;
-      // params.shipping_address_1 = this.estate.title.rendered + " " + this.estate.address;
-      if (this.estate.referal) {
-        params.ref = this.estate.referal;
-      }
+      params.billing_state = getStateCode('北京市'); // TODO
+      params.billing_city = '北京'; //TODO
+      params.billing_address_1 = this.store.address
     } else {
       let address = this.address;
       params.billing_first_name = address.userName;
@@ -561,74 +471,7 @@ console.log("load");
 
   }
 
-  async reduceGoodNum(id, num, index) {
-    let userSpecialInfo = wepy.getStorageSync(USER_SPECICAL_INFO) || {};
-    let openId = userSpecialInfo.openid;
-    const json = await api.cartUpdateNum({
-      query: {
-        openId: openId,
-        id: id,
-        num: num
-      }
-    });
-    if (json.data.code == 0) {
-      // 购物车数据
-      this.list[index].num = num;
-      this.totalPrice = this.totalPrice - this.list[index].price;
-      this.actualPrice = this.totalPrice - this.reduce_fee;
-      this.operating = false;
-    } else {
-      tip.error(json.data.msg)
-    }
-    this.$apply();
-  }
-
-  async addGoodNum(id, num, index) {
-    let userSpecialInfo = wepy.getStorageSync(USER_SPECICAL_INFO) || {};
-    let openId = userSpecialInfo.openid;
-    const json = await api.cartUpdateNum({
-      query: {
-        openId: openId,
-        id: id,
-        num: num
-      }
-    });
-    if (json.data.code == 0) {
-      // 购物车数据
-      this.list[index].num = num;
-      this.totalPrice = parseInt(this.totalPrice) + parseInt(this.list[index].price);
-      this.actualPrice = this.totalPrice - this.reduce_fee;
-      this.operating = false;
-    } else {
-      tip.error(json.data.msg)
-    }
-    this.$apply();
-  }
-
-  async deleteGoods(itemData) {
-    let that = this;
-    var id = itemData.key;
-    let userSpecialInfo = wepy.getStorageSync(USER_SPECICAL_INFO) || {};
-    let openId = userSpecialInfo.openid;
-    const json = await api.cartDel({
-      query: {
-        openId: openId,
-        cart_key: id,
-      }
-    });
-    if (json.statusCode == 200) {
-      // 刷新订单详情
-      that.getOrderDetailInfo();
-      that.$apply();
-    } else {
-      tip.error(json.data.msg)
-    }
-  }
-
   methods = {
-    handleDelItem(itemData) {
-      this.deleteGoods(itemData);
-    },
     bindKeyInput(e) {
       this.sellerMessage = e.detail.value;
     },
@@ -665,11 +508,6 @@ console.log("load");
          tip.confirm('请填写联系手机',{},"提示",false);
         return false;
       }
-      if (this.chosenShipping.method_id == 'local_pickup' && !this.estate.contact) {
-
-         tip.confirm('抱歉 ，该小区没有小区长信息，无法下单！',{},"提示",false);
-        return false;
-      }
       this.goToPay(fId);
     },
     async setAddress() {
@@ -681,68 +519,6 @@ console.log("load");
         console.log('address', address);
       } catch (e) {
       }
-    },
-    jianBtnTap(e) {
-      if (this.operating) {
-        return;
-      }
-      this.operating = true;
-      var index = parseInt(e.currentTarget.dataset.index);
-      var id =  e.currentTarget.dataset.id;
-      var num = this.list[index].num;
-      // 如果只有1件了，就不允许再减了
-      if (num > 1) {
-        num --;
-      } else {
-        return;
-      }
-      // 购物车数据
-      //this.list[index].num = num;
-      //this.totalPrice = this.totalPrice-this.list[index].price;
-      //this.actualPrice = this.totalPrice - this.reduce_fee;
-      //this.$apply();
-      this.reduceGoodNum(id, num, index);
-    },
-    jiaBtnTap(e) {
-      if (this.operating) {
-        return;
-      }
-      this.operating = true;
-      var index = parseInt(e.currentTarget.dataset.index);
-      var num = this.list[index].num;
-      var id =  e.currentTarget.dataset.id;
-      // 自增
-      num ++;
-      // 购物车数据
-      /*this.list[index].num = num;
-      this.totalPrice = parseInt(this.totalPrice)+parseInt(this.list[index].price);
-      this.actualPrice = this.totalPrice - this.reduce_fee;
-      this.$apply();*/
-      this.addGoodNum(id, num, index);
-    },
-    jfInput(e) {
-      let num = e.detail.value * 10 / 10;
-      let reg = /^[0-9]+$/;
-      if (!reg.test(num)) {
-        tip.error("输入类型有误");
-        this.jf_num="";
-        return {
-          value: ""
-        };;
-      }
-      if (this.can_use_score != num && num !=0  ) {
-        this.jf_num = this.can_use_score;
-      }/* else if(parseInt(this.jf_num)%this.deduScore) {
-        this.jf_num = Math.floor(parseInt(this.jf_num)/this.deduScore)*this.deduScore;
-      }*/ else {
-        this.jf_num = num;
-      }
-      let beishu = this.jf_num/this.deduScore;
-      this.reduce_fee = beishu * this.deduFee;
-      this.actualPrice = this.totalPrice - this.reduce_fee;
-      return {
-        value: this.jf_num
-      };
     },
     changeShipping (name, e) {
       if (!name) {
@@ -788,7 +564,6 @@ console.log("load");
 
   onShow () {
   // 更新自提点信息
-    this.estate = wepy.getStorageSync(CURRENT_ESTATE);
     this.getOrderDetailInfo();
     this.$apply()
   }

@@ -1,12 +1,12 @@
 <template>
   <view class="product-card">
     <view class="product-card__left">
-      <navigator url="/pages/goods_detail?id={{product.id}}">
+      <navigator url="/pages/goods_detail?id={{product.id}}&type={{type}}">
        <image class="product-card__thumbnail" src="{{product.images[0].shop_single}}" />
       </navigator>
     </view>
     <view class="product-card__right">
-      <navigator class="product-card__title" url="/pages/goods_detail?id={{product.id}}">{{product.name}}</navigator>
+      <navigator class="product-card__title" url="/pages/goods_detail?id={{product.id}}&type={{type}}">{{product.name}}</navigator>
       <view class="product-card__price">
           {{ '￥' + product.price }}
       </view>
@@ -21,12 +21,13 @@ import wepy from 'wepy'
 
 export default class ProductCard extends wepy.component {
   props =  {
-    product: Object
+    product: Object,
+    type: String
   }
   methods = {
     go () {
       wepy.navigateTo({
-        url: "/pages/goods_detail?id=" + this.product.id
+        url: `/pages/goods_detail?id=${this.product.id}&type=${this.type}`
       })
     }
   }

@@ -18,7 +18,7 @@
         <view class="spacing"></view>
         <view class="store__detail">
           <repeat for="{{products}}" key="index" index="index" item="product">
-            <productCard :product.sync="product"></productCard>
+            <productCard :product.sync="product" type="train-ship"></productCard>
           </repeat>
         </view>
     </view>
@@ -74,6 +74,7 @@ export default class StoreDetail extends wepy.page {
     this.products = res2.data
     this.loading = false
     this.$apply()
+    wepy.$instance.globalData['current_store'] = this.store
   }
   onLoad(options) {
     this.init(options.id)    
