@@ -1,0 +1,43 @@
+<template>
+    <view>
+        <view style="text-align:center;">正在加载...</view>
+        <web-view src="https://pet.papamk.com/{{slug}}"></web-view>
+    </view>
+</template>
+<script>
+import wepy from 'wepy'
+
+export default class EstateForm extends wepy.page {
+  config = {
+    navigationBarTitleText: '',
+  }
+  data = {
+    title: '',
+    slug: ''
+  }
+  onLoad(options) {
+    this.title = options.title
+    this.slug = options.slug
+    wepy.setNavigationBarTitle({
+      title: this.title
+      })
+  }
+  methods = {
+    onShareAppMessage: function(res) {
+      return {
+        title: this.title,
+        path: '/pages/estate_form',
+        success: function(res) {
+          // 转发成功
+        },
+        fail: function(res) {
+          // 转发失败
+        }
+      }
+    }
+  }
+
+}
+</script>
+<style lang="less">
+</style>

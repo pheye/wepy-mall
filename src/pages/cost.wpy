@@ -7,10 +7,6 @@
         <navigator url="/pages/store_list" style="width:100%;">
             <button block >商家名录</button>
         </navigator>
-        <view class="spacing"></view>
-        <navigator  style="width:100%;">
-            <button block  disabled>淘宝贝</button>
-        </navigator>
    </view>
 </template>
 <script>

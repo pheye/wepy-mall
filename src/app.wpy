@@ -81,6 +81,7 @@ export default class extends wepy.app {
       'pages/pet_shop_select',
       'pages/store_list',
       'pages/store_detail',
+      'pages/form',
     ],
     window: {
       backgroundTextStyle: 'dark',

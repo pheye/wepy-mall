@@ -77,6 +77,12 @@
         </view>
         <view class="arrow">&gt;</view>
       </navigator>
+      <navigator class="item" url="/pages/form?title=代办犬证&slug=dog-service-form">
+        <view class="item_content">
+          <view class="text">代办犬证</view>
+        </view>
+        <view class="arrow">&gt;</view>
+      </navigator>
       <navigator class="item" url="/pages/coupons">
         <view class="item_content">
           <view class="text">我的优惠券</view>

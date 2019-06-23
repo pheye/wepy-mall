@@ -44,10 +44,6 @@
         <image src="../images/icon_nav_01_new.png" class="nav_icon"></image>
         <view class="nav_text">萌宠馆</view>
       </navigator>
-      <navigator open-type="navigate" url="/pages/exchange_goods">
-        <image src="../images/icon_nav_02_new.png" class="nav_icon"></image>
-        <view class="nav_text">淘宝贝</view>
-      </navigator>
       <navigator open-type="navigate" url="/pages/store_list">
         <image src="../images/icon_nav_03_new.png" class="nav_icon"></image>
         <view class="nav_text">商家名录</view>
@@ -526,15 +522,15 @@ export default class Home extends wepy.page {
   background-color: white;
   display: flex;
   font-size: 26rpx;
-  justify-content: space-between;
+  justify-content: space-around;
   padding: 17rpx 50rpx;
   navigator {
     text-align: center
   }
   .nav_icon {
-    height: 80rpx;
+    height: 160rpx;
     margin: 0 auto;
-    width: 80rpx;
+    width: 160rpx;
     margin-bottom: 14rpx;
   }
   .nav_text {
