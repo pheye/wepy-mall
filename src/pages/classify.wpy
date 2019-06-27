@@ -16,7 +16,8 @@
     </scroll-view>
     <scroll-view class="classify_detail" scroll-y scroll-with-animation="true" style="height:{{windowHeight-50}}px" lower-threshold="100" @scrolltolower="loadMore" >
         <view class="children" style='padding-left:50rpx;'>
-          <productCardList :list.sync="childList" ></productCardList>
+          <grid :source.sync="secondCateList" columns="3" wx:if="{{showSecondCategory}}" style="margin-left: -50rpx;" ></grid>
+          <productCardList :list.sync="childList" wx:if="{{showProductList}}"></productCardList>
           <!--加载更多时动画-->
           <bottomLoadMore :show.sync="showLoading" message="正在加载"></bottomLoadMore>
           <!--暂无数据显示-->
@@ -42,6 +43,7 @@ import tip from '@/utils/tip'
 import BottomLoadMore from "../components/common/bottomLoadMore"
 import Placeholder from "../components/common/placeholder"
 import ProductCardList from "@/components/product_card_list"
+import Grid from '@/components/grid'
 
 export default class Classify extends wepy.page {
   config = {
@@ -51,15 +53,18 @@ export default class Classify extends wepy.page {
       bottomLoadMore: BottomLoadMore,
       placeholder: Placeholder,
       productCardList: ProductCardList,
+      grid: Grid
   }
 
   data = {
     scrollTop: 100,
     windowHeight: 0,
     list: {},
-    //一级分类数据
+    // 一级分类数据
     rootcateList: {},
-    //二级三级分类数据
+    // 二级分类
+    secondCateList: [],
+    // 二级三级产品数据
     childList: [],
     showLoading: false,
     isEmpty: false,
@@ -68,26 +73,58 @@ export default class Classify extends wepy.page {
     //总页数
     pageTotal: 0,
     categoryID: -1,
-    preventRepeatReuqest: false
+    preventRepeatReuqest: false,
+    showSecondCategory: true,
+    showProductList: false,
   }
 
   async getChildCate(categoryID) {
-    const json = await api.queryProducts({
-      query: {
-        category: categoryID
+    const parentCat = this.rootcateList.find(item => item.id === categoryID)
+    console.log('parent', parentCat)
+
+    this.showSecondCategory = false
+    this.showProductList = false
+    this.secondCateList = []
+    this.childList = []
+    // 显示子分类或者同时显示子分类和产品时，就要获取子分类
+    if (parentCat.display === 'subcategories' || parentCat.display === 'both') {
+      this.showSecondCategory = true
+      // 要求显示二级分类就先显示二级分类 
+      const res = await api.queryCategories({
+        query: {
+          parent: categoryID
+        }
+      })
+      const tmp = res.data.map(item => ({
+        name: item.name,
+        image: item.image,
+        url: `/pages/search?id=${item.id}`
+      }))
+      
+      for (let i = 0; i <  tmp.length; i += 3) {
+        this.secondCateList.push(tmp.slice(i, i + 3))
       }
-    });
-    // console.log('json', json);
-    if (json.data.length > 0) {
-      this.childList = json.data;
-      this.pageTotal = json.header['X-WP-Total'];
-      this.isEmpty= false;
-    } else {
-      this.childList = [];
-      this.isEmpty= true;
+    } 
+    // 除了“显示子分类”，其他显示类型都要显示产品列表
+    if (parentCat.display !== 'subcategories') {
+      this.showProductList = true
+      const json = await api.queryProducts({
+        query: {
+          category: categoryID
+        }
+      });
+      // console.log('json', json);
+      if (json.data.length > 0) {
+        this.childList = json.data;
+        this.pageTotal = json.header['X-WP-Total'];
+        this.isEmpty= false;
+      } else {
+        this.childList = [];
+        this.isEmpty= true;
+      }
+      this.categoryID = categoryID;
+      this.currentPage = 1;
     }
-    this.categoryID = categoryID;
-    this.currentPage = 1;
     this.$apply();
   }
 

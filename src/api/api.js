@@ -170,7 +170,7 @@ const refundApply = (params) => wxRequest(params, apiMall + '/api/mall/refund/sa
 //一级分类
 const rootCtegoryList = (params) => request(`${host}/wp-json/w2w/v1/products/categories?parent=0&per_page=100`, {...params, noauth: true});
 //二级三级分类
-const queryCategories = (params) => request(`${host}/wp-json/w2w/v1/products/categories?parent=${params.parent}&per_page=100&${stringify(params)}`, {noauth: true});
+const queryCategories = ({query = {} }) => request(`${host}/wp-json/w2w/v1/products/categories?per_page=100&${stringify(query)}`, {noauth: true});
 //商品分类--end
 
 //查询广告列表
