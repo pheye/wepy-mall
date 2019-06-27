@@ -219,7 +219,10 @@ export default class Home extends wepy.page {
       query: {
         category: categoryID,
         page: currentPage || 1,
-        size: size || 10
+        size: size || 10,
+        order: 'desc',
+        orderby: 'meta_value_num',
+        meta_key: 'total_sales',
         // on_sale: 1,
       }
     });

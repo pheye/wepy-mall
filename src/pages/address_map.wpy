@@ -4,7 +4,7 @@
         <!--     <image src="../images/estate_banner.jpg" mode="widthFix" style="width:100%;display:block;" /> -->
         <!-- </navigator> -->
         <!-- <van-cell icon="location-o" title="{{cities[mainActiveIndex].name}}" clickable value="切换城市" bind:click="onSelectCity" /> -->
-        <view style="position:absolute;top:2vw;left:4vw;width:92vw;background-color:white;z-index:99999999;">
+        <view style="position:absolute;top:2vw;left:4vw;width:92vw;padding-bottom:4vw;background-color:white;z-index:99999999;">
             <view style="display:flex;flex-direction:row;padding:16rpx 8rpx;">
                 <view style="display:flex;flex:6;justify-content:center;align-items:center;font-size:14px;" @tap="onSelectCity">
                     <van-icon name="location-o" />{{cities[mainActiveIndex].name}}
@@ -13,6 +13,7 @@
                     <input 
                         placeholder="搜索小区/写字楼等"
                         @focus="onFocus"
+                        @input="onInput"
                         @confirm="onChange"
                         style="font-size:15px;line-height:20px;border:1px solid #ececec;padding:4px 8rpx;backgorund-color:#eee;"
                     />
@@ -77,6 +78,7 @@ export default class Estate extends wepy.page {
     searchText: '',
     searched: [],
     showResultPanel: false,
+    oldCursor: 0,
   }
   computed = {}
   async initCurrent () {
@@ -220,6 +222,25 @@ export default class Estate extends wepy.page {
     
     await this.loadEstates(center)
   }
+  async search (e) {
+      if (!e.detail) {
+          this.showResultPanel = false
+          this.$apply()
+          return
+      }
+      if (!e.detail.value.trim()) {
+        this.searched = []
+        this.$apply()
+        return
+      }
+      const json = await api.queryEstates({
+        query: {
+            search: e.detail.value
+        }
+      })
+      this.searched = json.data
+      this.$apply()
+  }
   methods = {
     async onSelectCity() {
         const cities = this.cities.map(item => item.name)
@@ -290,21 +311,16 @@ export default class Estate extends wepy.page {
           this.showResultPanel = false
           this.$apply()
       },
+      onInput(e) {
+        if (e.detail.cursor == this.oldCursor) {
+          return;
+        }
+        this.oldCursor = e.detail.cursor
+        this.search(e)
+      },
       async onChange(e) {
           console.log('e', e.detail)
-          if (!e.detail) {
-              this.showResultPanel = false
-              this.$apply()
-              return
-          }
-          const json = await api.queryEstates({
-            query: {
-                search: e.detail.value
-            }
-          })
-          this.searched = json.data
-          this.$apply()
-          console.log("results:", json.data)
+          // console.log("results:", json.data)
       },
   }
 }

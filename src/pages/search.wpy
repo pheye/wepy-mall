@@ -4,7 +4,8 @@
     <filterBar wx:if="{{list.length>0||skuval !==''}}" @currentType.user="currentType"></filterBar>
     <view wx:if="{{list.length>0}}">
       <!--矩阵商品列表模块-->
-      <shopGridList :purchasetype.sync="purchasetype" :list.sync="list"></shopGridList>
+      <shopGridList :purchasetype.sync="purchasetype" :list.sync="{{useGridLayout}}"></shopGridList>
+      <productCardList :list.sync="list" wx:if="{{!useGridLayout}}"></productCardList>
       <!--加载更多时动画-->
       <bottomLoadMore :show.sync="showLoading" message="正在加载"></bottomLoadMore>
       <!--暂无数据显示-->
@@ -40,6 +41,8 @@
   import BottomLoadMore from "../components/common/bottomLoadMore"
   import Placeholder from "../components/common/placeholder"
   import FilterSlider from '@/components/filterSlider'
+  import ProductCardList from "@/components/product_card_list"
+
   export default class Search extends wepy.page {
     config = {
       navigationBarTitleText: '搜索',
@@ -50,7 +53,8 @@
       filterSlider: FilterSlider,
       shopGridList: ShopGridList,
       bottomLoadMore: BottomLoadMore,
-      placeholder: Placeholder
+      placeholder: Placeholder,
+      productCardList: ProductCardList,
     }
     data = {
       list: [],
@@ -69,7 +73,8 @@
       orderby: null,
       order: 'desc',
       title: "",
-      skuval: ""
+      skuval: "",
+      useGridLayout: false,
     }
     async getKeyWordHisList() {
       // const json = await api.searchKeywordList()

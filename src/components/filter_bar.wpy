@@ -82,7 +82,7 @@
         if (oldValue !== "" && newValue !== "") {
           this.$emit("currentType", {
             name: "price",
-            type: newValue
+            type: oldValue
           });
         }
       }

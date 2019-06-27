@@ -125,7 +125,7 @@
       <view class="block">
         <view class="left"><text class='imp'>*</text> 门牌号:</view>
         <view class="right input_box">
-          <input @input="changeCustomerRoomNo" value="{{customer.roomNo}}" placeholder="请输入门牌号" />
+          <input @input="changeCustomerRoomNo" value="{{customer.roomNo}}" placeholder="示例:55号楼402" />
         </view>
       </view>
       </view>
@@ -154,7 +154,7 @@
       <view class="block">
         <view class="left"><text class='imp'>*</text> 门牌号:</view>
         <view class="right input_box">
-          <input @input="changeCustomerRoomNo" value="{{customer.roomNo}}" placeholder="请输入门牌号" />
+          <input @input="changeCustomerRoomNo" value="{{customer.roomNo}}" placeholder="示例:55号楼402" />
         </view>
       </view>
       </view>

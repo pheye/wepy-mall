@@ -98,7 +98,7 @@ export default class Classify extends wepy.page {
       const tmp = res.data.map(item => ({
         name: item.name,
         image: item.image,
-        url: `/pages/search?id=${item.id}`
+        url: `/pages/search?cateCode=${item.id}&title=${item.name}`
       }))
       
       for (let i = 0; i <  tmp.length; i += 3) {
@@ -129,8 +129,10 @@ export default class Classify extends wepy.page {
   }
 
   async getRootCateTopLevel() {
-    const json = await api.rootCtegoryList({
-      query: {}
+    const json = await api.queryCategories({
+      query: {
+        parent: 0
+      }
     });
     if (json.data instanceof Array) {
       this.rootcateList = json.data;
