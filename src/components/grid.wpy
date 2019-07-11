@@ -65,6 +65,8 @@ export default class Grid extends wepy.component {
   height: 100%;
   left: 0;
   top: 0;
+  box-sizing: border-box;
+  padding: 16px;
 }
 .grid-column--placeholder {
   background-color: #f5f5f5;
