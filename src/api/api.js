@@ -34,7 +34,7 @@ const updateProducts = (id, params) => request(`${host}/wp-json/w2w/v1/products/
 
 
 const queryPets = ({query}) => request(`${host}/wp-json/wp/v2/pets?${stringify(query)}`);
-const getPets = (id) => request(`${host}/wp-json/wp/v2/pets/${id}`, {noauth: true});
+const getPets = (id, noauth = true) => request(`${host}/wp-json/wp/v2/pets/${id}`, {noauth});
 const createPets = (params) => request(`${host}/wp-json/wp/v2/pets`, {...params, method: 'POST'});
 const updatePets = (id, params) => request(`${host}/wp-json/wp/v2/pets/${id}`, {...params, method: 'PUT'});
 const deletePets = (id) => request(`${host}/wp-json/wp/v2/pets/${id}`, {method: 'DELETE'});

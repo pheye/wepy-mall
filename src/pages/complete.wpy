@@ -30,7 +30,7 @@ export default class CompletePage extends wepy.page {
               this.description = '完成出售登记'
               break
           case 'pet_register':
-              this.mainButtonUrl =  `/pages/my_pet_detail?id=${options.id}`
+              this.mainButtonUrl =  `/pages/pet_card?id=${options.id}`
               this.mainButtonText =  '查看详情'
               this.defaultButtonUrl  =  '/pages/my_pets'
               this.defaultButtonText =  '我的宠物'

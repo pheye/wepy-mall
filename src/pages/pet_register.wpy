@@ -6,15 +6,16 @@
         <view wx:if="{{stepsIndex == 0}}">
             <view class="cell-group-title">基础信息</view>
             <van-cell-group>
-                <van-field required label="名称" placeholder="请输入名称" value="{{product.title}}" @change="onChange('title')"/>
+                <van-field required label="宠物名称" placeholder="请输入宠物名称" value="{{product.name}}" @change="onChange('name')"/>
                 <van-cell required title="出生地省份" value="{{product.native_province || '请选择'}}" arrow-direction="down" clickable is-link @click="onSelectProvince"/>
                 <van-cell required title="生日" clickable>
                     <view slot="">
-                        <picker mode="date" value="{{product.birthday}}" @change="onBirthdayChange">{{product.birthday || '请选择'}}</picker>
+                        <view wx:if="{{!creating}}">{{product.birthday}}</view>
+                        <picker mode="date" value="{{product.birthday}}" @change="onBirthdayChange" wx:if="{{creating}}">{{product.birthday || '请选择'}}</picker>
                     </view>
                 </van-cell>
                 <van-cell required title="性别" value="{{product.sex || '请选择'}}" arrow-direction="down" clickable is-link @click="onShowSexPicker"/>
-                <van-cell required title="类别" value="{{product.type || '请选择'}}" arrow-direction="right" clickable is-link @click="showPicker('showTypePicker')"/>
+                <van-cell required title="类别" value="{{product.type || '请选择'}}" arrow-direction="right" clickable is-link @click="showPicker('showTypePicker', {{creating}})"/>
             </van-cell-group>
             <view class="spacing"></view>
 
@@ -71,9 +72,14 @@
                         </van-cell>
                         <van-field label="厂商" placeholder="请输入厂商" value="{{product.vaccin[index].vendor}}" @change="onChange2('vaccin', {{index}}, 'vendor')" />
                         <van-field label="名称" placeholder="请输入名称" value="{{product.vaccin[index].name}}" @change="onChange2('vaccin', {{index}}, 'name')"/>
-                            <van-cell title="照片" label="点击上传" size="large" clickable @click="selectVaccinImage({{index}})" >
+                        <van-cell title="照片(免疫过程)" label="点击上传" size="large" clickable @click="selectVaccinImage({{index}}, 'photo')" >
                             <view slot="">
                                 <image style="width:64rpx;height:64rpx;" src="{{product.vaccin[index].photo || '../images/image.png'}}"/>
+                            </view>
+                        </van-cell>
+                        <van-cell title="照片(免疫瓶)" label="点击上传" size="large" clickable @click="selectVaccinImage({{index}}, 'photo2')" >
+                            <view slot="">
+                                <image style="width:64rpx;height:64rpx;" src="{{product.vaccin[index].photo2 || '../images/image.png'}}"/>
                             </view>
                         </van-cell>
                     </van-cell-group>
@@ -101,9 +107,14 @@
                         </van-cell>
                         <van-field label="厂商" placeholder="请输入厂商" value="{{product.insect[index].vendor}}" @change="onChange2('insect', {{index}}, 'vendor')"/>
                         <van-field label="名称" placeholder="请输入名称" value="{{product.insect[index].name}}" @change="onChange2('insect', {{index}}, 'name')"/>
-                            <van-cell title="照片" label="点击上传" size="large" clickable @click="selectInsectImage({{index}})" >
+                        <van-cell title="照片(驱虫过程)" label="点击上传" size="large" clickable @click="selectInsectImage({{index}}, 'photo')" >
                             <view slot="">
                                 <image style="width:64rpx;height:64rpx;" src="{{product.insect[index].photo || '../images/image.png'}}"/>
+                            </view>
+                        </van-cell>
+                        <van-cell title="照片(驱虫瓶)" label="点击上传" size="large" clickable @click="selectInsectImage({{index}}, 'photo2')" >
+                            <view slot="">
+                                <image style="width:64rpx;height:64rpx;" src="{{product.insect[index].photo2 || '../images/image.png'}}"/>
                             </view>
                         </van-cell>
                     </van-cell-group>
@@ -169,7 +180,8 @@ export default class PetRegister extends wepy.page {
           },
       ],
       product: {
-          title: '',
+          name: '',
+          title: '', // 宠证编码
           status: 'draft',
           chip: {},
           owner: {},
@@ -195,7 +207,8 @@ export default class PetRegister extends wepy.page {
       ],
       types: [
         '狗狗', '猫猫', '异宠'
-      ]
+      ],
+      creating: true
   }
   init(product) {
       this.product = {...this.product, ...product}
@@ -209,12 +222,16 @@ export default class PetRegister extends wepy.page {
   }
   async onLoad (options) {
       if (options.id) {
-          const res = await api.getPets(options.id)
+          this.creating = false
+          const res = await api.getPets(options.id, false)
           this.init(res.data)
       }
   }
   methods = {
       onSelectProvince () {
+        if (!this.creating) {
+          return
+        }
         this.showSelectProvince = true
         this.$apply()
       },
@@ -237,10 +254,16 @@ export default class PetRegister extends wepy.page {
           this.$apply()
       },
       onShowSexPicker() {
+        if (!this.creating) {
+          return
+        }
         this.showSexPicker = true
         this.$apply()
       },
-      showPicker(type) {
+      showPicker(type, creating) {
+        if (creating === false) {
+          return
+        }
         this[type] = true
         this.$apply()
       },
@@ -278,12 +301,12 @@ export default class PetRegister extends wepy.page {
           this.product.vaccin.splice(index, 1)
           this.$apply()
       },
-      async selectVaccinImage(index) {
+      async selectVaccinImage(index, name) {
           try {
               const res = await wepy.chooseImage({count:1})
               let paths = res.tempFilePaths
               this.product.vaccin[index].photo = paths[0]
-              this.vaccinImages[index] = paths[0]
+              this.vaccinImages[this.vaccinImages.length++] = {index, path: paths[0], key: name}
               this.$apply()
           } catch (e) {
               console.log('e', e)
@@ -301,12 +324,12 @@ export default class PetRegister extends wepy.page {
           this.product.insect.splice(index, 1)
           this.$apply()
       },
-      async selectInsectImage(index) {
+      async selectInsectImage(index, name) {
           try {
               const res = await wepy.chooseImage({count:1})
               let paths = res.tempFilePaths
-              this.product.insect[index].photo= paths[0]
-              this.insectImages[index] = paths[0]
+              this.product.insect[index][name]= paths[0]
+              this.insectImages[this.insectImages.length++] = {index, path: paths[0], key: name}
               this.$apply()
           } catch (e) {
               console.log('e', e)
@@ -332,8 +355,8 @@ export default class PetRegister extends wepy.page {
           const product = this.product
           switch (this.stepsIndex) {
               case 0:
-                  const {title, native_province, birthday, sex, type} = this.product
-                  if (!title || !native_province  || !birthday || !sex || !type) {
+                  const {name, native_province, birthday, sex, type} = this.product
+                  if (!name || !native_province  || !birthday || !sex || !type) {
                     tip.error('请完善星号字段')
                     return
                   }
@@ -342,6 +365,17 @@ export default class PetRegister extends wepy.page {
                       const res = await api.updatePets(id, {query: this.product})
                       this.init(res.data)
                   } else {
+                      let title = ''
+                      const typeIndex = this.types.findIndex(item => item === type)
+                      const sexIndex = this.sexes.findIndex(item => item === sex)
+                      title += native_province
+                      title += ['D', 'G', 'O'][typeIndex]
+                      title += birthday.replace(/-/g, '')
+                      title += sexIndex + 1
+                      title += Math.floor(Math.random() * 10000)
+                      this.product.title = title
+                      console.log('title', title)
+
                       const res = await api.createPets({query: this.product})
                       this.init(res.data)
                   }
@@ -388,17 +422,17 @@ export default class PetRegister extends wepy.page {
                   var vaccin = [...this.product.vaccin]
                   if (this.vaccinImages.length > 0) {
                       await Promise.all(this.vaccinImages.map(async (item, index) => {
-                          const res = await api.createMedia(item, id)
+                          const res = await api.createMedia(item.path, id)
                           const mediaID = res.data['id']
-                          vaccin[index].photo = mediaID
+                          vaccin[item.index][item.key] = mediaID
                       }))
                   } 
                   var insect = [...this.product.insect]
                   if (this.insectImages.length > 0) {
                       await Promise.all(this.insectImages.map(async (item, index) => {
-                          const res = await api.createMedia(item, id)
+                          const res = await api.createMedia(item.path, id)
                           const mediaID = res.data['id']
-                          insect[index].photo = mediaID
+                          insect[item.index][item.key]= mediaID
                       }))
                   }
 

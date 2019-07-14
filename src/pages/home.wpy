@@ -53,11 +53,12 @@
     <view class="pet_panel">
        <view class="center font-second-title">宠证查询与登记</view>
        <view class="pet-cell-group">
-           <view class="pet-cell center flex-4" @tap="select('province')">{{ petProvince || '出生省' }}</view>
-           <view span="4" class="pet-cell center flex-4" @tap="select('type')">{{petType || '类别'}}</view>
-           <view span="8" class="pet-cell center flex-8" @tap="select('birthday')">{{formattedPetBirthday}}</view>
-           <view span="4" class="pet-cell center flex-4" @tap="select('sex')">{{petSex || '性别'}}</view>
-           <view span="4" class="pet-cell center flex-4" @tap="select('seq')">{{formattedPetSeq}}</view>
+          <input class="pet-cell__input" placeholder="输入宠证或者芯片ID查询" />
+           <!-- <view class="pet-cell center flex-4" @tap="select('province')">{{ petProvince || '出生省' }}</view> -->
+           <!-- <view span="4" class="pet-cell center flex-4" @tap="select('type')">{{petType || '类别'}}</view> -->
+           <!-- <view span="8" class="pet-cell center flex-8" @tap="select('birthday')">{{formattedPetBirthday}}</view> -->
+           <!-- <view span="4" class="pet-cell center flex-4" @tap="select('sex')">{{petSex || '性别'}}</view> -->
+           <!-- <view span="4" class="pet-cell center flex-4" @tap="select('seq')">{{formattedPetSeq}}</view> -->
        </view>
        <view>
           <button type="primary" style="width:100%;" size="mini" @tap="query">查询</button>
@@ -602,6 +603,14 @@ export default class Home extends wepy.page {
        box-sizing: border-box;
      }
    }
+}
+.pet-cell__input {
+  border-top: 1px solid #d9d9d9;
+  border-right: 1px solid #d9d9d9;
+  border-bottom: 1px solid #d9d9d9;
+  line-height: 16px;
+  padding: 8px;
+  width: 100%;
 }
 
 </style>
