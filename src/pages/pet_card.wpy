@@ -24,9 +24,18 @@ export default class PetCardPage extends wepy.page {
   }
   async onLoad (options) {
     try {
-      const res = await api.getPets(options.id)
-      // console.log('data', res.data)
-      this.item= res.data
+      if (options.id) {
+        const res = await api.getPets(options.id)
+        this.item= res.data
+      } else if (options.query) {
+        const list = await api.queryPets({
+          query: {
+            search: options.search
+          }
+        })
+        const data = list.data.find(item => item.title.rendered === options.query)
+        this.item = data
+      }
     } catch (e) {
       console.log(e.message)
     }

@@ -52,7 +52,7 @@ export default class PetCard extends wepy.component {
     }
     computed = {
       petId () {
-        return getPetId(this.item)
+        return this.item && this.item.title.rendered // getPetId(this.item)
       }
     }
     methods = {

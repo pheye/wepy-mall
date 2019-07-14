@@ -53,7 +53,7 @@
     <view class="pet_panel">
        <view class="center font-second-title">宠证查询与登记</view>
        <view class="pet-cell-group">
-          <input class="pet-cell__input" placeholder="输入宠证或者芯片ID查询" />
+          <input class="pet-cell__input" placeholder="输入宠证查询" @input="onTextChange"/>
            <!-- <view class="pet-cell center flex-4" @tap="select('province')">{{ petProvince || '出生省' }}</view> -->
            <!-- <view span="4" class="pet-cell center flex-4" @tap="select('type')">{{petType || '类别'}}</view> -->
            <!-- <view span="8" class="pet-cell center flex-8" @tap="select('birthday')">{{formattedPetBirthday}}</view> -->
@@ -176,6 +176,7 @@ export default class Home extends wepy.page {
     petBirthday: null,
     petSex: '',
     petSeq: '',
+    queryString: '',
   }
   //读取一级分类数据
    async getRootCateTopLevel() {
@@ -407,7 +408,13 @@ export default class Home extends wepy.page {
       }
       this.$apply()
     },
+    onTextChange (e) {
+      console.log('e e', e)
+      this.queryString = e.detail.value
+      this.$apply()
+    },
     query() {
+      /*
       if (!this.petProvince) {
         tip.error('请选择出生省')
         return
@@ -429,8 +436,9 @@ export default class Home extends wepy.page {
         return
       }
       let seq = parseInt(this.formattedPetSeq, 10)
+      */
       wepy.navigateTo({
-        "url": `/pages/pet_card?id=${seq}`
+        "url": `/pages/pet_card?query=${this.queryString}`
       })
     }
   }
