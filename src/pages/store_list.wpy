@@ -3,7 +3,7 @@
         <repeat for="{{stores}}" key="index" index="index" item="store">
             <navigator class="store-card" url="/pages/store_detail?id={{store.id}}">
                 <view class="store-card__avatar">
-                    <image src="{{store['_embedded']['wp:featuredmedia'][0].source_url}}"></image>
+                    <image src="{{store['_embedded']['wp:featuredmedia'][0].source_url || 'https://pet.papamk.com/app/uploads/2019/06/宠物图标ok.png'}}"></image>
                 </view>
                 <view class="store-card__content">
                     <view class="store-card__title font-second-title">
@@ -54,7 +54,7 @@ export default class StoreList extends wepy.page {
       tags () {
           const tags = []
           this.stores.map((s, index) => {
-            const terms = s['_embedded']['wp:term']
+            const terms = s['_embedded'] && s['_embedded']['wp:term']
             tags[index] = ''
             if (terms) {
                 tags[index] = terms[0].map(item => item.name)

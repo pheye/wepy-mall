@@ -1,6 +1,6 @@
 <template>
     <view class="store">
-        <image src="{{store['_embedded']['wp:featuredmedia'][0].source_url}}" class="store__banner" mode="widthFix"></image>
+        <image src="{{store['_embedded']['wp:featuredmedia'][0].source_url || 'https://pet.papamk.com/app/uploads/2019/06/宠物图标ok.png'}}" class="store__banner" mode="widthFix"></image>
         <view class="store__main">
             <view class="font-title center">{{store.title.rendered}}</view>
             <view>
