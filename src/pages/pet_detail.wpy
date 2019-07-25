@@ -56,6 +56,9 @@
             <view @tap="previewImage2({{item.photo}})">
               <image src="{{item.photo}}" style="width:32px;height:32px" wx:if="{{item.photo}}"/>
             </view>
+            <view @tap="previewImage2({{item.photo2}})">
+              <image src="{{item.photo2}}" style="width:32px;height:32px" wx:if="{{item.photo2}}"/>
+            </view>
           </van-col>
         </van-row>
       </repeat>

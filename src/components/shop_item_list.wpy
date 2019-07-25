@@ -3,7 +3,7 @@
 <repeat for="{{list}}" key="index" index="index" item="item">
     <view class="good_list">
       <view class="image_box">
-          <navigator url="/pages/goods_detail?id={{item.product_id}}">
+          <navigator url="/pages/pet_detail?id={{item.product_id}}">
             <image src="{{item.image[0].shop_single}}"></image>
           </navigator>
       </view>

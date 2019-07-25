@@ -76,10 +76,6 @@ export default class Order extends wepy.page {
         that.orderStatus = "refunded";
     }
     // that.orderStatus = orderStatus;
-    console.log("orderStatus值");
-    console.log("orderStatus值" + that.orderStatus);
-    // let userSpecialInfo = wepy.getStorageSync(USER_SPECICAL_INFO) || {};
-    // let openId = userSpecialInfo.openid;
     let me = wepy.getStorageSync(ME) || {};
     const json = await api.queryOrders({
       query: {
@@ -90,11 +86,24 @@ export default class Order extends wepy.page {
       }
     });
     if (json.statusCode == 200) {
+      json.data = json.data.map((item) => {
+        /*
+        const pet = item // item.categories.find(cat => cat.id === 17)
+        if (pet) {
+          item.formatted_url = `/pages/order_detail?id=${item.id}`
+        } else {
+          item.formatted_url = `/pages/order_detail?orderNo=${item.id}`
+        }
+        */
+        item.formatted_url = `/pages/order_detail?orderNo=${item.id}`
+        return item
+      })
       if (refresh) {
         that.orderList = json.data;
       } else {
         that.orderList = [...that.orderList, ...json.data];
       }
+
       that.pageTotal = json.header['X-WP-TotalPages'];
       console.log("pageTotal" + that.pageTotal);
       that.totalCount = json.header['X-WP-Total'];

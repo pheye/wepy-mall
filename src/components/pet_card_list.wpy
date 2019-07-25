@@ -72,7 +72,7 @@
                     <van-button type="primary" size="mini">编辑</van-button>
                 </navigator>
                 <view class="hor-spacing"></view>
-                <van-button type="danger" size="mini">删除</van-button>
+                <van-button type="danger" size="mini" wx:if="{{item.in_stock}}">删除</van-button>
             </view>
         </view>
     </van-row>

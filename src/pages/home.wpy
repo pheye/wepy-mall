@@ -115,6 +115,7 @@ import moment from 'moment'
 export default class Home extends wepy.page {
   config = {
     navigationBarTitleText: '宠证',
+    enablePullDownRefresh: true
   }
   components = {
     discover: Discover,
@@ -469,7 +470,10 @@ export default class Home extends wepy.page {
       that.showLoading = false;
       that.is_empty = true;
     }
-  };
+  }
+  onPullDownRefresh () {
+    this.getFeaturedProducts();
+  }
 }
 
 </script>

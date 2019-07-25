@@ -34,6 +34,7 @@ export default class Complete extends wepy.component {
 
     .complete__icon {
         font-size: 176rpx;
+        line-height: 180rpx;
         margin:32rpx;
     }
     .complete__btn {
