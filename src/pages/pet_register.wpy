@@ -369,11 +369,12 @@ export default class PetRegister extends wepy.page {
                       const typeIndex = this.types.findIndex(item => item === type)
                       const sexIndex = this.sexes.findIndex(item => item === sex)
                       title += native_province
-                      title += ['D', 'G', 'O'][typeIndex]
+                      title += ['D', 'C', 'O'][typeIndex]
                       title += birthday.replace(/-/g, '')
                       title += sexIndex + 1
                       title += Math.floor(Math.random() * 1000)
                       this.product.title = title
+                      this.product.ident = title
 
                       const res = await api.createPets({query: this.product})
                       this.init(res.data)

@@ -6,7 +6,7 @@
             <image src="{{item.photo.front}}" style="width:240rpx;height:240rpx;"></image>
           </view>
           <view class="part1__content">
-            <view class="font-second-title">{{petId}}</view>
+            <view class="font-second-title">{{item.title && item.title.rendered}}</view>
             <view class="cell">姓名: {{item.name}}</view>
             <view class="cell">生日: {{item.birthday}}</view>
             <view class="cell">性别: {{item.sex}}</view>
