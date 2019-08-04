@@ -1,4 +1,5 @@
 <template>
+  <view>
     <repeat for="{{shopes}}" key="index" index="index" item="item">
     <van-cell value="选择" clickable="true" arrow-direction="right" custom-class="estate-cell" center="true" bind:click="onSelect({{item}})">
         <view slot="title" class="estate-cell__title">
@@ -11,6 +12,7 @@
   <bottomLoadMore :show.sync="showLoading" message="正在加载"></bottomLoadMore>
   <!--暂无数据显示-->
   <placeholder :show.sync="isEmpty" message="暂无发现数据"></placeholder>
+  </view>
 </template>
 <script>
 import wepy from 'wepy'
@@ -28,6 +30,7 @@ import {
 export default class PetShopSelect extends wepy.page {
   config = {
     navigationBarTitleText: '选择商店',
+    onReachBottomDistance: 200,
   }
   components = {
       bottomLoadMore: BottomLoadMore,
@@ -38,19 +41,42 @@ export default class PetShopSelect extends wepy.page {
     showLoading: false,
     isEmpty: false,
     currentId: -1,
+    currentPage: 1,
+    totalPage: 1,
   }
   async query(page = 1) {
-      const res = await api.query('pet_shop', {
-          page,
-          per_page: 100
-      })
-      this.shopes = [...this.shopes, ...res.data]
+      this.showLoading = true
+      try { 
+        const res = await api.query('pet_shop', {
+          query: {
+            page,
+            per_page: 20
+          }
+        })
+        this.shopes = [...this.shopes, ...res.data]
+        this.currentPage = page
+        this.totalPage = res.header['X-WP-TotalPages'];
+      } catch (e) {
+      }
+      this.showLoading = false
+      if (this.shopes.length === 0) {
+          this.isEmpty = true
+      }
       this.$apply()
   }
   onLoad(options) {
       console.log('options', options)
       this.currentId = options.id
       this.query()
+  }
+  //加载更多
+  async onReachBottom () {
+    console.log('on reach end')
+    if (this.currentPage >= this.totalPage)
+        return
+    if (this.showLoading)
+        return
+    await this.query(this.currentPage + 1)
   }
   methods = {
     onSelect(item) {

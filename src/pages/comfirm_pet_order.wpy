@@ -90,7 +90,7 @@
     </view>
     <view wx:if="{{chosenShipping.method_id == 'local_pickup' }}">
 
-      <navigator  url="/pages/pet_shop_select">
+      <navigator  url="/pages/pet_shop_select?id={{petShop.id}}">
       <view class="block" >
         <view class="left">
             <view>门店</view>
