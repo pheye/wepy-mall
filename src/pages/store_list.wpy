@@ -16,7 +16,7 @@
                     </view>
                     <view class="store-card__bottom">
                         <view class="store-card__address text-default">
-                            {{store.address}}
+                            {{store.map && store.map.address}}
                         </view>
                     </view>
                 </view>

@@ -9,7 +9,7 @@
                 </van-tag>
             </view>
             <view class="text-default">
-                <van-icon name="location-o" />{{store.address}}
+                <van-icon name="location-o" />{{store.map && store.map.address}}
             </view>
             <view class="text-default">
                 <van-icon name="phone-o" /> {{store.phone}}
