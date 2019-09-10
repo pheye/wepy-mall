@@ -152,6 +152,9 @@ import Card from "@/components/card"
 import moment from 'moment'
 import api from '@/api/api'
 import tip from '@/utils/tip'
+import {
+  ME
+} from '@/utils/constant'
 
 export default class PetRegister extends wepy.page {
   config = {
@@ -305,7 +308,7 @@ export default class PetRegister extends wepy.page {
           try {
               const res = await wepy.chooseImage({count:1})
               let paths = res.tempFilePaths
-              this.product.vaccin[index].photo = paths[0]
+              this.product.vaccin[index][name] = paths[0]
               this.vaccinImages[this.vaccinImages.length++] = {index, path: paths[0], key: name}
               this.$apply()
           } catch (e) {
@@ -375,6 +378,12 @@ export default class PetRegister extends wepy.page {
                       title += Math.floor(Math.random() * 1000)
                       this.product.title = title
                       this.product.ident = title
+
+                      // 初始化联系人信息
+                      const me= wepy.getStorageSync(ME);
+                      if (me) {
+                        this.product.owner = me.owner_info
+                      }
 
                       const res = await api.createPets({query: this.product})
                       this.init(res.data)
