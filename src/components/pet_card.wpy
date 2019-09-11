@@ -28,7 +28,7 @@
       </view>
       <view class="pet-card-action" wx:if="{{mode=='edit'}}">
         <van-cell title="查看公开信息"  is-link  arrow-direction="right" link-type="navigateTo" url="/pages/pet_card?id={{item.id}}"></van-cell>
-        <van-cell title="查看相册"  is-link  arrow-direction="right" link-type="navigateTo" url="/pages/pet_album?id={{item.id}}"></van-cell>
+        <van-cell title="查看相册"  is-link  arrow-direction="right" link-type="navigateTo" url="/pages/my_pet_album?id={{item.id}}"></van-cell>
         <van-cell title="宠证制作"  is-link  arrow-direction="right" link-type="navigateTo" url="/pages/pet_card_make?id={{item.id}}"></van-cell>
         <van-cell title="修改信息"  is-link  arrow-direction="right" link-type="navigateTo" url="/pages/pet_register?id={{item.id}}"></van-cell>
         <van-cell title="删除信息"  is-link  arrow-direction="right" @click="delPet({{item.id}})"></van-cell>

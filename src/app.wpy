@@ -76,6 +76,7 @@ export default class extends wepy.app {
       'pages/complete',
       'pages/my_sale_pets',
       'pages/my_pets',
+      'pages/my_pet_album',
       'pages/pet_card',
       'pages/product_pet_list',
       'pages/pet_shop_select',

@@ -1,0 +1,115 @@
+<template>
+    <van-button type="primary" block @tap="upload">上传照片</van-button>
+    <repeat for="{{item.album}}" key="index" index="index" item="photo">
+        <view style="position:relative;" @tap="showAction({{index}})">
+          <image src="{{photo.url}}" mode="aspectFit" ></image>
+        </view>
+    </repeat>
+    <!--加载更多时动画-->
+    <bottomLoadMore :show.sync="showLoading" message="正在加载"></bottomLoadMore>
+    <!--暂无数据显示-->
+    <placeholder :show.sync="isEmpty" message="暂无发现数据"></placeholder>
+    <van-action-sheet
+      show="{{showActionSheet}}"
+      actions="{{actions}}"
+      cancel-text="取消"
+      close-on-click-overlay  
+      @close="onActionClose"
+      @select="onActionSelect"
+    />
+</template>
+<script>
+import wepy from 'wepy'
+import api from '@/api/api'
+import tip from '@/utils/tip'
+import {
+  ME
+} from '@/utils/constant';
+import BottomLoadMore from "../components/common/bottomLoadMore"
+import Placeholder from "../components/common/placeholder"
+
+import PetCard from "@/components/pet_card"
+
+export default class MySalePets extends wepy.page {
+  config = {
+    navigationBarTitleText: '宠物相册',
+  }
+  components = {
+      bottomLoadMore: BottomLoadMore,
+      placeholder: Placeholder
+  }
+  data = {
+    item: {},
+    showLoading: false,
+    isEmpty: false,
+    showActionSheet: false,
+    currentIndex: -1,
+    actions: [
+      {
+        name: '删除',
+      }
+    ]
+  }
+  async init (id) {
+    this.showLoading = true
+    try {
+      const res = await api.getPets(id)
+      this.item= res.data
+      this.isEmpty = !this.item.album.length
+    } catch (e) {
+      this.isEmpty = true
+      console.log(e.message)
+    }
+    this.showLoading = false
+    this.$apply()
+  }
+  async onLoad (options) {
+    this.init(options.id)
+  }
+  methods = {
+    async upload () {
+      let ids = this.item.album ? this.item.album.map(item => item.id) : []
+      console.log('ids', ids)
+      try {
+          const res = await wepy.chooseImage({count:1})
+          let paths = res.tempFilePaths
+          this.src = paths[0]
+          const res2 = await api.createMedia(this.src, this.item.id)
+          const mediaID = res2.data['id']
+          ids.unshift(mediaID)
+          const res3 = await api.updatePets(this.item.id, {query: {
+            album: ids
+          }})
+          this.$apply()
+          this.init(this.item.id)
+      } catch (e) {
+          console.log("e", e)
+      }
+    },
+    showAction(index) {
+      console.log('index', index)
+      this.currentIndex = index
+      this.showActionSheet = true
+      this.$apply()
+    },
+    onActionClose() {
+      this.showActionSheet = false
+      this.$apply()
+    },
+    async onActionSelect(e) {
+      if (e.detail.name === '删除') {
+          let ids = this.item.album ? this.item.album.map(item => item.id) : []
+          ids.splice(this.currentIndex, 1)
+          const res3 = await api.updatePets(this.item.id, {query: {
+            album: ids
+          }})
+          this.init(this.item.id)
+      }
+      this.showActionSheet = false
+      this.$apply()
+    }
+  }
+}
+</script>
+<style lang="less">
+</style>
