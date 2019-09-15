@@ -21,8 +21,8 @@
 
             <view class="cell-group-title">芯片信息</view>
             <van-cell-group>
-                <van-field label="芯片码" placeholder="请输入" value="{{product.chip.code}}" @change="onChange('chip.code')"/>
-                <van-field label="芯片厂商" placeholder="请输入" value="{{product.chip.vendor}}" @change="onChange('chip.vendor')"/>
+                <van-field label="芯片码" placeholder="请输入" value="{{product.chip_code}}" @change="onChange('chip_code')"/>
+                <van-field label="芯片厂商" placeholder="请输入" value="{{product.chip_vendor}}" @change="onChange('chip_vendor')"/>
             </van-cell-group>
             <view class="spacing"></view>
             <button type="primary" @tap="goNext" class="block-button">下一步</button>
@@ -186,7 +186,6 @@ export default class PetRegister extends wepy.page {
           name: '',
           title: '', // 宠证编码
           status: 'draft',
-          chip: {},
           owner: {},
           photo: {},
           insect: [],

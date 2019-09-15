@@ -1,6 +1,8 @@
 <template>
-    <petCard :item.sync="item" wx:if="{{item}}"/>
-    <view class="center font-second-title" wx:else>未查询相关结果...</view>
+    <repeat for="{{list}}" key="index" index="index" item="item">
+        <petCard :item="item" />
+    </repeat>
+    <view class="center font-second-title" wx:if="{{list.length == 0}}">未查询相关结果...</view>
 </template>
 <script>
 import wepy from 'wepy'
@@ -20,7 +22,7 @@ export default class PetCardPage extends wepy.page {
     petCard: PetCard,
   }
   data = {
-    item: null
+    list: [],
   }
   async onLoad (options) {
     try {
@@ -30,11 +32,15 @@ export default class PetCardPage extends wepy.page {
       } else if (options.query) {
         const list = await api.queryPets({
           query: {
-            search: options.search
+            'filter[meta_query][relation]': 'or',
+            'filter[meta_query][0][key]': 'ident',
+            'filter[meta_query][0][value]': options.query,
+            'filter[meta_query][1][key]': 'chip_code',
+            'filter[meta_query][1][value]': options.query,
           }
         })
-        const data = list.data.find(item => item.title.rendered === options.query)
-        this.item = data
+        const data = list.data
+        this.list = data
       }
     } catch (e) {
       console.log(e.message)
