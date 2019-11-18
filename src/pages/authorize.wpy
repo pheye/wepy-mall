@@ -25,7 +25,7 @@ export default class Authorize extends wepy.page {
   config = {
     navigationBarTitleText: '授权登录',
   }
-  async login() {
+  async login(option) {
       /* let userInfo = wepy.getStorageSync(USER_INFO) */
 
       let token = wepy.getStorageSync(TOKEN);
@@ -44,6 +44,7 @@ export default class Authorize extends wepy.page {
         if (data) {
           wepy.setStorageSync(USER_INFO, data.userInfo)
         }
+        console.log('author options', option)
         if (res.code) {
           let systemInfo = wepy.getSystemInfoSync();
           wepy.setStorageSync(SYSTEM_INFO, systemInfo);
@@ -53,7 +54,8 @@ export default class Authorize extends wepy.page {
               nickname: data.userInfo.nickName,
               avatarUrl: data.userInfo.avatarUrl,
               encryptedData: data.encryptedData,
-              iv: data.iv
+              iv: data.iv,
+              ref: option  ?  option.ref : null
             }
           })
           // console.log("rlt", rlt)
@@ -79,15 +81,15 @@ export default class Authorize extends wepy.page {
         url: '/pages/home'
       })
   }
-  async onLoad() { 
+  async onLoad(option) { 
     let res = await wepy.getSetting()
     if ((res.authSetting)['scope.userInfo']) {
-        this.login()
+        this.login(option)
     }
   }
   async onGotUserInfo(e) {
     if (e.detail.errMsg == 'getUserInfo:ok') {
-        this.login()
+        this.login(option)
     }
   }
   methods = {

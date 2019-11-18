@@ -173,14 +173,14 @@ export default class extends wepy.app {
 
   async onLaunch(option) {
     // this.loadEstates()
-
+    console.log('launch options', option);
     const res = await api.querySettings()
     if (res.statusCode !== 200) {
       return;
     }
     this.globalData.settings = res.data
 
-    this.checkUsers()
+    this.checkUsers(option.query)
     this.initCart()
     // 更新购物车信息
     PubSub.subscribe(CART, async (msg, data) => {
@@ -216,12 +216,17 @@ export default class extends wepy.app {
      // console.log('on error', res)
      // bugOut.track(res)
   // }
-  async checkUsers() {
+  async checkUsers(query) {
     let me = wepy.getStorageSync(ME);
     // console.log("me", me)
+    let url = '/pages/authorize'
+    if (query && query.ref) {
+      url += `?ref=${query.ref}`
+    }
+    console.log("checking", url, query);
     if (!me) {
         wx.navigateTo({
-            url: '/pages/authorize'
+            url
         })
     }
   }

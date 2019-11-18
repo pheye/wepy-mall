@@ -215,7 +215,8 @@ import timer from '@/components/common/timer'
 import CartAdvise from "@/components/cart_advise"
 import {
   USER_INFO,
-  CART
+  CART,
+  ME,
 } from '@/utils/constant';
 import PubSub from 'pubsub-js'
 import moment from 'moment'
@@ -816,9 +817,17 @@ export default class goodsDetail extends wepy.page {
         console.log(res.target)
       }
       this.scrMove = -85;
+      let affiliate_id = wepy.getStorageSync(ME).affiliate_id;
+      console.log("affiliate_id",affiliate_id);
+      let url ='';
+      if (affiliate_id) {
+          url = '/pages/goods_detail?id=' + this.goodsId + '&ref=' + affiliate_id;
+       }else{
+          url = '/pages/goods_detail?id=' + this.goodsId;
+       }
       return {
         title: this.detail.name,
-        path: '/pages/goods_detail?id=' + this.goodsId,
+        path: url,
         success: function(res) {
           // 转发成功
           this.scrMove = 0;

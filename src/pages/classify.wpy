@@ -37,6 +37,7 @@ import {
   SYSTEM_INFO,
   SEL_CLASS_CODE,
   CART,
+  ME,
 } from '@/utils/constant';
 import PubSub from 'pubsub-js'
 import tip from '@/utils/tip'
@@ -193,9 +194,17 @@ export default class Classify extends wepy.page {
         // 来自页面内转发按钮
         console.log(res.target)
       }
+      let affiliate_id = wepy.getStorageSync(ME).affiliate_id;
+      console.log("affiliate_id",affiliate_id);
+      let url ='';
+      if (affiliate_id) {
+          url = '/pages/classify?ref=' + affiliate_id;
+       }else{
+          url = '/pages/classify';
+       }
       return {
         title: "邻区乐",
-        path: '/pages/classify',
+        path: url,
         success: function(res) {
           // 转发成功
         },

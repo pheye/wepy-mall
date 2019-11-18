@@ -453,6 +453,7 @@ console.log("load");
     tip.loading("提交订单中");
     app.aldstat.sendEvent('点击下单');
     let params = {}
+    const me = wx.getStorageSync(ME);
     if (this.chosenShipping.method_id == 'local_pickup' || this.chosenShipping.method_id == 'free_shipping') {
 
       params.billing_first_name = this.customer.name;
@@ -464,7 +465,9 @@ console.log("load");
       params.billing_city = this.estate.city;
       params.billing_address_1 = this.estate.title.rendered;
       // params.shipping_address_1 = this.estate.title.rendered + " " + this.estate.address;
-      if (this.estate.referal) {
+      if (me.ref) {
+        params.ref = me.ref;
+      } else if (this.estate.referal) {
         params.ref = this.estate.referal;
       }
     } else {
@@ -510,7 +513,6 @@ console.log("load");
         query:{
           id: json.data.order.id,
           openid: me.openid,
-          ref: 3
         }
       });
 

@@ -127,6 +127,7 @@ import {
   CURRENT_ESTATE,
   CART,
   USER_SPECICAL_INFO,
+  ME,
 } from '@/utils/constant';
 import moment from 'moment'
 
@@ -343,7 +344,8 @@ export default class Home extends wepy.page {
     this.featuredList = json.data;
     this.$apply()
   }
-  onLoad() {
+  onLoad(option) {
+    console.log('home opt', option);
     let that = this;
     this.discoverList = [];
     this.rootImages = [];
@@ -390,7 +392,7 @@ export default class Home extends wepy.page {
         // 来自页面内转发按钮
         console.log(res.target)
       }
-      let affiliate_id = wepy.getStorageSync(USER_SPECICAL_INFO).affiliate_id;
+      let affiliate_id = wepy.getStorageSync(ME).affiliate_id;
       console.log("affiliate_id",affiliate_id);
       let url ='';
       if (affiliate_id) {

@@ -33,7 +33,8 @@
   import {
     SYSTEM_INFO,
     USER_SPECICAL_INFO,
-    SEARCH_LIST
+    SEARCH_LIST,
+    ME,
   } from '@/utils/constant';
   import Searchs from '@/components/search'
   import FilterBar from "../components/filter_bar"
@@ -232,9 +233,17 @@
           // 来自页面内转发按钮
           console.log(res.target)
         }
+        let affiliate_id = wepy.getStorageSync(ME).affiliate_id;
+        console.log("affiliate_id",affiliate_id);
+        let url ='';
+        if (affiliate_id) {
+            url =  '/pages/search?cateCode=' + this.cateCode + '&title=' + this.title + '&ref=' + affiliate_id;
+         }else{
+            url = '/pages/search?cateCode=' + this.cateCode + '&title=' + this.title;
+         }
         return {
           title: this.detail.name,
-          path: '/pages/search?cateCode=' + this.cateCode + '&title=' + this.title,
+          path: url,
           success: function(res) {
             // 转发成功
           },
