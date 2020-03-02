@@ -36,3 +36,5 @@ export const CURRENT_ESTATE = 'currentEstate';
 export const SEARCH_LIST = 'searchList';
 
 export const CART = 'CART';
+
+export const AUTHORIZE_URL = 'authorize_url';

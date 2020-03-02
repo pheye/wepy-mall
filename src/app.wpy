@@ -17,6 +17,7 @@ import {
   TOKEN,
   TOKEN_EXPIRED,
   CART,
+  AUTHORIZE_URL
 } from '@/utils/constant';
 import fundebug from '@/utils/fundebug.1.1.0.min.js'
 import PubSub from 'pubsub-js'
@@ -36,8 +37,8 @@ fundebug.init(
 export default class extends wepy.app {
   config = {
     pages: [
-      'pages/authorize',
       'pages/home',
+      'pages/authorize',
       'pages/home_detail',
       'pages/classify',
       'pages/shop_cart',
@@ -139,7 +140,8 @@ export default class extends wepy.app {
     estates:[],
     // bugOut: bugOut
     cart: {},
-    settings: {}
+    settings: {},
+    inited: false
   }
 
   constructor() {
@@ -178,7 +180,11 @@ export default class extends wepy.app {
     if (res.statusCode !== 200) {
       return;
     }
+    console.log('settings2', res.data)
     this.globalData.settings = res.data
+    this.globalData.inited = true
+
+    PubSub.publish('global-settings', res.data)
 
     this.checkUsers(option.query)
     this.initCart()
@@ -219,16 +225,18 @@ export default class extends wepy.app {
   async checkUsers(query) {
     let me = wepy.getStorageSync(ME);
     // console.log("me", me)
-    let url = '/pages/authorize'
+    let url = '/pages/authorize?back=1'
     if (query && query.ref) {
-      url += `?ref=${query.ref}`
+      url += `&ref=${query.ref}`
     }
     console.log("checking", url, query);
+    wepy.setStorageSync(AUTHORIZE_URL, url);
+    /*
     if (!me) {
         wx.navigateTo({
             url
         })
-    }
+    }*/
   }
   async initCart() {
     const json = await api.getCart()

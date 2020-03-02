@@ -116,7 +116,7 @@
         <!-- </view> -->
         <!-- <view class="arrow">&gt;</view> -->
       <!-- </navigator> -->
-      <!-- 
+      <!--
       <view class="item" @tap="setAddress">
         <view class="item_content">
           <image class="item_img" src="../images/icon_my_02.png"></image>
@@ -170,6 +170,9 @@ import api from '@/api/api';
 import {
   ME
 } from '@/utils/constant';
+import {
+  ensureAuthorized
+} from '@/utils/authorize';
 export default class Index extends wepy.page {
   config = {
     navigationBarTitleText: '我',
@@ -188,6 +191,10 @@ export default class Index extends wepy.page {
   }
   async getUserInfo(phone,code) {
     let that = this;
+    if (!ensureAuthorized()) {
+      return;
+    }
+
     let me= wepy.getStorageSync(ME);
     if (!me) {
         wx.navigateTo({

@@ -365,12 +365,25 @@ export default class Home extends wepy.page {
     this.now = moment().format('HH');
     this.onSale = true;
     this.redBtn =true;
-    const settings = this.$parent.globalData.settings
-    console.log('settings', settings)
-    if (settings.bomscreen) {
-      this.isShowAlert = settings.bomscreen.image
-      this.tps = settings.bomscreen.type || 0
-      this.bomImage = settings.bomscreen.image
+    if (this.$parent.globalData.inited) {
+      const settings = this.$parent.globalData.settings
+      console.log('sync-settings', settings)
+      if (settings.bomscreen) {
+        this.isShowAlert = settings.bomscreen.image
+        this.tps = settings.bomscreen.type || 0
+        this.bomImage = settings.bomscreen.image
+      }
+    } else {
+      const that = this;
+      PubSub.subscribe('global-settings', (msg, settings) => {
+        console.log('async-settings', settings)
+        if (settings.bomscreen) {
+          that.isShowAlert = settings.bomscreen.image
+          that.tps = settings.bomscreen.type || 0
+          that.bomImage = settings.bomscreen.image
+          that.$apply() 
+        }
+      })
     }
     this.$apply() 
   }

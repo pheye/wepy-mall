@@ -33,11 +33,6 @@ export default class Authorize extends wepy.page {
       let me = wepy.getStorageSync(ME);
       if (!token || !tokenExpired || moment().isAfter(tokenExpired) || !me) {
         wepy.clearStorageSync();
-          /*
-        let data  = await wepy.getUserInfo()
-        if (data) {
-          wepy.setStorageSync(USER_INFO, data.userInfo)
-        }*/
         let res = await wepy.login()
         let data = await wepy.getUserInfo()
         // console.log('data', data)
@@ -77,19 +72,24 @@ export default class Authorize extends wepy.page {
           }
         }
       }
-      wepy.switchTab({
-        url: '/pages/home'
-      })
+      if (option.back) {
+        wepy.navigateBack();
+      } else {
+        wepy.switchTab({
+          url: '/pages/home'
+        })
+      }
   }
-  async onLoad(option) { 
+  async onLoad(option) {
     let res = await wepy.getSetting()
     if ((res.authSetting)['scope.userInfo']) {
         this.login(option)
     }
+    this.option = option;
   }
   async onGotUserInfo(e) {
     if (e.detail.errMsg == 'getUserInfo:ok') {
-        this.login(option)
+        this.login(this.option)
     }
   }
   methods = {

@@ -37,10 +37,11 @@
          </view>
          <van-row>
            <view class="item_price_container">
-               <van-col span="4" >
+               <van-col span="16" >
                   <view style='height:40rpx;'>
-                  <text class="group" wx:if="{{onSale}}">秒杀价</text>
-                  <text class="group" wx:else >{{ item.on_sale ? '团购价' : ''}}</text>
+                    <text class="group" wx:if="{{onSale}}">秒杀价</text>
+                    <text class="group" wx:else >{{ item.on_sale ? '团购价' : ''}}</text>
+                    <text class="group" style="margin-left:4px;"> {{ '已售:' + item.total_sales }} </text>
                   </view>
                   <view >
                   <!-- 商品价格 -->
@@ -51,8 +52,9 @@
                  </view>
                </van-col>
                <!-- 购买按钮 -->
-                <van-col offset="12" span="6">
+                <van-col  span="6">
                   <view class="cannot-buy-btn" wx:if="{{!item.in_stock || item.stock_quantity == 0}}" >售罄</view>
+
                   <view class="to-buy-btn {{ redBtn ?'redBtn':''}}" wx:else @tap="getGoodsDetail({{item.id}})">{{ onSale ? '立即秒杀' : '立即抢购'}}</view>
                 </van-col>
             </view>
@@ -71,6 +73,11 @@ import PubSub from 'pubsub-js'
 import {
   CART,
 } from '@/utils/constant';
+
+import {
+  ensureAuthorized
+} from '@/utils/authorize';
+
 var app = getApp()
 export default class productCardList extends wepy.component {
   props = {
@@ -147,6 +154,9 @@ export default class productCardList extends wepy.component {
     },
     async getGoodsDetail(productId) {
         let that = this;
+        if (!ensureAuthorized()) {
+          return;
+        }
         const json = await api.getProducts(productId);
         if (json.statusCode == 200) {
           let data = json.data;
