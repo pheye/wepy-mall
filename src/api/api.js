@@ -197,6 +197,7 @@ const queryPromotions = ({query}) => request(`${host}/wp-json/w2w/v1/customers/p
 
 // 创建裂变分享
 const createShare = (query) => request(`${apiHost}/api/shares`, {query, noauth: true, method: 'POST', header} )
+const getShare = (code, query) => request(`${apiHost}/api/shares/${code}`, {query, noauth: true, header})
 
 export default {
   querySettings,
@@ -264,5 +265,6 @@ export default {
   getOrderStatics,
   updateCartShipping,
   queryPromotions,
-  createShare
+  createShare,
+  getShare
 }

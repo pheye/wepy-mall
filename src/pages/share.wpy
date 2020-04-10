@@ -1,16 +1,179 @@
 <template>
-  <view>Hello</view>
+  <view class="container">
+    <bottomLoadMore :show.sync="showLoading" message="正在加载"></bottomLoadMore>
+    <view class="container__title">邻区乐</view>
+    <view class="card__container-title">恭喜你获得以下优惠</view>
+    <view class="card__container">
+      <view class="card">
+        <view class="card__avatar">
+          <image width="32" height="32" src="{{myrecord.avatar}}" />
+        </view>
+        <view class="card__title">
+          <view class="card__title--main">{{myrecord.nickname}}</view>
+          <view class="card__title--min">{{myrecord.created_at}}</view>
+        </view>
+        <view class="card__right">{{myrecord.amount}}元</view>
+      </view>
+    </view>
+    <view class="container__button">
+      <button size="mini" class="container__button--main" @tap="goHome">打开邻区乐</button>
+    </view>
+    <view class="card__container-title">看看朋友手气如何</view>
+    <view class="card__container">
+      <view class="card" wx:for="{{records}}" wx:key="item">
+        <view class="card__avatar">
+          <image width="32" height="32" src="{{item.avatar}}" />
+        </view>
+        <view class="card__title">
+          <view class="card__title--main">{{item.nickname}}</view>
+          <view class="card__title--min">{{item.created_at}}</view>
+        </view>
+        <view class="card__right">{{item.amount}}元</view>
+      </view>
+    </view>
+  </view>
 </template>
 <script>
 import wepy from 'wepy'
+import api from '@/api/api'
+import {
+ ME
+} from '@/utils/constant';
+import { ensureAuthorized } from '@/utils/authorize'
+import BottomLoadMore from "../components/common/bottomLoadMore"
 
 export default class Share extends wepy.page {
   config = {
       navigationBarTitleText: '分享优惠券',
-  },
-  data {
+  }
+  components = {
+    bottomLoadMore: BottomLoadMore
+  }
+  data = {
+    code: '',
+    myrecord:{},
+    records: [],
+    inited: false,
+    showLoading: false
+  }
+  async init (code) {
+    this.showLoading = true
+		const me = wepy.getStorageSync(ME);
+    if (!me) {
+      return;
+    }
+    const res = await api.getShare(code, {
+      openid: me.openid
+    })
+    this.myrecord = res.data.records.find(item => item.id == me.user_id)
+    this.records = res.data.records.filter(item => item.id != me.user_id)
+    this.inited = true
+    this.showLoading = false
+    this.$apply()
+  }
+  onLoad(options) {
+    console.log('options', options);
+    this.code = options.code;
+    this.$apply();
+
+		if (!ensureAuthorized()) {
+			return;
+		}
+    // this.init(options.code);
+  }
+  methods = {
+    goHome () {
+      wepy.reLaunch({url: '/pages/home'});
+    },
+    onShareAppMessage: function(res) {
+        url = '/pages/share?code=' + this.code;
+        return {
+          title: '拼手气-分享优惠券',
+          path: url,
+          success: function(res) {
+            // 转发成功
+          },
+          fail: function(res) {
+            // 转发失败
+          }
+        }
+    }
+  }
+  onShow () {
+    console.log('data', this.code);
+    if (this.code && !this.inited) {
+      this.init(this.code)
+    }
   }
 }
 </script>
-<style lang="less">
+<style lang="less" scoped>
+.row {
+  display: flex;
+  flex-direction: row;
+}
+
+
+.container {
+  background-color: darken(#ff6a3c, 10%);
+  min-height: 100vh;
+  color: white;
+}
+.container__title {
+  text-align:center;
+  font-size: 20px;
+  margin:8px;
+}
+.container__button {
+  margin: 16px 32px;
+  text-align: center;
+}
+.container__button--main {
+  background-color: rgba(252,231,52, 1);
+  color: #ff6a3c;
+  border-radius:32px;
+}
+.card__container-title {
+  text-align:center;
+}
+.card__container {
+  margin: 32rpx;
+  border-radius: 8px;
+  background-color: #ff6a3c;
+}
+.card {
+  padding: 16px 8px;
+  display:flex;
+  flex-direction:row;
+  .card__avatar {
+    display:flex;
+    flex:6;
+    text-align:center;
+    image {
+      width: 48px;
+      height: 48px;
+    }
+  }
+  .card__title {
+    display:flex;
+    flex-direction:column;
+    flex:12;
+  }
+  .card__title--main {
+    line-height:20px;
+    font-size:16px;
+    flex:1;
+  }
+  .card__title--min {
+    font-size:10px;
+  }
+  .card__right {
+    display:flex;
+    flex:6;
+    justify-content:center;
+    align-items:center;
+    font-size:14px;
+    weight: 600;
+  }
+}
 </style>
