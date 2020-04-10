@@ -93,7 +93,7 @@
           <text >优惠:</text><text class="price">-￥{{obj.discount_total}}</text>
         </view>
     </view>
-    <view>
+    <view wx:if="{{obj.status=='completed' || obj.status == 'shipped' || obj.status == 'processing'}}">
       <view @tap="shareCoupon" class="share_coupon">分享得优惠券</view>
 			<canvasdrawer painting="{{painting}}" class="canvasdrawer" bind:getImage="eventGetImage"/>
     </view>
@@ -203,11 +203,16 @@ export default class OrderDetail extends wepy.page {
   }
 	async getQrcode(){
 		let that = this;
-    const share = await api.createShare({
+    const res = await api.createShare({
       "source": "order",
       "source_id": this.obj.order_number
     });
-    const qrcodeJson = await api.getQrcodeByPath(`/pages/share?=${share.code}`);
+    const code = res.data.code
+    wepy.navigateTo({
+      url: '/pages/share?code=' + code
+    })
+    return;
+    const qrcodeJson = await api.getQrcodeByPath(res.data.code);
 		if(qrcodeJson.statusCode == 200) {
 			let qrcode = qrcodeJson.data;
 			that.qrcode =qrcode.replace(/^http:/, 'https:');
@@ -296,7 +301,7 @@ export default class OrderDetail extends wepy.page {
     },
     async shareCoupon() {
 			await this.getQrcode()
-      this.methods.eventDraw(this)
+      // this.methods.eventDraw(this)
     },
       // 生成卡片
       eventDraw (value) {
@@ -463,8 +468,7 @@ export default class OrderDetail extends wepy.page {
               urls: [this.shareImage] // 需要预览的图片http链接列表
             })
           }
-      }
-
+      },
   }
 
   events = {

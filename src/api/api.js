@@ -45,7 +45,7 @@ const getProducts = (id, params) => request(`${host}/wp-json/w2w/v1/products/${i
 //查看商品的Qrcode
 const getQrcode = (id, params) => request(`${host}/wp-json/w2w/v1/products/qrcode?id=${id}&transparent=1`, params);
 
-const getQrcodeByPath = (path, params) => request(`${host}/wp-json/w2w/v1/products/qrcode?path=${path}&transparent=1`, params);
+const getQrcodeByPath = (code, params) => request(`${host}/wp-json/w2w/v1/products/qrcode?code=${code}&transparent=1`, params);
 
 //商品加入购物车
 const addCart = (params) => request(`${host}/wp-json/w2w/v1/cart/add`, {...params, method: 'POST'});
