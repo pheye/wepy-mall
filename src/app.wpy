@@ -74,6 +74,7 @@ export default class extends wepy.app {
       'pages/estate_detail',
       'pages/coupons',
       'pages/promotions',
+      'pages/share',
     ],
     window: {
       backgroundTextStyle: 'dark',
@@ -218,10 +219,13 @@ export default class extends wepy.app {
     }
 
   }
-  // onError(res) {
-     // console.log('on error', res)
+  onError(res) {
+     console.log('on error', res)
      // bugOut.track(res)
-  // }
+  }
+  onUnhandledRejection(obj) {
+    console.log('unhandled promise', obj)
+  }
   async checkUsers(query) {
     let me = wepy.getStorageSync(ME);
     // console.log("me", me)

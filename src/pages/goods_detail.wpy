@@ -1016,7 +1016,7 @@ export default class goodsDetail extends wepy.page {
       },
       // 图片生成并预览
       eventGetImage (event) {
-        // console.log(event)
+        console.log(event)
         wx.hideLoading()
         const { tempFilePath, errMsg } = event.detail
         if (errMsg === 'canvasdrawer:ok') {

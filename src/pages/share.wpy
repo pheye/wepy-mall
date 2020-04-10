@@ -1,0 +1,16 @@
+<template>
+  <view>Hello</view>
+</template>
+<script>
+import wepy from 'wepy'
+
+export default class Share extends wepy.page {
+  config = {
+      navigationBarTitleText: '分享优惠券',
+  },
+  data {
+  }
+}
+</script>
+<style lang="less">
+</style>

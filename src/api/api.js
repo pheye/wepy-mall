@@ -7,8 +7,12 @@ import { stringify } from 'qs';
 let env = "-test" //-dev 或者 -test
 const apiMall = 'https://sujiefs.com/'
 const host = "https://lingqule.papamk.com"
+const apiHost = "https://admin.lingqule.papamk.com"
 // const apiMall = 'http://localhost:8080/'
-
+const header = {
+  'Content-Type': 'application/json',
+  'Accept': 'application/json'
+}
 
 const querySettings = () => request(`${host}/wp-json/w2w/v1/store/home`, {noauth: true})
 
@@ -40,6 +44,9 @@ const queryProducts = ({query}) => request(`${host}/wp-json/w2w/v1/products`, {q
 const getProducts = (id, params) => request(`${host}/wp-json/w2w/v1/products/${id}`, params);
 //查看商品的Qrcode
 const getQrcode = (id, params) => request(`${host}/wp-json/w2w/v1/products/qrcode?id=${id}&transparent=1`, params);
+
+const getQrcodeByPath = (path, params) => request(`${host}/wp-json/w2w/v1/products/qrcode?path=${path}&transparent=1`, params);
+
 //商品加入购物车
 const addCart = (params) => request(`${host}/wp-json/w2w/v1/cart/add`, {...params, method: 'POST'});
 
@@ -187,6 +194,10 @@ const queryPages =  (params) => request(`${host}/wp-json/wp/v2/pages`, params)
 // 获取推广订单
 const queryPromotions = ({query}) => request(`${host}/wp-json/w2w/v1/customers/promotions?${stringify(query)}`)
 
+
+// 创建裂变分享
+const createShare = (query) => request(`${apiHost}/api/shares`, {query, noauth: true, method: 'POST', header} )
+
 export default {
   querySettings,
   hostGoodsList,
@@ -195,6 +206,7 @@ export default {
   queryProducts,
   getProducts,
   getQrcode,
+  getQrcodeByPath,
   getToken,
   getMe,
   updateMe,
@@ -252,4 +264,5 @@ export default {
   getOrderStatics,
   updateCartShipping,
   queryPromotions,
+  createShare
 }

@@ -93,6 +93,10 @@
           <text >优惠:</text><text class="price">-￥{{obj.discount_total}}</text>
         </view>
     </view>
+    <view>
+      <view @tap="shareCoupon" class="share_coupon">分享得优惠券</view>
+			<canvasdrawer painting="{{painting}}" class="canvasdrawer" bind:getImage="eventGetImage"/>
+    </view>
     <view class="footer">
       <view class="money">应付款:<text class="receive_money">￥{{obj.total}}</text>
       <view class="btn_group">
@@ -112,6 +116,7 @@ import tip from '@/utils/tip'
 import ShopItemList from '@/components/shop_item_list'
 import api from '@/api/api'
 import {
+  USER_INFO,
   SYSTEM_INFO,
   USER_SPECICAL_INFO
 } from '@/utils/constant';
@@ -126,7 +131,10 @@ export default class OrderDetail extends wepy.page {
     flag:"",
     list:[],
     orderExpress:{},
-    expressFlowInfo:{}
+    expressFlowInfo:{},
+    shareImage: '',
+    qrcode: '',
+		painting: {}
   }
 
   async getOrderInfo(currentPage,size) {
@@ -193,7 +201,26 @@ export default class OrderDetail extends wepy.page {
 
     that.$apply();
   }
-
+	async getQrcode(){
+		let that = this;
+    const share = await api.createShare({
+      "source": "order",
+      "source_id": this.obj.order_number
+    });
+    const qrcodeJson = await api.getQrcodeByPath(`/pages/share?=${share.code}`);
+		if(qrcodeJson.statusCode == 200) {
+			let qrcode = qrcodeJson.data;
+			that.qrcode =qrcode.replace(/^http:/, 'https:');
+      console.log('qrcode', qrcode);
+		}else {
+			if (qrcodeJson.data.message) {
+				tip.error(qrcodeJson.data.message)
+			} else {
+				tip.error('查看QRCode失败')
+			}
+		}
+	 that.$apply();
+	}
   components = {
     shopItemList: ShopItemList
   }
@@ -266,7 +293,178 @@ export default class OrderDetail extends wepy.page {
       } else {
         tip.alert('支付失败');
       }
-    }
+    },
+    async shareCoupon() {
+			await this.getQrcode()
+      this.methods.eventDraw(this)
+    },
+      // 生成卡片
+      eventDraw (value) {
+        let that = value;
+        // 如果已经生成卡片直接预览
+        if (that.shareImage != ''){
+            wx.previewImage({
+              urls: [that.shareImage] // 需要预览的图片http链接列表
+            })
+            return
+        }
+        // 绘制图片loading效果
+        wx.showLoading({
+            title: '绘制分享图片中',
+            mask: true
+          })
+        // 用户头像信息
+        let userInfo = wepy.getStorageSync(USER_INFO);
+        that.avatarUrl = userInfo.avatarUrl;
+        that.painting= {
+            width: 375,
+            height: 555,
+            clear: true,
+            views: [
+              // 背景
+              {
+                type: 'image',
+                url: '../../images/background.jpeg',
+                top: 0,
+                left: 0,
+                width: 375,
+                height: 555
+              },
+              // 用户头像
+              {
+                type: 'image',
+                url: that.avatarUrl,
+                top: 27.5,
+                left: 295,
+                width: 55,
+                height: 55
+              },
+              // 用户头像背景
+              {
+                type: 'image',
+                url: '../../images/avatar_cover.jpeg',
+                top: 27.5,
+                left: 295,
+                width: 55,
+                height: 55
+              },
+              // 标题
+              {
+                type: 'text',
+                content: '邻区乐',
+                fontSize: 30,
+                color: '#402D16',
+                textAlign: 'left',
+                top: 23,
+                left: 56,
+                bolder: true
+              },
+              // 副标题
+              {
+                type: 'text',
+                content: '一个小区的快乐',
+                fontSize: 12,
+                color: '#563D20',
+                textAlign: 'left',
+                top: 59.5,
+                left: 56
+              },
+              // 内容
+              {
+                type: 'text',
+                content: "今天24:00前下单 隔日11点前送货",
+                fontSize: 16,
+                lineHeight: 21,
+                color: '#383549',
+                textAlign: 'center',
+                top: 126,
+                left: 175,
+                width: 345,
+                height: 60
+              },
+              {
+                type: 'rect',
+                top: 210,
+                left: 60,
+                width: 245,
+                height: 80,
+                background: 'rgba(254,213,90,1)'
+              },
+              {
+                type: 'rect',
+                top: 220,
+                left: 70,
+                width: 225,
+                height: 60,
+                background: 'rgba(255,247,237,1)'
+              },
+              {
+                type: 'text',
+                content: "分享抢优惠券",
+                fontSize: 30,
+                lineHeight: 21,
+                color: '#383549',
+                textAlign: 'center',
+                top: 235,
+                left: 175,
+                width: 120,
+                height: 60
+              },
+              // 二维码
+              {
+                type: 'image',
+                url: that.qrcode,
+                top: 433,
+                left: 260,
+                width: 68,
+                height: 68
+              },
+              // 商品名称
+              {
+                type: 'text',
+                content: '长按识别小程序',
+                fontSize: 16,
+                lineHeight: 21,
+                color: '#383549',
+                textAlign: 'left',
+                top: 456,
+                left: 44,
+                width: 200,
+                MaxLineNumber: 2,
+                breakWord: true,
+                bolder: true
+              },
+            ]
+          }
+        console.log(that.painting)
+				that.$apply()
+      },
+      eventSave () {
+        wx.saveImageToPhotosAlbum({
+          filePath: that.data.shareImage,
+          success (res) {
+            wx.showToast({
+              title: '保存图片成功',
+              icon: 'success',
+              duration: 2000
+            })
+          }
+      })
+      },
+      // 图片生成并预览
+      eventGetImage (event) {
+        console.log(event)
+        wx.hideLoading()
+        const { tempFilePath, errMsg } = event.detail
+        if (errMsg === 'canvasdrawer:ok') {
+          this.shareImage= tempFilePath;
+          // 预览显示图片
+            wx.previewImage({
+              urls: [this.shareImage] // 需要预览的图片http链接列表
+            })
+          }
+      }
+
   }
 
   events = {
@@ -420,4 +618,14 @@ export default class OrderDetail extends wepy.page {
 
     }
   }
+
+.share_coupon {
+  background: #ff6a3c;
+  color: white;
+  margin: 16px 8px;
+  padding: 12px;
+  font-size: 24px;
+  text-align: center;
+  border-radius: 16px;
+}
 </style>
