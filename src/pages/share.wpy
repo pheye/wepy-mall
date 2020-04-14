@@ -52,19 +52,21 @@ export default class Share extends wepy.page {
   }
   data = {
     code: '',
+    from: null,
     myrecord:{},
     records: [],
     inited: false,
     showLoading: false
   }
-  async init (code) {
+  async init (code, from = null) {
     this.showLoading = true
 		const me = wepy.getStorageSync(ME);
     if (!me) {
       return;
     }
     const res = await api.getShare(code, {
-      openid: me.openid
+      openid: me.openid,
+      from
     })
     this.myrecord = res.data.records.find(item => item.id == me.user_id)
     this.records = res.data.records.filter(item => item.id != me.user_id)
@@ -75,6 +77,7 @@ export default class Share extends wepy.page {
   onLoad(options) {
     console.log('options', options);
     this.code = options.code;
+    this.from = options.from;
     this.$apply();
 
 		if (!ensureAuthorized()) {
@@ -103,7 +106,7 @@ export default class Share extends wepy.page {
   onShow () {
     console.log('data', this.code);
     if (this.code && !this.inited) {
-      this.init(this.code)
+      this.init(this.code, this.from)
     }
   }
 }

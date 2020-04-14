@@ -110,6 +110,9 @@
 <!--     <placeholder :show.sync="is_empty" message="暂无发现数据"></placeholder>
  -->    <!--弹屏  types:0 图片  1：领红包   show 是否显示  @close 关闭回调  @callback 点击图片回调 或确定回调-->
     <bombscreen :types.sync="tps" :image.sync="bomImage" :show.sync="isShowAlert" @close.user="closeAlert" @callback.user="alertCallback"></bombscreen>
+    <button class="share-float-box" open-type="share" id="share-coupon-button" wx:if="share_generic_code">
+      <view>抢优惠券</view>
+    </button>
   </view>
 </template>
 <script>
@@ -130,6 +133,7 @@ import {
   ME,
 } from '@/utils/constant';
 import moment from 'moment'
+import { ensureAuthorized } from '@/utils/authorize'
 
 export default class Home extends wepy.page {
   config = {
@@ -191,7 +195,8 @@ export default class Home extends wepy.page {
     // 类目图目录
     imageIdx: 0,
     // 精选商品
-    featuredList:[]
+    featuredList:[],
+    shareGenericCode: null
   }
   //读取一级分类数据
    async getRootCateTopLevel() {
@@ -381,11 +386,15 @@ export default class Home extends wepy.page {
           that.isShowAlert = settings.bomscreen.image
           that.tps = settings.bomscreen.type || 0
           that.bomImage = settings.bomscreen.image
-          that.$apply() 
+          that.$apply()
+        }
+        if (settings.share_generic_code) {
+          that.shareGenericCode = settings.share_generic_code
+          that.$apply()
         }
       })
     }
-    this.$apply() 
+    this.$apply()
   }
   computed = {
 
@@ -401,17 +410,26 @@ export default class Home extends wepy.page {
       })
     },
     onShareAppMessage: function(res) {
+      const me = wepy.getStorageSync(ME);
+      let url = '';
       if (res.from === 'button') {
         // 来自页面内转发按钮
         console.log(res.target)
-      }
-      let affiliate_id = wepy.getStorageSync(ME).affiliate_id;
-      console.log("affiliate_id",affiliate_id);
-      let url ='';
-      if (affiliate_id) {
-          url = '/pages/home?ref=' + affiliate_id;
-       }else{
-          url = '/pages/home';
+        if (!ensureAuthorized()) {
+          return {};
+        }
+        const code = this.shareGenericCode
+        const from = me.user_id
+        url = `/pages/share?code=${code}&from=${from}`;
+      } else {
+        let affiliate_id = me.affiliate_id;
+        console.log("affiliate_id",affiliate_id);
+        url ='';
+        if (affiliate_id) {
+            url = '/pages/home?ref=' + affiliate_id;
+         }else{
+            url = '/pages/home';
+         }
        }
        console.log(url);
       return {
@@ -434,7 +452,7 @@ export default class Home extends wepy.page {
             query: {
               code: settings.bomscreen.url
             }
-          }) 
+          })
           if (res.statusCode != 200) {
             tip.alert(res.data.message)
             return
@@ -621,4 +639,21 @@ export default class Home extends wepy.page {
       }
 }
 
+.share-float-box {
+  position: fixed;
+  left:0;
+  bottom:30vh;
+  color: white;
+  padding: 8px 4px 8px 2px;
+  background-color: #ff6a3c;
+  border-top-left-radius: 0;
+  border-bottom-left-radius:0;
+  border-top-right-radius: 16px;
+  border-bottom-right-radius: 16px;
+  line-height:1.5 !important;
+}
+
+button::after {
+  border:0 !important;
+}
 </style>

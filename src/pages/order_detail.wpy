@@ -645,4 +645,7 @@ export default class OrderDetail extends wepy.page {
   border-radius: 16px;
   line-height:1.5 !important;
 }
+button::after {
+  border:0 !important;
+}
 </style>
