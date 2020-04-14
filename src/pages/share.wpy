@@ -1,8 +1,9 @@
 <template>
   <view class="container">
     <bottomLoadMore :show.sync="showLoading" message="正在加载"></bottomLoadMore>
-    <view class="container__title">邻区乐</view>
-    <view class="card__container-title">恭喜你获得以下优惠</view>
+    <view class="text-center"><image src="../images/share.jpg"></image></view>
+    <!-- <view class="container__title">邻区乐</view> -->
+    <!-- <view class="card__container-title">恭喜你获得以下优惠</view> -->
     <view class="card__container">
       <view class="card">
         <view class="card__avatar">
@@ -115,9 +116,9 @@ export default class Share extends wepy.page {
 
 
 .container {
-  background-color: darken(#ff6a3c, 10%);
+  background-color: rgba(246,223,187, 1);
   min-height: 100vh;
-  color: white;
+  padding-bottom: 48px;
 }
 .container__title {
   text-align:center;
@@ -129,9 +130,16 @@ export default class Share extends wepy.page {
   text-align: center;
 }
 .container__button--main {
-  background-color: rgba(252,231,52, 1);
-  color: #ff6a3c;
+  background-color: #ff6a3c;
+  color: white;
   border-radius:32px;
+}
+button::after {
+
+  border:0 !important;
+}
+.container__button::after {
+  border:0 !important;
 }
 .card__container-title {
   text-align:center;
@@ -139,7 +147,7 @@ export default class Share extends wepy.page {
 .card__container {
   margin: 32rpx;
   border-radius: 8px;
-  background-color: #ff6a3c;
+  background-color: white;
 }
 .card {
   padding: 16px 8px;

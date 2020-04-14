@@ -26,8 +26,8 @@
       </view>
     </view>
     <view class="transparent">
-      <view @tap="shareCoupon" class="share_coupon">分享得优惠券</view>
-      <canvasdrawer painting="{{painting}}" class="canvasdrawer" bind:getImage="eventGetImage"/>
+      <button class="share_coupon"  open-type="share">分享得优惠券</button>
+      <!-- <canvasdrawer painting="{{painting}}" class="canvasdrawer" bind:getImage="eventGetImage"/> -->
     </view>
   </view>
 </template>
@@ -79,6 +79,8 @@ export default class paySuccess extends wepy.page {
       "source": "order",
       "source_id": this.obj.order_number
     });
+    return res.data.code;
+
     const qrcodeJson = await api.getQrcodeByPath(res.data.code);
 		if(qrcodeJson.statusCode == 200) {
 			let qrcode = qrcodeJson.data;
@@ -273,6 +275,21 @@ export default class paySuccess extends wepy.page {
               urls: [this.shareImage] // 需要预览的图片http链接列表
             })
           }
+      },
+      async onShareAppMessage (obj) {
+        const code = await this.getQrcode()
+        const url = `/pages/share?code=${code}`
+
+        console.log('obj', code, url)
+        return {
+          title: '分享得优惠券',
+          path: url,
+          imageUrl: '../images/share.jpg',
+          success: function(res) {
+          },
+          fail: function(res) {
+          }
+        }
       }
   }
 }
@@ -352,6 +369,7 @@ export default class paySuccess extends wepy.page {
     font-size: 24px;
     text-align: center;
     border-radius: 16px;
+    line-height:1.5 !important;
   }
   .transparent {
     background:transparent;

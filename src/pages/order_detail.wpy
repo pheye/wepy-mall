@@ -94,7 +94,7 @@
         </view>
     </view>
     <view wx:if="{{obj.status=='completed' || obj.status == 'shipped' || obj.status == 'processing'}}">
-      <view @tap="shareCoupon" class="share_coupon">分享得优惠券</view>
+      <button  class="share_coupon"  open-type="share">分享得优惠券</button>
 			<canvasdrawer painting="{{painting}}" class="canvasdrawer" bind:getImage="eventGetImage"/>
     </view>
     <view class="footer">
@@ -208,10 +208,8 @@ export default class OrderDetail extends wepy.page {
       "source_id": this.obj.order_number
     });
     const code = res.data.code
-    wepy.navigateTo({
-      url: '/pages/share?code=' + code
-    })
-    return;
+    return code;
+
     const qrcodeJson = await api.getQrcodeByPath(res.data.code);
 		if(qrcodeJson.statusCode == 200) {
 			let qrcode = qrcodeJson.data;
@@ -469,12 +467,26 @@ export default class OrderDetail extends wepy.page {
             })
           }
       },
+    async onShareAppMessage (obj) {
+      const code = await this.getQrcode()
+      const url = `/pages/share?code=${code}`
+
+      console.log('obj', code, url)
+      return {
+        title: '分享得优惠券',
+        path: url,
+        imageUrl: '../images/share.jpg',
+        success: function(res) {
+        },
+        fail: function(res) {
+        }
+      }
+    }
   }
 
   events = {
 
   }
-
 }
 
 </script>
@@ -631,5 +643,6 @@ export default class OrderDetail extends wepy.page {
   font-size: 24px;
   text-align: center;
   border-radius: 16px;
+  line-height:1.5 !important;
 }
 </style>
