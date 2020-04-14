@@ -110,7 +110,7 @@
 <!--     <placeholder :show.sync="is_empty" message="暂无发现数据"></placeholder>
  -->    <!--弹屏  types:0 图片  1：领红包   show 是否显示  @close 关闭回调  @callback 点击图片回调 或确定回调-->
     <bombscreen :types.sync="tps" :image.sync="bomImage" :show.sync="isShowAlert" @close.user="closeAlert" @callback.user="alertCallback"></bombscreen>
-    <button class="share-float-box" open-type="share" id="share-coupon-button" wx:if="share_generic_code">
+    <button class="share-float-box" open-type="share" id="share-coupon-button" wx:if="{{shareGenericCode}}">
       <view>抢优惠券</view>
     </button>
   </view>
