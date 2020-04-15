@@ -134,7 +134,8 @@ export default class OrderDetail extends wepy.page {
     expressFlowInfo:{},
     shareImage: '',
     qrcode: '',
-		painting: {}
+		painting: {},
+    shareCode: null,
   }
 
   async getOrderInfo(currentPage,size) {
@@ -153,6 +154,7 @@ export default class OrderDetail extends wepy.page {
       tip.error(json.data.message)
     }
 
+    that.shareCode = await this.getQrcode()
     that.$apply();
   }
 
@@ -467,8 +469,8 @@ export default class OrderDetail extends wepy.page {
             })
           }
       },
-    async onShareAppMessage (obj) {
-      const code = await this.getQrcode()
+    onShareAppMessage (obj) {
+      const code = this.shareCode
       const url = `/pages/share?code=${code}`
 
       console.log('obj', code, url)
@@ -477,8 +479,10 @@ export default class OrderDetail extends wepy.page {
         path: url,
         imageUrl: '../images/share.jpg',
         success: function(res) {
+          console.log('res', res)
         },
         fail: function(res) {
+          console.log
         }
       }
     }

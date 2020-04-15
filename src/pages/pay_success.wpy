@@ -26,7 +26,7 @@
       </view>
     </view>
     <view class="transparent">
-      <button class="share_coupon"  open-type="share">分享得优惠券</button>
+      <button class="share_coupon"  open-type="share" wx:if="{{shareCode}}">分享得优惠券</button>
       <!-- <canvasdrawer painting="{{painting}}" class="canvasdrawer" bind:getImage="eventGetImage"/> -->
     </view>
   </view>
@@ -50,7 +50,8 @@ export default class paySuccess extends wepy.page {
     shareImage: '',
     qrcode: '',
 		painting: {},
-    obj: {}
+    obj: {},
+    shareCode: null,
   }
   components = {
 
@@ -64,13 +65,14 @@ export default class paySuccess extends wepy.page {
     } else {
       tip.error(json.data.message)
     }
-
+    that.shareCode = await this.getQrcode()
     that.$apply();
   }
   onLoad(option) {
     //tip.success('支付成功,接收的参数为' + option.orderNo);
     this.orderNo = option.orderNo;
     this.getPayOrderDetail();
+
   }
 
 	async getQrcode(){
@@ -276,8 +278,8 @@ export default class paySuccess extends wepy.page {
             })
           }
       },
-      async onShareAppMessage (obj) {
-        const code = await this.getQrcode()
+      onShareAppMessage (obj) {
+        const code = this.shareCode
         const url = `/pages/share?code=${code}`
 
         console.log('obj', code, url)

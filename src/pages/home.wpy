@@ -196,7 +196,7 @@ export default class Home extends wepy.page {
     imageIdx: 0,
     // 精选商品
     featuredList:[],
-    shareGenericCode: null
+    shareGenericCode: '',
   }
   //读取一级分类数据
    async getRootCateTopLevel() {
@@ -378,6 +378,9 @@ export default class Home extends wepy.page {
         this.tps = settings.bomscreen.type || 0
         this.bomImage = settings.bomscreen.image
       }
+      if (settings.share_generic_code) {
+        this.shareGenericCode = settings.share_generic_code
+      }
     } else {
       const that = this;
       PubSub.subscribe('global-settings', (msg, settings) => {
@@ -435,6 +438,7 @@ export default class Home extends wepy.page {
       return {
         title: '邻区乐',
         path: url,
+        imageUrl: '../images/share.jpg',
         success: function(res) {
           // 转发成功
         },
