@@ -4,7 +4,7 @@
     <view class="text-center"><image src="../images/share.jpg"></image></view>
     <!-- <view class="container__title">邻区乐</view> -->
     <!-- <view class="card__container-title">恭喜你获得以下优惠</view> -->
-    <view class="card__container">
+    <view class="card__container" wx:if="{{myrecord.amount}}">
       <view class="card">
         <view class="card__avatar">
           <image width="32" height="32" src="{{myrecord.avatar}}" />
@@ -16,6 +16,7 @@
         <view class="card__right">{{myrecord.amount}}元</view>
       </view>
     </view>
+    <view class="gameover" wx:if="{{!myrecord.amount}}">您来晚了，红包已经抢完</view>
     <view class="container__button">
       <button size="mini" class="container__button--main" @tap="goHome">打开邻区乐</button>
     </view>
@@ -119,7 +120,7 @@ export default class Share extends wepy.page {
 
 
 .container {
-  background-color: rgba(246,223,187, 1);
+  background-color: white;
   min-height: 100vh;
   padding-bottom: 48px;
 }
@@ -150,7 +151,7 @@ button::after {
 .card__container {
   margin: 32rpx;
   border-radius: 8px;
-  background-color: white;
+  background-color:#fcee89;
 }
 .card {
   padding: 16px 8px;
@@ -186,5 +187,9 @@ button::after {
     font-size:14px;
     weight: 600;
   }
+}
+.gameover {
+    font-size: 16px;
+    text-align: center;
 }
 </style>
