@@ -17,7 +17,7 @@
       </view>
     </view>
     <view class="gameover" wx:if="{{!myrecord.amount && share.type == 0}}">您来晚了，红包已经抢完</view>
-    <view class="gameover" wx:if="{{!myrecord.amount && share.type == 1}}">分享满 {{share.limit}} 人，得随机优惠券哦~</view>
+    <view class="gameover" wx:if="{{!myrecord.amount && share.type == 1}}">您的朋友离得到优惠还差{{share.limit - records.length }}人哦~</view>
     <view class="container__button">
       <button size="mini" class="container__button--main" @tap="goHome">打开邻区乐</button>
     </view>
