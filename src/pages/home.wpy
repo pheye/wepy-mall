@@ -415,6 +415,7 @@ export default class Home extends wepy.page {
     onShareAppMessage: function(res) {
       const me = wepy.getStorageSync(ME);
       let url = '';
+      let img = '';
       if (res.from === 'button') {
         // 来自页面内转发按钮
         console.log(res.target)
@@ -424,10 +425,12 @@ export default class Home extends wepy.page {
         const code = this.shareGenericCode
         const from = me.user_id
         url = `/pages/share?code=${code}&from=${from}`;
+        img = '../images/share.jpg';
       } else {
         let affiliate_id = me.affiliate_id;
         console.log("affiliate_id",affiliate_id);
         url ='';
+        img = '';
         if (affiliate_id) {
             url = '/pages/home?ref=' + affiliate_id;
          }else{
@@ -438,7 +441,7 @@ export default class Home extends wepy.page {
       return {
         title: '邻区乐',
         path: url,
-        imageUrl: '../images/share.jpg',
+        imageUrl: img,
         success: function(res) {
           // 转发成功
         },

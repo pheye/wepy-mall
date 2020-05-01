@@ -71,7 +71,6 @@ export default class Share extends wepy.page {
   data = {
     code: '',
     share: {
-        type: 0
     },
     shareType: 0,
     myrecord:{},
@@ -94,8 +93,13 @@ export default class Share extends wepy.page {
 
     } else {
         this.share = res.data.share
-        this.myrecord = res.data.records.find(item => item.id == me.user_id)
-        this.records = res.data.records.filter(item => item.id != me.user_id)
+        if (this.share.type == 1) {
+            this.myrecord = res.data.records.find(item => item.id == res.data.customer_id)
+            this.records = res.data.records
+        } else {
+            this.myrecord = res.data.records.find(item => item.id == me.user_id)
+            this.records = res.data.records.filter(item => item.id != me.user_id)
+        }
         this.owner = me.user_id == res.data.customer_id
     }
     this.inited = true
