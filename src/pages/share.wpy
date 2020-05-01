@@ -17,7 +17,7 @@
       </view>
     </view>
     <view class="gameover" wx:if="{{!myrecord.amount && share.type == 0}}">您来晚了，红包已经抢完</view>
-    <view class="gameover" wx:if="{{!myrecord.amount && share.type == 1}}">您的朋友离得到优惠还差{{share.limit - records.length }}人哦~</view>
+    <view class="gameover" wx:if="{{!myrecord.amount && share.type == 1}}"> {{ owner ? '' : '您的朋友' }}离得到优惠还差{{share.limit - records.length }}人哦~</view>
     <view class="container__button">
       <button size="mini" class="container__button--main" @tap="goHome">打开邻区乐</button>
     </view>
@@ -78,6 +78,7 @@ export default class Share extends wepy.page {
     records: [],
     inited: false,
     showLoading: false,
+    owner: false,
   }
   async init (code, from = null) {
     this.showLoading = true
@@ -95,6 +96,7 @@ export default class Share extends wepy.page {
         this.share = res.data.share
         this.myrecord = res.data.records.find(item => item.id == me.user_id)
         this.records = res.data.records.filter(item => item.id != me.user_id)
+        this.owner = me.user_id == res.data.customer_id
     }
     this.inited = true
     this.showLoading = false
