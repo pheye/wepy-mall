@@ -5,6 +5,8 @@
     <view class="auth-item">获取你的公开信息（头像、昵称等）</view>
     <view class="btn-authorize">
       <button open-type="getUserInfo" type="primary" lang="zh_CN" bindgetuserinfo="onGotUserInfo">授权</button>
+      <view style="height:8px;"></view>
+      <button type="default" lang="zh_CN" @tap="refuse">拒绝授权</button>
     </view>
   </view>
 </template>
@@ -93,7 +95,11 @@ export default class Authorize extends wepy.page {
     }
   }
   methods = {
-
+    refuse: () => {
+        wepy.switchTab({
+          url: '/pages/home'
+        })
+    }
   }
   events = {
 
